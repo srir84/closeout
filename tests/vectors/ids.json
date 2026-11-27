@@ -1,0 +1,33 @@
+{
+  "namespace": "297e4163-3d09-5695-95de-04c1fdca7664",
+  "send_commands": [
+    {
+      "target": "job-00000000-0000-0000-0000-000000000001",
+      "round": 1,
+      "step": "first",
+      "command_id": "24aa54ea-8ce6-5aa5-ac61-7939f26a004b",
+      "message_id": "<59464537-63fd-5978-924d-2304b99f42cd@closeout.test>"
+    },
+    {
+      "target": "job-00000000-0000-0000-0000-000000000001",
+      "round": 1,
+      "step": "reminder_1",
+      "command_id": "42de8585-c871-5986-9871-37ffb9a1fc7e",
+      "message_id": "<3527a257-d974-5b69-93f0-369c1f6ebf7c@closeout.test>"
+    },
+    {
+      "target": "job-00000000-0000-0000-0000-000000000001",
+      "round": 2,
+      "step": "first",
+      "command_id": "40c40966-799e-53ea-a56f-4916174897cc",
+      "message_id": "<30a1235c-02db-5a0b-b25d-41e9301074c3@closeout.test>"
+    },
+    {
+      "target": "town-00000000-0000-0000-0000-000000000009",
+      "round": 1,
+      "step": "request",
+      "command_id": "95e8566e-3e43-5551-b2cd-590dc556592a",
+      "message_id": "<99f3e6b7-3f69-5865-b6d7-ddbb40917fa6@closeout.test>"
+    }
+  ]
+}

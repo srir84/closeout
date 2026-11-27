@@ -1,0 +1,70 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  UV_PYTHON: "3.13"
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - run: uv run ruff check src tests tools data evals
+      - run: uv run ruff format --check src tests tools data evals
+      - run: uv run pyright
+      - run: uv run python tools/publish_check.py
+        env:
+          CLOSEOUT_PRIVATE_NAMES: ${{ secrets.CLOSEOUT_PRIVATE_NAMES }}
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - name: Fast tests (unit, property, arch, config, workflow, replay, integration)
+        run: uv run pytest -q -m "not stack and not live and not slow" --durations=15
+      - name: Mutation gate on core/
+        run: uv run python tools/mutation_gate.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: trace-fast, path: build/trace/ }
+
+  stack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - run: uv run playwright install --with-deps chromium
+      - run: make up
+      - name: Stack, chaos and browser tests
+        run: uv run pytest -q -m "stack and not live" --durations=15 --video=retain-on-failure --output=test-results/videos
+      - if: always()
+        run: docker compose -f deploy/compose.yaml logs --no-color > test-results/compose.log 2>&1 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: stack-results, path: test-results/ }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: trace-stack, path: build/trace/ }
+
+  trace:
+    needs: [tests, stack]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: results }
+      - run: mkdir -p build/trace && cat results/trace-*/trace.jsonl > build/trace/trace.jsonl
+      - run: python3 tools/trace.py | tee -a $GITHUB_STEP_SUMMARY

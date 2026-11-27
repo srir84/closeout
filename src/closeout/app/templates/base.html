@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Closeout{% endblock %} · Closeout demo</title>
+<link rel="stylesheet" href="/static/site.css">
+{% block head %}{% endblock %}
+</head>
+<body>
+{% if clock and clock.scale and clock.scale > 1 %}
+<div class="banner clock" role="status">Fast clock: 1 day = {{ (86400 / clock.scale) | round(1) }} s{% if clock.virtual_now %} · demo date {{ clock.virtual_now.strftime('%a %d %b %Y %H:%M') }}{% endif %}</div>
+{% endif %}
+<header class="top">
+  <a class="brand" href="/">Closeout <span class="tag">demo</span></a>
+  <nav>{% block nav %}{% endblock %}</nav>
+  {% if account %}
+  <form method="post" action="/signout" class="who">
+    <span>{{ account.display_name }} <small>({{ account.kind }})</small></span>
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <button class="link">Switch person</button>
+  </form>
+  {% endif %}
+</header>
+{% block sample %}{% endblock %}
+<main>
+{% block content %}{% endblock %}
+</main>
+<footer>
+  <p>Made-up people, homes and companies. Not tied to any real company. Real public data: NJ Department of Community Affairs (construction permits, public domain) and NJ Office of GIS (parcels).</p>
+</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

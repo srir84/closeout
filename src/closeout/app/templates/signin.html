@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Pick a demo person{% endblock %}
+{% block content %}
+<h1>Pick a demo person</h1>
+<p class="lead">This demo has no passwords. Choose who you want to be. Everyone here is made up.</p>
+<div class="cards">
+{% for p in people %}
+  <form method="post" action="/signin" class="card person">
+    <input type="hidden" name="account_id" value="{{ p.id }}">
+    <h3>{{ p.display_name }}</h3>
+    <p class="muted">{{ {'contractor': 'Contractor', 'homeowner': 'Homeowner', 'ops': 'Operations'}[p.kind] }}</p>
+    <button>Continue as {{ p.display_name.split(' ')[0] }}</button>
+  </form>
+{% else %}
+  <p>No demo people yet. Run <code>make reset</code>.</p>
+{% endfor %}
+</div>
+{% endblock %}

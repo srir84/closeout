@@ -1,0 +1,12 @@
+# Protected paths (test strategy 5.4): a change needs the code owner's approval.
+/tests/ @srir84
+/evals/ @srir84
+/tools/ @srir84
+/.github/ @srir84
+/Makefile @srir84
+/deploy/ @srir84
+/.pre-commit-config.yaml @srir84
+/pyproject.toml @srir84
+/conftest.py @srir84
+/docs/01-SPEC.md @srir84
+/docs/06-IMPLEMENTATION-PLAN.md @srir84

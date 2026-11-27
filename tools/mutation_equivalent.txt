@@ -1,0 +1,2 @@
+# Mutants that cannot change behaviour, excluded from the score by exact name.
+# Protected path: only the person can add to this list. Each line needs a reason.

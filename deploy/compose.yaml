@@ -1,0 +1,126 @@
+# Every published port is on 127.0.0.1 only (R-SAFE-4). Postgres and Temporal's main port are not published.
+name: closeout
+
+x-app: &app
+  image: closeout-app:local
+  pull_policy: never
+  restart: unless-stopped
+  env_file:
+    - path: ../.env
+      required: false
+  environment: &app-env
+    DATABASE_URL: postgresql+psycopg://closeout:closeout@postgres:5432/closeout
+    TEMPORAL_ADDRESS: temporal:7233
+    SMTP_HOST: mailpit
+    SMTP_PORT: "1025"
+    MAILPIT_API_URL: http://mailpit:8025
+    CLOSEOUT_KEYS_DIR: /keys
+    UPLOADS_DIR: /app/var/uploads
+    APP_INTERNAL_URL: http://app:8000
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  depends_on:
+    postgres: { condition: service_healthy }
+    temporal: { condition: service_healthy }
+    mailpit: { condition: service_started }
+
+services:
+  postgres:
+    image: postgres:16.16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: closeout
+      POSTGRES_PASSWORD: closeout
+      POSTGRES_DB: closeout
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U closeout"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  temporal:
+    image: temporalio/temporal:1.10.1
+    restart: unless-stopped
+    entrypoint: ["temporal"]
+    command: ["server", "start-dev", "--ip", "0.0.0.0", "--db-filename", "/data/temporal.db",
+              "--ui-port", "8233", "--log-level", "warn"]
+    user: "0:0"
+    volumes:
+      - temporaldata:/data
+    ports:
+      - "127.0.0.1:8233:8233"
+    healthcheck:
+      test: ["CMD", "temporal", "operator", "cluster", "health", "--address", "127.0.0.1:7233"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+
+  mailpit:
+    image: axllent/mailpit:v1.34.0
+    restart: unless-stopped
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_RELAY_ALL: "false"
+      MP_MAX_MESSAGES: "5000"
+    volumes:
+      - maildata:/data
+    ports:
+      - "127.0.0.1:8025:8025"
+
+  migrate:
+    <<: *app
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    pull_policy: build
+    restart: "no"
+    command: ["python", "-m", "closeout.cli", "migrate"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    volumes:
+      - ../.secrets/hmac.key:/keys/hmac.key:ro
+
+  app:
+    <<: *app
+    command: ["uvicorn", "closeout.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ../.secrets/approval_ed25519.key:/keys/approval_ed25519.key:ro
+      - ../.secrets/approval_ed25519.pub:/keys/approval_ed25519.pub:ro
+      - ../.secrets/hmac.key:/keys/hmac.key:ro
+      - ../.secrets/session.key:/keys/session.key:ro
+      - uploads:/app/var/uploads
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      temporal: { condition: service_healthy }
+
+  worker:
+    <<: *app
+    command: ["python", "-m", "closeout.worker"]
+    volumes:
+      - ../.secrets/approval_ed25519.pub:/keys/approval_ed25519.pub:ro
+      - ../.secrets/hmac.key:/keys/hmac.key:ro
+      - uploads:/app/var/uploads
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      temporal: { condition: service_healthy }
+
+  sender:
+    <<: *app
+    command: ["python", "-m", "closeout.sender.main"]
+    volumes:
+      - ../.secrets/approval_ed25519.pub:/keys/approval_ed25519.pub:ro
+      - ../.secrets/hmac.key:/keys/hmac.key:ro
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      temporal: { condition: service_healthy }
+      mailpit: { condition: service_started }
+
+volumes:
+  pgdata:
+  temporaldata:
+  maildata:
+  uploads:
