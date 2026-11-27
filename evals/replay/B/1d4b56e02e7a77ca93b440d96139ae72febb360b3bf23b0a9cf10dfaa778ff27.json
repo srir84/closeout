@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 25024,
+ "prompt_version": "invoice_v1",
+ "text": "{\n    \"contractor_name\": \"Harbor & Pine Builders\",\n    \"contractor_license\": \"13VH01234567\",\n    \"contractor_email\": \"office@harbopine.example\",\n    \"customer_name\": \"Leilani Nguyen\",\n    \"job_address\": \"253 Osprey Ln\",\n    \"work_type\": \"other\",\n    \"completion_date\": \"2025-11-30\",\n    \"total_amount\": 4755.43,\n    \"warranty_years\": null\n}",
+ "tokens_in": 4269,
+ "tokens_out": 123
+}

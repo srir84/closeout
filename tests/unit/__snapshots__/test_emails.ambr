@@ -1,0 +1,70 @@
+# serializer version: 1
+# name: test_each_template_exactly[first]
+  '''
+  Subject: Please confirm: kitchen work at 14 Osprey Ln
+  
+  Hello,
+  
+  Harbor & Pine Builders has asked us to confirm a job they finished.
+  
+    Work: Kitchen
+    Address: 14 Osprey Ln
+    Finished: 28 March 2025
+    Total on the invoice: $48,250.00
+  
+  Was this your job? You can confirm it, correct a detail, decline, or tell us it isn't your home.
+  Opening the link changes nothing until you press a button:
+  {{ANSWER_LINK}}
+  
+  You choose whether the price can be shown to anyone else.
+  
+  This message was sent by Closeout (a demo with made-up people) on the contractor's behalf.
+  Don't want these emails? Unsubscribe with one click: {{UNSUB_LINK}}
+  '''
+# ---
+# name: test_each_template_exactly[reminder_1]
+  '''
+  Subject: Reminder: please confirm kitchen work at 14 Osprey Ln
+  
+  Hello,
+  
+  A few days ago we asked you to confirm a job from Harbor & Pine Builders. We haven't heard back.
+  
+    Work: Kitchen
+    Address: 14 Osprey Ln
+    Finished: 28 March 2025
+    Total on the invoice: $48,250.00
+  
+  Was this your job? You can confirm it, correct a detail, decline, or tell us it isn't your home.
+  Opening the link changes nothing until you press a button:
+  {{ANSWER_LINK}}
+  
+  You choose whether the price can be shown to anyone else.
+  
+  This message was sent by Closeout (a demo with made-up people) on the contractor's behalf.
+  Don't want these emails? Unsubscribe with one click: {{UNSUB_LINK}}
+  '''
+# ---
+# name: test_each_template_exactly[reminder_2]
+  '''
+  Subject: Last reminder: please confirm kitchen work at 14 Osprey Ln
+  
+  Hello,
+  
+  This is our last reminder about a job from Harbor & Pine Builders. After this we won't write again.
+  
+    Work: Kitchen
+    Address: 14 Osprey Ln
+    Finished: 28 March 2025
+    Total on the invoice: $48,250.00
+  
+  Was this your job? You can confirm it, correct a detail, decline, or tell us it isn't your home.
+  Opening the link changes nothing until you press a button:
+  {{ANSWER_LINK}}
+  
+  You choose whether the price can be shown to anyone else.
+  
+  This message was sent by Closeout (a demo with made-up people) on the contractor's behalf.
+  Don't want these emails? Unsubscribe with one click: {{UNSUB_LINK}}
+  '''
+# ---

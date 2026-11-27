@@ -67,7 +67,55 @@ async def ping_pressed(env: WorkflowEnvironment) -> tuple[str, str]:
     return "ping_pressed", hist.to_json()
 
 
-SCENARIOS = {"ping_pressed": ping_pressed}
+async def job_scenario(env: WorkflowEnvironment, name: str) -> tuple[str, str]:
+    """Job workflow histories at its waiting points and unusual paths (design 3.8)."""
+    sys.path.insert(0, str(ROOT))
+    from datetime import timedelta
+
+    from tests.workflow import test_outreach as t
+
+    w = t.World(refuse={"reminder_1": "over_limit"} if name == "job_on_hold" else None)
+    async with t.job(env, w) as h:
+        await t.approved(h, w, env)
+        if name == "job_recorded":
+            await t.send(h, "answer", answer="confirm", round="1")
+            await h.result()
+        elif name == "job_no_answer":
+            await h.result()
+        elif name == "job_undo_round_2":
+            await t.send(h, "answer", answer="confirm", round="1")
+            await t.send(h, "undo")
+            await t.send(h, "approve")
+            await t.until_state(h, w, "asking_homeowner", env)
+            await t.send(h, "answer", answer="confirm", round="2")
+            await h.result()
+        elif name == "job_corrected_accepted":
+            await t.send(h, "answer", answer="correct", round="1")
+            await t.send(h, "accept_correction")
+            await h.result()
+        elif name == "job_on_hold":
+            await t.until_state(h, w, "on_hold", env, step=timedelta(hours=6))
+            await t.send(h, "ops_stop")
+            await h.result()
+        elif name == "job_between_reminders":
+            await env.sleep(timedelta(days=4))
+            await h.terminate("saved while waiting between reminders")
+        hist = await h.fetch_history()
+    return name, hist.to_json()
+
+
+JOB_SCENARIOS = (
+    "job_recorded",
+    "job_no_answer",
+    "job_undo_round_2",
+    "job_corrected_accepted",
+    "job_on_hold",
+    "job_between_reminders",
+)
+SCENARIOS = {
+    "ping_pressed": ping_pressed,
+    **{n: (lambda env, n=n: job_scenario(env, n)) for n in JOB_SCENARIOS},
+}
 
 
 async def main(names: list[str]) -> None:
