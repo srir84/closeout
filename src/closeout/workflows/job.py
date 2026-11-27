@@ -1,12 +1,13 @@
 """The Job workflow: one long-lived workflow per job (design 3.4, 3.5, 3.8). Decisions only; I/O is in activities.
 
-S4 builds: read the invoice twice -> find the parcel -> check facts and contractor -> ready or needs_a_look,
-and the fix_fact / approve_facts / drop commands. Later slices add permit match, approval, outreach and undo.
+imported -> read twice -> parcel -> checks -> ready | needs_a_look -> (contractor approves) -> asking_homeowner
+-> outreach: first email, reminders 3 and 7 virtual days after delivery, a last wait of 7 days, late answers until
+day 30 -> answered -> confirmed -> undo window -> recorded. Every state is recorded as an event first.
 """
 
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -15,14 +16,18 @@ from temporalio.common import RetryPolicy
 from temporalio.exceptions import ActivityError, ApplicationError
 
 with workflow.unsafe.imports_passed_through():
-    from closeout.activities import common, permit_match, reading
+    from closeout.act import PerformIn, PerformOut
+    from closeout.activities import answers, common, outbox, permit_match, reading
     from closeout.activities import jobs as acts
+    from closeout.core.clock import WAITS, Clock
     from closeout.core.jobs import Refused, homeowner_started_next, next_state
     from closeout.workflows.commands import CommandQueue
-    from closeout.workflows.payloads import ClockIn, CommandRef, CommandResult
-    from closeout.workflows.util import DB_RETRY, DB_TIMEOUT
+    from closeout.workflows.payloads import ClockIn, CommandRef, CommandResult, Delivered
+    from closeout.workflows.util import DB_RETRY, DB_TIMEOUT, to_clock, wait_until
 
 MODEL_RETRY = RetryPolicy(maximum_attempts=2, non_retryable_error_types=["BadInput", "ReplayMiss"])
+SEND_STEPS = ("first", "reminder_1", "reminder_2")
+OPEN_ANSWER_STATES = ("asking_homeowner", "asking_contractor", "answered", "no_answer", "on_hold")
 
 
 class JobIn(BaseModel):
@@ -39,20 +44,28 @@ class JobOut(BaseModel):
 
 def command_kinds() -> dict[str, tuple[str, ...]]:
     """Which commands are allowed in which states (design 3.5)."""
+    before_recorded = (
+        "imported",
+        "needs_a_look",
+        "ready",
+        "asking_homeowner",
+        "answered",
+        "confirmed",
+        "no_answer",
+        "on_hold",
+    )
     return {
         "fix_fact": ("needs_a_look",),
         "approve_facts": ("needs_a_look",),
         "drop": ("needs_a_look",),
-        "pick_permit": (
-            "imported",
-            "needs_a_look",
-            "ready",
-            "asking_homeowner",
-            "answered",
-            "confirmed",
-            "no_answer",
-            "on_hold",
-        ),
+        "pick_permit": before_recorded,
+        "approve": ("ready",),
+        "answer": OPEN_ANSWER_STATES,
+        "accept_correction": ("answered",),
+        "reject_correction": ("answered",),
+        "undo": ("confirmed",),
+        "unsubscribed": (*before_recorded, "recorded"),
+        "ops_stop": ("on_hold",),
     }
 
 
@@ -64,12 +77,23 @@ class Job:
         self.round = 1
         self.origin = "contractor"
         self.inp: JobIn | None = None
+        self.clock: Clock | None = None
         self.document_id: UUID | None = None
         self.permit_candidates: list[str] = []
         self.permit_marked = False
         self.permits_dirty = False
+        # outreach, per round
+        self.approvals: dict[str, UUID] = {}
+        self.outbox: dict[str, UUID] = {}
+        self.delivered: dict[UUID, Delivered] = {}
+        self.first_sent_at: datetime | None = None
+        self.unsubscribed = False
+        self.correction_pending = False
+        self.confirmed_at: datetime | None = None
+        self.undo_deadline: datetime | None = None
+        self.closed_reason: str | None = None
 
-    # --- commands --------------------------------------------------------------------------------
+    # --- commands and signals --------------------------------------------------------------------
     def _allowed(self, ref: CommandRef) -> str | None:
         states = command_kinds().get(ref.kind)
         if states is None:
@@ -80,12 +104,22 @@ class Job:
             self.permit_marked or ref.codes.get("pk") not in self.permit_candidates
         ):
             return "not_a_candidate"
+        if ref.kind in ("accept_correction", "reject_correction") and not self.correction_pending:
+            return "no_correction"
+        if ref.kind == "answer" and ref.codes.get("answer") not in (
+            "confirm",
+            "correct",
+            "decline",
+            "not_mine",
+        ):
+            return "bad_answer"
+        if ref.kind == "answer" and ref.codes.get("round") != str(self.round):
+            return "old_round"
+        if ref.kind == "undo" and (self.undo_deadline is None or ref.saved_at > self.undo_deadline):
+            return "too_late"
+        if ref.kind == "approve" and not set(SEND_STEPS) <= set(ref.ids):
+            return "missing_approvals"
         return None
-
-    @workflow.signal
-    def permits_changed(self) -> None:
-        """The permit sync found new or changed permits on this job's parcel (design 3.2, later permits)."""
-        self.permits_dirty = True
 
     @workflow.update
     async def command(self, ref: CommandRef) -> CommandResult:
@@ -95,11 +129,22 @@ class Job:
     def _validate(self, ref: CommandRef) -> None:
         self.q.validate(ref, self._allowed)
 
+    @workflow.signal
+    def permits_changed(self) -> None:
+        """The permit sync found new or changed permits on this job's parcel (design 3.2, later permits)."""
+        self.permits_dirty = True
+
+    @workflow.signal(name="delivered")
+    def on_delivered(self, d: Delivered) -> None:
+        """From the sender. Ignored unless its outbox row belongs to this round (design 3.5)."""
+        if d.round == self.round and d.outbox_id in self.outbox.values():
+            self.delivered[d.outbox_id] = d
+
     @workflow.query
     def state(self) -> str:
         return self.status or "starting"
 
-    # --- helpers ---------------------------------------------------------------------------------
+    # --- small helpers ---------------------------------------------------------------------------
     async def _record(self, kind: str, key: str, **payload: object) -> None:
         assert self.inp is not None
         step = homeowner_started_next if self.origin == "homeowner" else next_state
@@ -120,17 +165,31 @@ class Job:
             fn, arg, start_to_close_timeout=DB_TIMEOUT, retry_policy=DB_RETRY
         )
 
-    def _key(self, what: str) -> str:
+    def _tkey(self, step: str, kind: str) -> str:
         assert self.inp is not None
-        return f"wf:job-{self.inp.job_id}:{self.round}:{what}"
+        return f"timer:job-{self.inp.job_id}:{self.round}:{step}:{kind}"
 
+    async def _finish(self, ref: CommandRef, ok: bool, code: str) -> None:
+        result = CommandResult(command_id=ref.command_id, ok=ok, code=code, state=self.status)
+        await workflow.execute_activity(
+            common.finish_command, result, start_to_close_timeout=DB_TIMEOUT, retry_policy=DB_RETRY
+        )
+        self.q.finish(result)
+
+    def is_open(self) -> bool:
+        return self.status not in ("dropped", "stopped", "retracted") and self.closed_reason is None
+
+    def real_at(self, virtual_wait: timedelta, since_real: datetime) -> datetime:
+        """The real instant `virtual_wait` after the real instant `since_real` (virtual time, design 3.3)."""
+        assert self.clock is not None
+        return self.clock.real(self.clock.virtual(since_real) + virtual_wait)
+
+    # --- reading, parcel and permit (S3-S5) ------------------------------------------------------
     async def _read(self) -> None:
-        """Reader A then reader B, each on its own queue, one read at a time per reader."""
         assert self.inp is not None
         if self.document_id is None:
             return
-        readers = ["A"] if self.inp.light else ["A", "B"]
-        for r in readers:
+        for r in ["A"] if self.inp.light else ["A", "B"]:
             try:
                 await workflow.execute_activity(
                     reading.read_document,
@@ -147,7 +206,6 @@ class Job:
         )
 
     async def _settle(self, key: str) -> None:
-        """From imported: ready if nothing needs a person, else needs_a_look with the first reason."""
         assert self.inp is not None
         await self._db(acts.match_job_address, acts.JobRef(job_id=self.inp.job_id))
         check: acts.CheckOut = await self._db(acts.check_job, acts.JobRef(job_id=self.inp.job_id))
@@ -160,9 +218,6 @@ class Job:
             )
         else:
             await self._record("job.ready", f"{key}:ready")
-        await self.on_settled()
-
-    async def on_settled(self) -> None:
         await self._match_permit()
 
     async def _match_permit(self) -> None:
@@ -180,22 +235,193 @@ class Job:
             await self._record("permit.matched", f"match:job-{self.inp.job_id}:{m.pks[0]}", pk=m.pks[0])
             self.permit_marked = True
 
-    async def _finish(self, ref: CommandRef, ok: bool, code: str) -> None:
-        result = CommandResult(command_id=ref.command_id, ok=ok, code=code, state=self.status)
-        await workflow.execute_activity(
-            common.finish_command, result, start_to_close_timeout=DB_TIMEOUT, retry_policy=DB_RETRY
+    # --- outreach (S6, S7) -------------------------------------------------------------------------
+    async def _send(self, step: str) -> str:
+        """Ask the permission check to queue one approved message. Returns 'queued' or the refusal code."""
+        assert self.inp is not None
+        out: PerformOut = await self._db(
+            outbox.perform_send,
+            PerformIn(
+                approval_id=self.approvals[step],
+                action="send_email",
+                target=f"job-{self.inp.job_id}",
+                round=self.round,
+                step=step,
+            ),
         )
-        self.q.finish(result)
+        if out.ok and out.outbox_id is not None:
+            self.outbox[step] = out.outbox_id
+            return "queued"
+        return out.code
 
+    async def _wait_delivery(self, step: str) -> Delivered | None:
+        """Wait for the sender's signal, checking the outbox on the backup schedule (design 3.7).
+
+        Returns None if a command arrives first (the caller handles it and may wait again)."""
+        assert self.clock is not None
+        oid = self.outbox[step]
+        poll = self.clock.real_wait(WAITS.backup_poll, WAITS.backup_poll_floor)
+        while True:
+            await wait_until(
+                lambda: oid in self.delivered or self.q.has_work() or not self.is_open(),
+                workflow.now() + poll,
+            )
+            if oid in self.delivered:
+                return self.delivered[oid]
+            if self.q.has_work() or not self.is_open():
+                return None
+            d: Delivered = await self._db(outbox.outbox_state, outbox.OutboxRef(outbox_id=oid))
+            if d.state in ("sent", "failed", "unknown", "cancelled"):
+                self.delivered[oid] = d
+                return d
+
+    async def _delivery(self, step: str) -> Delivered | None:
+        """Wait for one message's result, handling commands that arrive meanwhile."""
+        while True:
+            d = await self._wait_delivery(step)
+            if d is not None or not self.is_open():
+                return d
+            await self.handle(self.q.pop())
+            if self.status != "asking_homeowner":
+                return None
+
+    async def _hold(self, reason: str, step: str, outbox_id: UUID | None = None) -> None:
+        assert self.inp is not None
+        if self.status not in ("asking_homeowner", "asking_contractor"):
+            return
+        await self._db(
+            outbox.stop_sending,
+            outbox.StopIn(job_id=self.inp.job_id, reason=f"on_hold:{reason}", review_kind="on_hold"),
+        )
+        await self._record(
+            "job.on_hold",
+            self._tkey(step, "on_hold"),
+            reason=reason,
+            outbox_id=str(outbox_id) if outbox_id else None,
+        )
+
+    async def _note_delivery(self, step: str, d: Delivered) -> None:
+        if d.state == "sent":
+            await self._record(
+                "job.message_delivered",
+                f"outbox:{d.outbox_id}:sent",
+                outbox_id=str(d.outbox_id),
+                step=step,
+                state="sent",
+                sent_at=d.sent_at.isoformat() if d.sent_at else None,
+            )
+            if step == "first" and d.sent_at is not None:
+                self.first_sent_at = d.sent_at
+        elif d.state in ("failed", "unknown"):
+            await self._record(
+                "job.message_delivered",
+                f"outbox:{d.outbox_id}:{d.state}",
+                outbox_id=str(d.outbox_id),
+                step=step,
+                state=d.state,
+            )
+            await self._hold(d.state, step, d.outbox_id)
+
+    async def _outreach(self) -> None:
+        """Send the first email, then the reminders, while nobody has answered (R-OUT-4)."""
+        code = await self._send("first")
+        if code != "queued":
+            if code != "suppressed":
+                await self._hold(code, "first")
+            return
+        d = await self._delivery("first")
+        if d is None:
+            return
+        await self._note_delivery("first", d)
+        if self.status != "asking_homeowner" or self.first_sent_at is None:
+            return
+        for step, at in (("reminder_1", WAITS.reminder_1), ("reminder_2", WAITS.reminder_2)):
+            if not await self._idle_until(self.real_at(at, self.first_sent_at)):
+                return
+            if self.unsubscribed:
+                continue
+            code = await self._send(step)
+            if code == "suppressed":
+                self.unsubscribed = True
+                continue
+            if code != "queued":
+                await self._hold(code, step)
+                return
+            rd = await self._delivery(step)
+            if rd is not None:
+                await self._note_delivery(step, rd)
+            if self.status != "asking_homeowner":
+                return
+        last = self.real_at(WAITS.reminder_2 + WAITS.last_wait, self.first_sent_at)
+        if await self._idle_until(last):
+            await self._record("job.no_answer", self._tkey("last", "no_answer"))
+
+    async def _idle_until(self, deadline: datetime) -> bool:
+        """Handle commands until the deadline. True if the job is still waiting for an answer at the end."""
+        while self.is_open() and self.status == "asking_homeowner":
+            await wait_until(lambda: self.q.has_work() or not self.is_open(), deadline)
+            if self.q.has_work():
+                await self.handle(self.q.pop())
+                continue
+            return self.status == "asking_homeowner"
+        return False
+
+    async def _undo_window(self) -> None:
+        """confirmed -> recorded when the undo window ends (R-REC-3). Real-time floor: 60 s."""
+        assert self.clock is not None and self.inp is not None and self.confirmed_at is not None
+        self.undo_deadline = self.confirmed_at + self.clock.real_wait(WAITS.undo_window, WAITS.undo_floor)
+        while self.status == "confirmed":
+            await wait_until(lambda: self.q.has_work(), self.undo_deadline)
+            if self.q.has_work():
+                await self.handle(self.q.pop())
+                continue
+            late: answers.LateUndo = await self._db(
+                answers.saved_undo, answers.SavedUndoIn(job_id=self.inp.job_id, deadline=self.undo_deadline)
+            )
+            if late.command_id is not None:  # pressed in time, delivered late: it still counts (design 3.5)
+                await self._undo(
+                    CommandRef(command_id=late.command_id, kind="undo", saved_at=self.undo_deadline)
+                )
+                continue
+            await self._record("job.recorded", self._tkey("undo", "recorded"))
+
+    async def _undo(self, ref: CommandRef) -> None:
+        await self._record("job.undone", f"cmd:{ref.command_id}:job.undone", command_id=str(ref.command_id))
+        await self._new_round("undo")
+        self.q.seen.add(ref.command_id)
+        await self._finish(ref, True, "undone")
+
+    async def _new_round(self, why: str) -> None:
+        """A new round: new command IDs and links; the old round's unused approvals and links are voided."""
+        assert self.inp is not None
+        self.round += 1
+        await self._db(
+            answers.start_round, answers.RoundIn(job_id=self.inp.job_id, round=self.round, why=why)
+        )
+        self.approvals, self.outbox, self.delivered = {}, {}, {}
+        self.first_sent_at = None
+        self.correction_pending = False
+        self.confirmed_at = None
+        self.undo_deadline = None
+
+    async def _confirmed(self, key: str, command_id: UUID, via: str) -> None:
+        assert self.inp is not None
+        await self._db(outbox.stop_sending, outbox.StopIn(job_id=self.inp.job_id, reason="answered"))
+        await self._record("job.homeowner_confirmed", key, command_id=str(command_id), via=via)
+        self.confirmed_at = workflow.now()
+
+    # --- command handling ------------------------------------------------------------------------
     async def handle(self, ref: CommandRef) -> None:
         assert self.inp is not None
         ckey = f"cmd:{ref.command_id}"
-        # Checked again when its turn comes: an earlier command may have moved the job on.
         stale = self._allowed(ref)
-        if stale is not None:
+        if (
+            stale is not None
+        ):  # checked again when its turn comes: an earlier command may have moved the job on
             await self._finish(ref, False, stale)
             return
-        if ref.kind in ("fix_fact", "approve_facts"):
+        k = ref.kind
+        if k in ("fix_fact", "approve_facts"):
             out: acts.CommandOut = await self._db(
                 acts.apply_fix, acts.CommandIn(job_id=self.inp.job_id, command_id=ref.command_id)
             )
@@ -210,7 +436,7 @@ class Job:
             )
             await self._settle(ckey)
             await self._finish(ref, True, out.code)
-        elif ref.kind == "pick_permit":
+        elif k == "pick_permit":
             pk = ref.codes["pk"]
             await self._record(
                 "permit.matched",
@@ -219,22 +445,125 @@ class Job:
                 picked_by_contractor=True,
                 command_id=str(ref.command_id),
             )
-            self.permit_marked = True
-            self.permit_candidates = []
+            self.permit_marked, self.permit_candidates = True, []
             await self._finish(ref, True, "picked")
-        elif ref.kind == "drop":
+        elif k == "drop":
             await self._record("job.dropped", f"{ckey}:job.dropped", command_id=str(ref.command_id))
             await self._finish(ref, True, "dropped")
+        elif k == "approve":
+            chk: outbox.ApprovalCheckOut = await self._db(
+                outbox.check_approvals,
+                outbox.ApprovalCheckIn(
+                    job_id=self.inp.job_id, approval_ids={s: ref.ids[s] for s in SEND_STEPS}, round=self.round
+                ),
+            )
+            if not chk.ok:
+                await self._finish(ref, False, chk.code)
+                return
+            self.approvals = {s: ref.ids[s] for s in SEND_STEPS}
+            await self._record(
+                "job.approved",
+                f"{ckey}:job.approved",
+                approval_ids=[str(ref.ids[s]) for s in SEND_STEPS],
+                command_id=str(ref.command_id),
+            )
+            await self._record(
+                "job.contractor_confirmed",
+                f"{ckey}:job.contractor_confirmed",
+                approval_id=str(ref.ids["first"]),
+                command_id=str(ref.command_id),
+            )
+            await self._finish(ref, True, "approved")
+            await self._outreach()
+        elif k == "answer":
+            await self._answer(ref)
+        elif k == "accept_correction":
+            self.correction_pending = False
+            await self._record(
+                "job.correction_accepted", f"{ckey}:job.correction_accepted", command_id=str(ref.command_id)
+            )
+            await self._confirmed(f"{ckey}:job.homeowner_confirmed", ref.command_id, "correction_accepted")
+            await self._finish(ref, True, "accepted")
+        elif k == "reject_correction":
+            self.correction_pending = False
+            await self._db(
+                answers.correction_rejected, acts.CommandIn(job_id=self.inp.job_id, command_id=ref.command_id)
+            )
+            await self._record(
+                "job.correction_rejected", f"{ckey}:job.correction_rejected", command_id=str(ref.command_id)
+            )
+            await self._finish(ref, True, "rejected")
+        elif k == "undo":
+            await self._undo(ref)
+        elif k == "unsubscribed":
+            self.unsubscribed = True
+            await self._finish(ref, True, "unsubscribed")
+        elif k == "ops_stop":
+            await self._db(outbox.stop_sending, outbox.StopIn(job_id=self.inp.job_id, reason="ops_stop"))
+            await self._record(
+                "job.stopped", f"{ckey}:job.stopped", reason="ops_stop", command_id=str(ref.command_id)
+            )
+            await self._finish(ref, True, "stopped")
         else:
             await self._finish(ref, False, "unknown_command")
 
-    def is_open(self) -> bool:
-        return self.status not in ("dropped", "stopped", "retracted")
+    async def _answer(self, ref: CommandRef) -> None:
+        """confirm / correct / decline / not my house (R-OUT-3). The typed values stay in the database."""
+        assert self.inp is not None
+        ckey = f"cmd:{ref.command_id}"
+        kind = ref.codes["answer"]
+        a: answers.AnswerOut = await self._db(
+            answers.apply_answer, acts.CommandIn(job_id=self.inp.job_id, command_id=ref.command_id)
+        )
+        await self._record(
+            "job.answered",
+            f"{ckey}:job.answered",
+            command_id=str(ref.command_id),
+            answer=kind,
+            link_id=str(ref.link_id) if ref.link_id else None,
+        )
+        if a.price_visible is not None:
+            await self._record(
+                "job.price_visibility_set",
+                f"{ckey}:job.price_visibility_set",
+                command_id=str(ref.command_id),
+                price_visible=a.price_visible,
+            )
+        if kind == "confirm":
+            self.correction_pending = False
+            await self._confirmed(f"{ckey}:job.homeowner_confirmed", ref.command_id, "answer")
+        elif kind == "correct":
+            await self._db(outbox.stop_sending, outbox.StopIn(job_id=self.inp.job_id, reason="answered"))
+            await self._record(
+                "job.corrected",
+                f"{ckey}:job.corrected",
+                command_id=str(ref.command_id),
+                finish_date=a.finish_date.isoformat() if a.finish_date else None,
+                total=str(a.total) if a.total is not None else None,
+            )
+            self.correction_pending = True
+        else:
+            await self._db(
+                outbox.stop_sending,
+                outbox.StopIn(
+                    job_id=self.inp.job_id,
+                    reason=kind,
+                    review_kind="not_my_house" if kind == "not_mine" else None,
+                ),
+            )
+            await self._record(
+                "job.stopped",
+                f"{ckey}:job.stopped",
+                reason="declined" if kind == "decline" else "not_mine",
+                command_id=str(ref.command_id),
+            )
+        await self._finish(ref, True, kind)
 
     # --- main ------------------------------------------------------------------------------------
     @workflow.run
     async def run(self, inp: JobIn) -> JobOut:
         self.inp = inp
+        self.clock = to_clock(inp.clock)
         prep: acts.PrepOut = await self._db(acts.prepare_job, acts.JobRef(job_id=inp.job_id))
         self.origin = prep.origin
         self.document_id = prep.document_id
@@ -242,9 +571,21 @@ class Job:
         await self._read()
         await self._settle(f"wf:job-{inp.job_id}:1:first")
         while self.is_open():
-            await workflow.wait_condition(
-                lambda: self.q.has_work() or not self.is_open() or self.permits_dirty
-            )
+            if self.status == "confirmed":
+                await self._undo_window()
+                continue
+            if self.status == "recorded":
+                break  # retraction runs as its own workflow
+            if self.status == "no_answer" and self.first_sent_at is not None:
+                end = self.real_at(WAITS.late_window, self.first_sent_at)
+                await wait_until(lambda: self.q.has_work() or self.permits_dirty, end)
+                if not self.q.has_work() and not self.permits_dirty and workflow.now() >= end:
+                    self.closed_reason = "late_window_ended"
+                    break
+            else:
+                await workflow.wait_condition(
+                    lambda: self.q.has_work() or not self.is_open() or self.permits_dirty
+                )
             if self.permits_dirty:
                 self.permits_dirty = False
                 if self.status not in ("recorded", "retracted"):

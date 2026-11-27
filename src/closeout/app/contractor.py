@@ -59,6 +59,44 @@ def job_facts(job_id: uuid.UUID) -> list[dict[str, Any]]:
     ]
 
 
+def outreach_view(job: dict[str, Any]) -> dict[str, Any]:
+    """Marks, the email history and any correction waiting for the contractor."""
+    from closeout.core.record import marks
+    from closeout.events import read_stream
+
+    with db.tx() as c:
+        evs = read_stream(c, f"job-{job['id']}")
+        sent = db.all_rows(
+            c,
+            """SELECT step, round, state, sent_at, cancel_reason FROM outbox WHERE job_id = :j
+                                ORDER BY created_at""",
+            j=job["id"],
+        )
+        corrected = db.all_rows(
+            c,
+            """SELECT field, value FROM facts WHERE job_id = :j AND status = 'answered'
+                                     AND reason = 'homeowner_correction'""",
+            j=job["id"],
+        )
+    pending = False
+    for e in evs:  # a correction waits for the contractor until accepted or rejected
+        if e.kind == "job.corrected":
+            pending = True
+        elif e.kind in ("job.correction_accepted", "job.correction_rejected", "job.undone"):
+            pending = False
+    pending = pending and job["status"] == "answered"
+    return {
+        "marks": marks(evs) if evs else [],
+        "sent": sent,
+        "correction": corrected if pending else [],
+        "mark_names": {
+            "homeowner_confirmed": "Homeowner confirmed",
+            "contractor_confirmed": "Contractor confirmed",
+            "permit_on_file": "Town permit on file",
+        },
+    }
+
+
 def permit_view(job: dict[str, Any]) -> dict[str, Any]:
     """The permit result for the job page (R-COR-1, R-COR-2)."""
     from closeout.core import permits as pm
@@ -230,6 +268,7 @@ def register(app: FastAPI) -> None:
             sample=True,
             command_id=uuid.uuid4(),
             permit=permit_view(job),
+            **outreach_view(job),
         )
 
     @app.get("/c/review/{job_id}", response_class=HTMLResponse)

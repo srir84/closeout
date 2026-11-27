@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 13037,
+ "prompt_version": "invoice_v1",
+ "text": "{\n    \"contractor_name\": \"Tidewater Electric LLC\",\n    \"contractor_license\": \"HIC Reg # 13VH00938114\",\n    \"contractor_email\": \"jobs@tidewater-elec.example\",\n    \"customer_name\": \"Samir Haddad\",\n    \"job_address\": \"244 Beacon Ave\",\n    \"work_type\": \"electrical\",\n    \"completion_date\": \"2026-03-02\",\n    \"total_amount\": 1961.14,\n    \"warranty_years\": null\n}",
+ "tokens_in": 2492,
+ "tokens_out": 128
+}

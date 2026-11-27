@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 16891,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Bayside Plumbing & Heating\",\n  \"contractor_license\": \"13VH00551920\",\n  \"contractor_email\": \"service@baysideph.example\",\n  \"customer_name\": \"Sofia Takahashi\",\n  \"job_address\": \"248 Lantern Pl\",\n  \"work_type\": \"plumbing\",\n  \"completion_date\": \"2025-01-30\",\n  \"total_amount\": 1737.0,\n  \"warranty_years\": null\n}",
+ "tokens_in": 4269,
+ "tokens_out": 124
+}

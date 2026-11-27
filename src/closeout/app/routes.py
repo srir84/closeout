@@ -6,7 +6,8 @@ from fastapi import FastAPI
 
 
 def register(app: FastAPI) -> None:
-    from closeout.app import contractor, data_pages
+    from closeout.app import contractor, data_pages, outreach_pages
 
     data_pages.register(app)
     contractor.register(app)
+    outreach_pages.register(app)

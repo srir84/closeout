@@ -75,3 +75,12 @@ class PingOut(BaseModel):
     ping_id: UUID
     presses: int
     finished_state: str
+
+
+class Delivered(BaseModel):
+    """The sender's signal: what happened to one outbox row (design 3.5, 3.7)."""
+
+    outbox_id: UUID
+    state: str
+    sent_at: datetime | None = None
+    round: int = 1

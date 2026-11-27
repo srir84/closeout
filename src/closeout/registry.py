@@ -18,7 +18,7 @@ def workflows() -> list[type]:
 
 
 def activities(client: Client | None = None) -> list[Callable[..., Any]]:
-    from closeout.activities import common, jobs, permit_match, permits, reading
+    from closeout.activities import answers, common, jobs, outbox, permit_match, permits, reading
 
     out: list[Callable[..., Any]] = [
         common.finish_command,
@@ -32,6 +32,14 @@ def activities(client: Client | None = None) -> list[Callable[..., Any]]:
         jobs.prepare_batch,
         jobs.finish_batch,
         permit_match.match_permit,
+        outbox.perform_send,
+        outbox.outbox_state,
+        outbox.check_approvals,
+        outbox.stop_sending,
+        answers.apply_answer,
+        answers.correction_rejected,
+        answers.saved_undo,
+        answers.start_round,
     ]
     if client is not None:
         out.append(jobs.Starter(client).start_jobs)

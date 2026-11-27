@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 17584,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"13VH01234567\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Darnell Nguyen\",\n  \"job_address\": \"187 Tidewater Rd\",\n  \"work_type\": \"bathroom\",\n  \"completion_date\": \"2024-12-25\",\n  \"total_amount\": 25559,\n  \"warranty_years\": 2\n}",
+ "tokens_in": 4269,
+ "tokens_out": 122
+}

@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 11071,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Bayside Plumbing & Heating\",\n  \"contractor_license\": \"13VH00551920\",\n  \"contractor_email\": \"service@baysideph.example\",\n  \"customer_name\": \"Diego Halvorsen\",\n  \"job_address\": \"75 Heron Way\",\n  \"work_type\": \"hvac\",\n  \"completion_date\": \"2025-11-06\",\n  \"total_amount\": 18252.73,\n  \"warranty_years\": 2\n}",
+ "tokens_in": 2181,
+ "tokens_out": 127
+}

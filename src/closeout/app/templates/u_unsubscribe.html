@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Unsubscribe{% endblock %}
+{% block content %}
+<div class="phone">
+{% if done %}
+<h1 id="unsubscribed">You're unsubscribed</h1>
+<p>We won't send you any more emails, and anything waiting to be sent to you was cancelled.</p>
+<p class="muted">One message that was being handed to the mail server at that very moment may still arrive.</p>
+{% else %}
+<h1>Unsubscribe</h1>
+<p>Stop all emails from Closeout to this address.</p>
+<form method="post" action="/u/{{ token }}"><button id="unsubscribe">Unsubscribe</button></form>
+{% endif %}
+</div>
+{% endblock %}

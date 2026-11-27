@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 25830,
+ "prompt_version": "invoice_v1",
+ "text": "{\n    \"contractor_name\": \"Tidewater Electric LLC\",\n    \"contractor_license\": \"NJ HIC # 13VH00938114\",\n    \"contractor_email\": \"jobs@tidewater-elec.example\",\n    \"customer_name\": \"Zainab Achterberg\",\n    \"job_address\": \"152 Osprey Ln\",\n    \"work_type\": \"electrical\",\n    \"completion_date\": \"2025-03-03\",\n    \"total_amount\": 5202.87,\n    \"warranty_years\": 3\n}",
+ "tokens_in": 4269,
+ "tokens_out": 132
+}

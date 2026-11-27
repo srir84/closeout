@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}This link{% endblock %}
+{% block content %}
+<div class="phone">
+{% if why == 'replaced' %}<h1 id="link-state">This request was replaced by a newer one</h1><p>Please use the link in the most recent email.</p>
+{% elif why == 'closed' %}<h1 id="link-state">This request has closed</h1><p>It's too late to answer this one.</p>
+{% elif why == 'refused' %}<h1 id="link-state">That answer can't be taken now</h1><p class="muted">{{ code }}</p>
+{% else %}<h1 id="link-state">This link isn't valid</h1>{% endif %}
+</div>
+{% endblock %}

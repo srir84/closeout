@@ -32,5 +32,14 @@
   <tr><td>{{ f.label }}</td><td>{{ f.value if f.value is not none else "—" }}</td><td>{{ {'kept': 'Both reads agree', 'asked': 'Needs checking', 'unconfirmed': 'Not confirmed yet', 'answered': 'Answered', 'missing': '—'}.get(f.status, f.status) }}{% if f.source == 'person' %} (you){% endif %}</td></tr>
   {% endfor %}
 </table>
+{% if marks %}<h2>Marks</h2><p id="marks">{% for m in marks %}<a class="mark" href="/proof/{{ job.id }}/{{ m.kind }}" data-mark="{{ m.kind }}">{{ mark_names[m.kind] }}</a>{% endfor %}</p>{% endif %}
+{% if job.status == 'ready' %}<p><a class="button" id="approve-link" href="/c/approve/{{ job.id }}">Review and approve the emails</a></p>{% endif %}
+{% if correction %}
+<div class="card warn" id="correction"><h3>The homeowner corrected this job</h3>
+<ul>{% for f in correction %}<li>{{ {'completion_date': 'Finished on', 'total_amount': 'Total'}.get(f.field, f.field) }}: <strong>{{ f.value }}</strong></li>{% endfor %}</ul>
+<form method="post" action="/c/jobs/{{ job.id }}/correction" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}">
+<button name="decision" value="accept" id="accept-correction">Accept the correction</button> <button name="decision" value="reject" class="secondary" id="reject-correction">I disagree</button></form></div>
+{% endif %}
+{% if sent %}<h2>Emails</h2><table id="emails"><tr><th>Message</th><th>Round</th><th>State</th><th>Sent</th></tr>{% for s in sent %}<tr><td>{{ s.step | replace('_', ' ') }}</td><td>{{ s.round }}</td><td>{{ s.state }}{% if s.cancel_reason %} ({{ s.cancel_reason | replace('_', ' ') }}){% endif %}</td><td>{{ s.sent_at.strftime('%d %b %H:%M:%S') if s.sent_at else '' }}</td></tr>{% endfor %}</table>{% endif %}
 {% block actions %}{% endblock %}
 {% endblock %}

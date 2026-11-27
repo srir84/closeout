@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Approve emails for {{ job.job_ref }}{% endblock %}
+{% block content %}
+<h1>Approve the emails for job {{ job.job_ref }}</h1>
+<p class="lead">Nothing is sent until you approve. These are the exact messages: the first email and up to two reminders (3 and 7 days after the first one is delivered, only if nobody has answered). Each message gets its own approval, tied to this round.</p>
+{% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
+{% for m in msgs %}
+<section class="card message" id="msg-{{ m.step }}">
+  <h3>{{ {'first': 'First email', 'reminder_1': 'Reminder 1', 'reminder_2': 'Reminder 2'}[m.step] }}</h3>
+  <dl class="kv"><dt>To</dt><dd class="to">{{ m.to_address }}</dd><dt>Subject</dt><dd class="subject">{{ m.subject }}</dd></dl>
+  <pre class="email">{{ shown(m.body_template) }}</pre>
+</section>
+{% else %}
+<p class="warn">There's no homeowner address for this job.</p>
+{% endfor %}
+{% if msgs and job.status == 'ready' %}
+<form method="post" action="/c/approve/{{ job.id }}">
+  <input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}">
+  <p class="muted">By approving, you also confirm that you did this job: that is the "contractor confirmed" mark.</p>
+  <button id="approve">Approve and send</button>
+</form>
+{% endif %}
+<p><a href="/c/jobs/{{ job.id }}">Back to the job</a></p>
+{% endblock %}

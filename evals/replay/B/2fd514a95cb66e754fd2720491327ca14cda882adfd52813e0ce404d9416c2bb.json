@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 20640,
+ "prompt_version": "invoice_v1",
+ "text": "{\n    \"contractor_name\": \"Harbor & Pine Builders\",\n    \"contractor_license\": \"NJ HIC # 13VH01234567\",\n    \"contractor_email\": \"office@harbopine.example\",\n    \"customer_name\": \"Lucia Achterberg\",\n    \"job_address\": \"216 Beacon Ave\",\n    \"work_type\": \"other\",\n    \"completion_date\": \"2026-07-29\",\n    \"total_amount\": 6945.3,\n    \"warranty_years\": 3\n}",
+ "tokens_in": 4399,
+ "tokens_out": 127
+}

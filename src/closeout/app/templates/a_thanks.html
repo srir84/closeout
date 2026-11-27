@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Thank you{% endblock %}
+{% block content %}
+<div class="phone">
+<h1 id="thanks">Thank you</h1>
+<p>{{ {'confirm': 'You confirmed the job.', 'correct': 'We sent your correction to the contractor.', 'decline': "You declined. We won't ask again about this job.", 'not_mine': "Thanks for telling us. We won't send anything more about this job, and someone will look at it."}[answer] }}</p>
+{% if saved %}<p class="muted">Your answer is saved and will be processed shortly.</p>{% endif %}
+<p class="muted">You can change your answer with the same link while the request is open.</p>
+</div>
+{% endblock %}
