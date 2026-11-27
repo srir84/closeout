@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Shore Line Plumbing & Heating\",\n  \"contractor_license\": \"13VH00045120\",\n  \"contractor_email\": \"service@shorelineph.example\",\n  \"customer_name\": \"Priscilla Vance\",\n  \"job_address\": \"144 Brine Pl\",\n  \"work_type\": \"plumbing\",\n  \"completion_date\": \"2026-03-30\",\n  \"total_amount\": 1972.56,\n  \"warranty_years\": 6\n}",
+ "seconds": 4.95,
+ "tokens_in": 2226,
+ "tokens_out": 124,
+ "model": "qwen3-vl:4b-instruct"
+}

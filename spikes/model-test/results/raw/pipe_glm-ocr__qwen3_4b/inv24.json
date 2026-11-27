@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"NJ HIC Reg. # 13VH00012345\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"159 Heron St\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"2026-08-21\",\n  \"total_amount\": 69150.00,\n  \"warranty_years\": 10\n}",
+ "ocr_text": "Harbor & Pine Builders\nNJ HIC Reg. # 13VH00012345 | office@harborpine.example | (732) 555-0112\n\nINVOICE\n\nInvoice # 9983    Invoice date: 2026-08-23\nWork completed: 2026-08-21\n\nBILL TO\nLena Ostrowski\n159 Heron St\nManasquan, NJ 08736\n\n\u2022 Frame 12x16 sunroom addition\n\u2022 Windows, insulation, drywall\n\u2022 Tie into existing roof\n\nOriginal contract $58,800.00\nChange order #1 (added scope) +$10,350.00\nAdjusted subtotal $69,150.00\nTOTAL $69,150.00\n\nWorkmanship warranty: 10 years from completion. Manufacturer warranties pass to owner.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 4.69,
+ "ocr_seconds": 3.15,
+ "tokens_in": 477,
+ "tokens_out": 133,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

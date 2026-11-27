@@ -1,0 +1,6 @@
+{
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"13VH00012345\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Raj Malhotra\",\n  \"job_address\": \"115 Beacon Court\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"2026-01-22\",\n  \"total_amount\": 41250,\n  \"warranty_years\": 10\n}",
+ "seconds": 16.35,
+ "stderr_tail": "",
+ "model": "codex"
+}

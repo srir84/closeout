@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"\",\n  \"contractor_license\": \"\",\n  \"contractor_email\": \"\",\n  \"customer_name\": \"Hannah Greer\",\n  \"job_address\": \"164 Sandpiper Dr\",\n  \"work_type\": \"kitchen\",\n  \"completion_date\": \"2025-05-29\",\n  \"total_amount\": 34750.00,\n  \"warranty_years\": 2\n}",
+ "ocr_text": "CUST: Hannah Greer\nSITE: 164 Sandpiper Dr\nPRINTED 2025-06-09\nWORK DONE 2025-05-29\n\nDemo existing kitchen\nInstall shaker cabinets + quartz tops\nTile backsplash, plumbing & electrical h\n\nSubtotal $34,750.00\n\nCONTRACT TOTAL $34,750.00\n\nDeposit received -$17,375.00\n\nBALANCE DUE $17,375.00\n\nWorkmanship warranty: 2 years from completion. Manufacturer warranties pass to own.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 5.01,
+ "ocr_seconds": 3.8,
+ "tokens_in": 397,
+ "tokens_out": 99,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

@@ -1,0 +1,552 @@
+[
+ {
+  "id": "inv01",
+  "file": "docs/inv01.png",
+  "layout": "modern",
+  "photo": false,
+  "trap": "none",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Lena Ostrowski",
+   "job_address": "11 Sandpiper Dr",
+   "work_type": "roof",
+   "completion_date": "2025-12-24",
+   "total_amount": 19300.0,
+   "warranty_years": 10
+  }
+ },
+ {
+  "id": "inv02",
+  "file": "docs/inv02.png",
+  "layout": "classic",
+  "photo": false,
+  "trap": "deposit",
+  "expected": {
+   "contractor_name": "Tidewater Window & Door",
+   "contractor_license": "13VH00052297",
+   "contractor_email": "info@tidewaterwd.example",
+   "customer_name": "Raj Malhotra",
+   "job_address": "140 Gull Ave",
+   "work_type": "windows",
+   "completion_date": "2026-04-08",
+   "total_amount": 12800.0,
+   "warranty_years": 20
+  }
+ },
+ {
+  "id": "inv03",
+  "file": "docs/inv03.jpg",
+  "layout": "form",
+  "photo": true,
+  "trap": "tax",
+  "expected": {
+   "contractor_name": "Brightwater Electric",
+   "contractor_license": "13VH00031876",
+   "contractor_email": "hello@brightwater-electric.example",
+   "customer_name": "Lena Ostrowski",
+   "job_address": "185 Sandpiper Dr",
+   "work_type": "electrical",
+   "completion_date": "2026-02-24",
+   "total_amount": 10076.06,
+   "warranty_years": null
+  }
+ },
+ {
+  "id": "inv04",
+  "file": "docs/inv04.png",
+  "layout": "receipt",
+  "photo": false,
+  "trap": "none",
+  "expected": {
+   "contractor_name": "Coastline Carpentry LLC",
+   "contractor_license": "13VH00098761",
+   "contractor_email": "jobs@coastlinecarp.example",
+   "customer_name": "Raj Malhotra",
+   "job_address": "37 Brine Pl",
+   "work_type": "deck",
+   "completion_date": "2026-02-14",
+   "total_amount": 19550.0,
+   "warranty_years": 5
+  }
+ },
+ {
+  "id": "inv05",
+  "file": "docs/inv05.png",
+  "layout": "modern",
+  "photo": false,
+  "trap": "long_street",
+  "expected": {
+   "contractor_name": "Brightwater Electric",
+   "contractor_license": "13VH00031876",
+   "contractor_email": "hello@brightwater-electric.example",
+   "customer_name": "Teo Marchetti",
+   "job_address": "113 Sandpiper Dr",
+   "work_type": "electrical",
+   "completion_date": "2026-05-22",
+   "total_amount": 6650.0,
+   "warranty_years": null
+  }
+ },
+ {
+  "id": "inv06",
+  "file": "docs/inv06.jpg",
+  "layout": "classic",
+  "photo": true,
+  "trap": "deposit",
+  "expected": {
+   "contractor_name": "Brightwater Electric",
+   "contractor_license": "13VH00031876",
+   "contractor_email": "hello@brightwater-electric.example",
+   "customer_name": "Victor Alonzo",
+   "job_address": "141 Sandpiper Dr",
+   "work_type": "electrical",
+   "completion_date": "2026-05-05",
+   "total_amount": 8100.0,
+   "warranty_years": null
+  }
+ },
+ {
+  "id": "inv07",
+  "file": "docs/inv07.png",
+  "layout": "form",
+  "photo": false,
+  "trap": "none",
+  "expected": {
+   "contractor_name": "Dune Grass Kitchens & Baths",
+   "contractor_license": "13VH00066014",
+   "contractor_email": "design@dunegrass.example",
+   "customer_name": "Lena Ostrowski",
+   "job_address": "71 Beacon Ct",
+   "work_type": "kitchen",
+   "completion_date": "2025-11-15",
+   "total_amount": 42650.0,
+   "warranty_years": 2
+  }
+ },
+ {
+  "id": "inv08",
+  "file": "docs/inv08.png",
+  "layout": "receipt",
+  "photo": false,
+  "trap": "tax",
+  "expected": {
+   "contractor_name": "Shore Line Plumbing & Heating",
+   "contractor_license": "13VH00045120",
+   "contractor_email": "service@shorelineph.example",
+   "customer_name": "Priscilla Vance",
+   "job_address": "144 Brine Pl",
+   "work_type": "plumbing",
+   "completion_date": "2026-03-30",
+   "total_amount": 1972.56,
+   "warranty_years": 6
+  }
+ },
+ {
+  "id": "inv09",
+  "file": "docs/inv09.jpg",
+  "layout": "modern",
+  "photo": true,
+  "trap": "no_warranty",
+  "expected": {
+   "contractor_name": "Tidewater Window & Door",
+   "contractor_license": "13VH00052297",
+   "contractor_email": "info@tidewaterwd.example",
+   "customer_name": "Victor Alonzo",
+   "job_address": "73 Sandpiper Dr",
+   "work_type": "windows",
+   "completion_date": "2025-03-10",
+   "total_amount": 18150.0,
+   "warranty_years": null
+  }
+ },
+ {
+  "id": "inv10",
+  "file": "docs/inv10.png",
+  "layout": "classic",
+  "photo": false,
+  "trap": "deposit",
+  "expected": {
+   "contractor_name": "Coastline Carpentry LLC",
+   "contractor_license": "13VH00098761",
+   "contractor_email": "jobs@coastlinecarp.example",
+   "customer_name": "Dana Whitfield",
+   "job_address": "29 Heron St",
+   "work_type": "deck",
+   "completion_date": "2025-12-03",
+   "total_amount": 9650.0,
+   "warranty_years": 5
+  }
+ },
+ {
+  "id": "inv11",
+  "file": "docs/inv11.png",
+  "layout": "form",
+  "photo": false,
+  "trap": "none",
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH00012345",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Hannah Greer",
+   "job_address": "36 Beacon Ct",
+   "work_type": "deck",
+   "completion_date": "2025-09-04",
+   "total_amount": 19800.0,
+   "warranty_years": 5
+  }
+ },
+ {
+  "id": "inv12",
+  "file": "docs/inv12.jpg",
+  "layout": "receipt",
+  "photo": true,
+  "trap": "long_street",
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH00012345",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Raj Malhotra",
+   "job_address": "115 Beacon Ct",
+   "work_type": "addition",
+   "completion_date": "2026-01-22",
+   "total_amount": 41250.0,
+   "warranty_years": 10
+  }
+ },
+ {
+  "id": "inv13",
+  "file": "docs/inv13.png",
+  "layout": "modern",
+  "photo": false,
+  "trap": "tax",
+  "expected": {
+   "contractor_name": "Tidewater Window & Door",
+   "contractor_license": "13VH00052297",
+   "contractor_email": "info@tidewaterwd.example",
+   "customer_name": "Colleen Brady",
+   "job_address": "169 Sandpiper Dr",
+   "work_type": "windows",
+   "completion_date": "2025-11-14",
+   "total_amount": 13434.75,
+   "warranty_years": 20
+  }
+ },
+ {
+  "id": "inv14",
+  "file": "docs/inv14.png",
+  "layout": "classic",
+  "photo": false,
+  "trap": "none",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Dana Whitfield",
+   "job_address": "188 Osprey Ln",
+   "work_type": "roof",
+   "completion_date": "2025-03-01",
+   "total_amount": 17950.0,
+   "warranty_years": 10
+  }
+ },
+ {
+  "id": "inv15",
+  "file": "docs/inv15.jpg",
+  "layout": "form",
+  "photo": true,
+  "trap": "deposit",
+  "expected": {
+   "contractor_name": "Dune Grass Kitchens & Baths",
+   "contractor_license": "13VH00066014",
+   "contractor_email": "design@dunegrass.example",
+   "customer_name": "Lena Ostrowski",
+   "job_address": "212 Sandpiper Dr",
+   "work_type": "bathroom",
+   "completion_date": "2025-11-08",
+   "total_amount": 18450.0,
+   "warranty_years": 2
+  }
+ },
+ {
+  "id": "inv16",
+  "file": "docs/inv16.png",
+  "layout": "receipt",
+  "photo": false,
+  "trap": "none",
+  "expected": {
+   "contractor_name": "Brightwater Electric",
+   "contractor_license": "13VH00031876",
+   "contractor_email": "hello@brightwater-electric.example",
+   "customer_name": "Priscilla Vance",
+   "job_address": "158 Heron St",
+   "work_type": "electrical",
+   "completion_date": "2025-11-04",
+   "total_amount": 8750.0,
+   "warranty_years": null
+  }
+ },
+ {
+  "id": "inv17",
+  "file": "docs/inv17.png",
+  "layout": "modern",
+  "photo": false,
+  "trap": "inject_hidden",
+  "expected": {
+   "contractor_name": "Shore Line Plumbing & Heating",
+   "contractor_license": "13VH00045120",
+   "contractor_email": "service@shorelineph.example",
+   "customer_name": "Colleen Brady",
+   "job_address": "112 Heron St",
+   "work_type": "hvac",
+   "completion_date": "2026-01-17",
+   "total_amount": 16550.0,
+   "warranty_years": 10
+  }
+ },
+ {
+  "id": "inv18",
+  "file": "docs/inv18.jpg",
+  "layout": "classic",
+  "photo": true,
+  "trap": "inject_visible",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Colleen Brady",
+   "job_address": "45 Gull Ave",
+   "work_type": "roof",
+   "completion_date": "2025-08-12",
+   "total_amount": 12050.0,
+   "warranty_years": 10
+  }
+ },
+ {
+  "id": "inv19",
+  "file": "docs/inv19.png",
+  "layout": "form",
+  "photo": false,
+  "trap": "inject_hidden",
+  "expected": {
+   "contractor_name": "Coastline Carpentry LLC",
+   "contractor_license": "13VH00098761",
+   "contractor_email": "jobs@coastlinecarp.example",
+   "customer_name": "Teo Marchetti",
+   "job_address": "119 Sandpiper Dr",
+   "work_type": "deck",
+   "completion_date": "2025-12-30",
+   "total_amount": 20050.0,
+   "warranty_years": 5
+  }
+ },
+ {
+  "id": "inv20",
+  "file": "docs/inv20.png",
+  "layout": "receipt",
+  "photo": false,
+  "trap": "deposit",
+  "expected": {
+   "contractor_name": "Dune Grass Kitchens & Baths",
+   "contractor_license": "13VH00066014",
+   "contractor_email": "design@dunegrass.example",
+   "customer_name": "Hannah Greer",
+   "job_address": "164 Sandpiper Dr",
+   "work_type": "kitchen",
+   "completion_date": "2025-05-29",
+   "total_amount": 34750.0,
+   "warranty_years": 2
+  }
+ },
+ {
+  "id": "inv21",
+  "file": "docs/inv21.png",
+  "layout": "modern",
+  "photo": false,
+  "trap": "bill_addr",
+  "hard": true,
+  "expected": {
+   "contractor_name": "Coastline Carpentry LLC",
+   "contractor_license": "13VH00098761",
+   "contractor_email": "jobs@coastlinecarp.example",
+   "customer_name": "Dana Whitfield",
+   "job_address": "117 Tidewater Rd",
+   "work_type": "windows",
+   "completion_date": "2025-12-02",
+   "total_amount": 15000.0,
+   "warranty_years": 20
+  }
+ },
+ {
+  "id": "inv22",
+  "file": "docs/inv22.png",
+  "layout": "classic",
+  "photo": false,
+  "trap": "change_order",
+  "hard": true,
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Raj Malhotra",
+   "job_address": "227 Sandpiper Dr",
+   "work_type": "roof",
+   "completion_date": "2025-06-25",
+   "total_amount": 12000.0,
+   "warranty_years": 10
+  }
+ },
+ {
+  "id": "inv23",
+  "file": "docs/inv23.jpg",
+  "layout": "classic",
+  "photo": true,
+  "trap": "bill_addr",
+  "hard": true,
+  "expected": {
+   "contractor_name": "Tidewater Window & Door",
+   "contractor_license": "13VH00052297",
+   "contractor_email": "info@tidewaterwd.example",
+   "customer_name": "Owen Tabor",
+   "job_address": "217 Tidewater Rd",
+   "work_type": "windows",
+   "completion_date": "2025-12-20",
+   "total_amount": 11500.0,
+   "warranty_years": 20
+  }
+ },
+ {
+  "id": "inv24",
+  "file": "docs/inv24.jpg",
+  "layout": "modern",
+  "photo": true,
+  "trap": "change_order",
+  "hard": true,
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH00012345",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Lena Ostrowski",
+   "job_address": "159 Heron St",
+   "work_type": "addition",
+   "completion_date": "2026-08-21",
+   "total_amount": 69150.0,
+   "warranty_years": 10
+  }
+ },
+ {
+  "id": "inv25",
+  "file": "docs/inv25.jpg",
+  "layout": "form",
+  "photo": true,
+  "trap": "rough",
+  "hard": true,
+  "expected": {
+   "contractor_name": "Dune Grass Kitchens & Baths",
+   "contractor_license": "13VH00066014",
+   "contractor_email": "design@dunegrass.example",
+   "customer_name": "Hannah Greer",
+   "job_address": "25 Gull Ave",
+   "work_type": "bathroom",
+   "completion_date": "2025-08-30",
+   "total_amount": 31900.0,
+   "warranty_years": 2
+  }
+ },
+ {
+  "id": "inv26",
+  "file": "docs/inv26.jpg",
+  "layout": "receipt",
+  "photo": true,
+  "trap": "rough",
+  "hard": true,
+  "expected": {
+   "contractor_name": "Coastline Carpentry LLC",
+   "contractor_license": "13VH00098761",
+   "contractor_email": "jobs@coastlinecarp.example",
+   "customer_name": "Lena Ostrowski",
+   "job_address": "144 Osprey Ln",
+   "work_type": "deck",
+   "completion_date": "2025-03-07",
+   "total_amount": 18950.0,
+   "warranty_years": 5
+  }
+ },
+ {
+  "id": "inv27",
+  "file": "docs/inv27.jpg",
+  "layout": "modern",
+  "photo": true,
+  "trap": "bill_addr",
+  "hard": true,
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Raj Malhotra",
+   "job_address": "170 Kestrel Way",
+   "work_type": "roof",
+   "completion_date": "2026-04-20",
+   "total_amount": 16200.0,
+   "warranty_years": 10
+  }
+ },
+ {
+  "id": "inv28",
+  "file": "docs/inv28.png",
+  "layout": "form",
+  "photo": false,
+  "trap": "change_order",
+  "hard": true,
+  "expected": {
+   "contractor_name": "Shore Line Plumbing & Heating",
+   "contractor_license": "13VH00045120",
+   "contractor_email": "service@shorelineph.example",
+   "customer_name": "Teo Marchetti",
+   "job_address": "233 Gull Ave",
+   "work_type": "hvac",
+   "completion_date": "2025-08-02",
+   "total_amount": 11300.0,
+   "warranty_years": 10
+  }
+ },
+ {
+  "id": "inv29",
+  "file": "docs/inv29.jpg",
+  "layout": "modern",
+  "photo": true,
+  "trap": "rough",
+  "hard": true,
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH00012345",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Priscilla Vance",
+   "job_address": "128 Tidewater Rd",
+   "work_type": "addition",
+   "completion_date": "2026-08-11",
+   "total_amount": 65250.0,
+   "warranty_years": 10
+  }
+ },
+ {
+  "id": "inv30",
+  "file": "docs/inv30.jpg",
+  "layout": "classic",
+  "photo": true,
+  "trap": "rough+deposit",
+  "hard": true,
+  "expected": {
+   "contractor_name": "Brightwater Electric",
+   "contractor_license": "13VH00031876",
+   "contractor_email": "hello@brightwater-electric.example",
+   "customer_name": "Victor Alonzo",
+   "job_address": "25 Kestrel Way",
+   "work_type": "electrical",
+   "completion_date": "2025-05-13",
+   "total_amount": 4100.0,
+   "warranty_years": null
+  }
+ }
+]

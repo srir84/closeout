@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"Raj Malhotra\",\n  \"contractor_license\": \"\",\n  \"contractor_email\": \"\",\n  \"customer_name\": \"Raj Malhotra\",\n  \"job_address\": \"227 Sandpiper Dr\",\n  \"work_type\": \"roof\",\n  \"completion_date\": \"2025-06-25\",\n  \"total_amount\": 12000,\n  \"warranty_years\": 10\n}",
+ "ocr_text": "Statement for: Raj Malhotra\nProperty: 227 Sandpiper Dr, Manasquan NJ\nDate of statement: July 7, 2025\nProject finished on June 25, 2025\n\nDescription of work\nTear off 1 layer asphalt shingles\nIce & water shield, synthetic underlayment\nInstall architectural shingles, ridge vent\n\nOriginal contract $10,200.00\nChange order #1 (added scope) +$1,800.00\nAdjusted subtotal $12,000.00\n\nTOTAL $12,000.00\n\nWorkmanship warranty: 10 years from completion. Manufacturer warranties pass to owner.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 5.03,
+ "ocr_seconds": 3.81,
+ "tokens_in": 417,
+ "tokens_out": 103,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

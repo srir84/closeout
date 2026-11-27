@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"HARBOR & PINE BUILDERS\",\n  \"contractor_license\": \"13VH00012345\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Hannah Greer\",\n  \"job_address\": \"36 Beacon Ct\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2025-09-04\",\n  \"total_amount\": 19800,\n  \"warranty_years\": 5\n}",
+ "seconds": 4.93,
+ "tokens_in": 2226,
+ "tokens_out": 121,
+ "model": "qwen3-vl:4b-instruct"
+}

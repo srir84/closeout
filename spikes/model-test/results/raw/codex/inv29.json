@@ -1,0 +1,6 @@
+{
+ "text": "{\"contractor_name\":\"Harbor & Pine Builders\",\"contractor_license\":\"13VH00012345\",\"contractor_email\":\"office@harborpine.example\",\"customer_name\":\"Priscilla Vance\",\"job_address\":\"128 Tidewater Rd\",\"work_type\":\"addition\",\"completion_date\":\"2026-08-11\",\"total_amount\":65250,\"warranty_years\":10}",
+ "seconds": 22.5,
+ "stderr_tail": "",
+ "model": "codex"
+}

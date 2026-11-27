@@ -1,0 +1,6 @@
+{
+ "text": "{\"contractor_name\":\"Inlet Roofing Co.\",\"contractor_license\":\"13VH00077302\",\"contractor_email\":\"estimates@inletroof.example\",\"customer_name\":\"Raj Malhotra\",\"job_address\":\"170 Kestrel Way\",\"work_type\":\"roof\",\"completion_date\":\"2026-04-20\",\"total_amount\":16200,\"warranty_years\":10}",
+ "seconds": 25.73,
+ "stderr_tail": "",
+ "model": "codex"
+}

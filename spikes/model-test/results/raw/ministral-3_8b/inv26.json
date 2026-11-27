@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Coastline Carpentry LLC\",\n  \"contractor_license\": \"13VH00098761\",\n  \"contractor_email\": \"jobs@coastlinecarp.example\",\n  \"customer_name\": \"Lane Ostrowski\",\n  \"job_address\": \"146 Geprey Ln\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2023-05-25\",\n  \"total_amount\": 18950.00,\n  \"warranty_years\": 5\n}",
+ "seconds": 3.94,
+ "tokens_in": 880,
+ "tokens_out": 132,
+ "model": "ministral-3:8b"
+}

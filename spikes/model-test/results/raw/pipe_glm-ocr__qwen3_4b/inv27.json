@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"the company that did the work\",\n  \"contractor_license\": \"the contractor's registration / HIC number, exactly as printed\",\n  \"contractor_email\": \"the contractor's email address as printed in the letterhead\",\n  \"customer_name\": \"the homeowner billed\",\n  \"job_address\": \"street line of the job site only (number and street, no town), e.g. \\\"12 Main St\\\"\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"the date the work was finished (not the invoice or print date), as YYYY-MM-DD\",\n  \"total_amount\": 16200.00,\n  \"warranty_years\": null\n  }",
+ "ocr_text": "INVOICE\n\nInvoice # 9871    Invoice date: 27-Apr-26\nWork completed: 20-Apr-26\n\nBILL TO\nRaj Malhotra\n9 Elm Ridge Rd, Morristown, NJ 07960\n\nJOB SITE\n170 Kestrel Way\nManasquan, NJ 08736\n\n\u2022 Tear off 1 layer asphalt shingles\n\u2022 Ice & water shield, synthetic underlayment\n\u2022 Install architectural shingles, ridge vent\n\nSubtotal $16,200.00\nTOTAL $16,200.00\n\nWorkmanship warranty: 10 years from completion. Manufacturer warranties pass to owner.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 4.61,
+ "ocr_seconds": 2.83,
+ "tokens_in": 413,
+ "tokens_out": 154,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

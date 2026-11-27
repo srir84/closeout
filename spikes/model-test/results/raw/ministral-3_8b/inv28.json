@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"SHORE LINE PLUMBING & HEATING\",\n  \"contractor_license\": \"13VH00045120\",\n  \"contractor_email\": \"service@shorelineph.example\",\n  \"customer_name\": \"Teo Marchetti\",\n  \"job_address\": \"233 Gull Ave\",\n  \"work_type\": \"hvac\",\n  \"completion_date\": \"2025-08-02\",\n  \"total_amount\": 11300.00,\n  \"warranty_years\": 10\n}",
+ "seconds": 4.81,
+ "tokens_in": 1244,
+ "tokens_out": 135,
+ "model": "ministral-3:8b"
+}

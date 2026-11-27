@@ -1,0 +1,6 @@
+{
+ "text": "{\"contractor_name\":\"Brightwater Electric\",\"contractor_license\":\"13VH10023456\",\"contractor_email\":\"jobs@brightwater-electric.example\",\"customer_name\":\"Victor Akano\",\"job_address\":\"25 Kestrel Way\",\"work_type\":\"electrical\",\"completion_date\":\"2025-05-13\",\"total_amount\":4100,\"warranty_years\":null}",
+ "seconds": 30.36,
+ "stderr_tail": "",
+ "model": "codex"
+}

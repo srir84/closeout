@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"Tidewater Window & Door\",\n  \"contractor_license\": \"13VH00052297\",\n  \"contractor_email\": \"info@tidewaterwd.example\",\n  \"customer_name\": \"Victor Alonzo\",\n  \"job_address\": \"73 Sandpiper Dr\",\n  \"work_type\": \"windows\",\n  \"completion_date\": \"2025-03-10\",\n  \"total_amount\": 18150.00,\n  \"warranty_years\": null\n}",
+ "ocr_text": "Tidewater Window & Door\nNJ HIC Reg. # 13VH00052297 | info@tidewaterwd.example | (732) 555-0166\n\nINVOICE\nInvoice # 6299    Invoice date: March 17, 2025\nWork completed: March 10, 2025\n\nBILL TO\nVictor Alonzo\n73 Sandpiper Dr\nManasquan, NJ 08736\n\n\u2022 Replace 11 double-hung windows\n\u2022 Capping & caulk\n\u2022 Haul away old units\n\nSubtotal $18,150.00\nTOTAL $18,150.00\n\nManufacturer warranties apply. No separate workmanship warranty is provided.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 4.87,
+ "ocr_seconds": 3.35,
+ "tokens_in": 436,
+ "tokens_out": 124,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

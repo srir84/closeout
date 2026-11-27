@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"DUNE GRASS KITCHENS & BATHS\",\n  \"contractor_license\": \"13VH00066014\",\n  \"contractor_email\": \"design@dunegrass.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"212 Sandpiper Dr\",\n  \"work_type\": \"bathroom\",\n  \"completion_date\": \"2025-11-08\",\n  \"total_amount\": 18450.00,\n  \"warranty_years\": 2\n}",
+ "seconds": 5.31,
+ "tokens_in": 1280,
+ "tokens_out": 138,
+ "model": "ministral-3:8b"
+}

@@ -1,0 +1,7 @@
+{
+ "text": "```json\n{\n  \"contractor_name\": \"Brightwater Electric\",\n  \"contractor_license\": \"13VH00031876\",\n  \"contractor_email\": \"hello@brightwater-electric.example\",\n  \"customer_name\": \"Priscilla Vance\",\n  \"job_address\": \"158 Heron St\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2025-11-04\",\n  \"total_amount\": 8750.00,\n  \"warranty_years\": null\n}\n```",
+ "seconds": 4.59,
+ "tokens_in": 1420,
+ "tokens_out": 139,
+ "model": "gemma4:12b"
+}

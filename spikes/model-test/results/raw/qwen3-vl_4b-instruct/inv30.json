@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Brightwater Electric\",\n  \"contractor_license\": \"13VH00031876\",\n  \"contractor_email\": \"hello@brightwater-electric.example\",\n  \"customer_name\": \"Victor Alonzo\",\n  \"job_address\": \"25 Kestrel Way\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2025-05-13\",\n  \"total_amount\": 4100.0,\n  \"warranty_years\": null\n}",
+ "seconds": 2.95,
+ "tokens_in": 1310,
+ "tokens_out": 121,
+ "model": "qwen3-vl:4b-instruct"
+}

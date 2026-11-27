@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"the company that did the work\",\n  \"contractor_license\": \"the contractor's registration / HIC number, exactly as printed\",\n  \"contractor_email\": \"the contractor's email address as printed in the letterhead\",\n  \"customer_name\": \"the homeowner billed\",\n  \"job_address\": \"street line of the job site only (number and street, no town), e.g. \\\"12 Main St\\\"\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"the date the work was finished (not the invoice or print date), as YYYY-MM-DD\",\n  \"total_amount\": 19300.00,\n  \"warranty_years\": null\n  }",
+ "ocr_text": "INVOICE\n\nInvoice # 9910  Invoice date: December 30, 2025\nWork completed: December 24, 2025\n\nBILL TO\nLena Ostrowski\n11 Sandpiper Dr\nManasquan, NJ 08736\n\n\u2022 Tear off 1 layer asphalt shingles\n\u2022 Ice & water shield, synthetic underlayment\n\u2022 Install architectural shingles, ridge vent\n\nSubtotal $19,300.00\nTOTAL $19,300.00\n\nWorkmanship warranty: 10 years from completion. Manufacturer warranties pass to owner.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 6.92,
+ "ocr_seconds": 4.53,
+ "tokens_in": 398,
+ "tokens_out": 154,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

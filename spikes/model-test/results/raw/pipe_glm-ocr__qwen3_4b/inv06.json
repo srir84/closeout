@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"the company above\",\n  \"contractor_license\": \"\",\n  \"contractor_email\": \"\",\n  \"customer_name\": \"Victor Alonzo\",\n  \"job_address\": \"141 Sandpiper Drive\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2026-05-05\",\n  \"total_amount\": 8100.0,\n  \"warranty_years\": null\n}",
+ "ocr_text": "Statement for: Victor Alonzo\nProperty: 141 Sandpiper Drive, Manasquan NJ\nDate of statement: 2026-05-16\nProject finished on 2026-05-05\n\nDescription of work\nUpgrade service to 200A panel\nAdd 4 circuits, whole-house surge\nUtility coordination\n\nSubtotal $8,100.00\n\nCONTRACT TOTAL $8,100.00\n\nDeposit received -$4,050.00\n\nBALANCE DUE $4,050.00\n\nManufacturer warranties apply. No separate workmanship warranty is provided.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 4.12,
+ "ocr_seconds": 2.87,
+ "tokens_in": 403,
+ "tokens_out": 101,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

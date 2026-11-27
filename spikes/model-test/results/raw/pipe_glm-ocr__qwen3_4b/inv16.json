@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"\",\n  \"contractor_license\": \"\",\n  \"contractor_email\": \"\",\n  \"customer_name\": \"Priscilla Vance\",\n  \"job_address\": \"158 Heron St\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2025-11-04\",\n  \"total_amount\": 8750.0,\n  \"warranty_years\": null\n}",
+ "ocr_text": "CUST: Priscilla Vance\nSITE: 158 Heron St\nPRINTED 2025-11-09\nWORK DONE 11/04/2025\n\nUpgrade service to 200A panel\nAdd 4 circuits, whole-house surge\nUtility coordination\n\nSubtotal $8,750.00\n\nTOTAL $8,750.00\n\nManufacturer warranties apply. No separate workmanship warranty is provided.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 4.68,
+ "ocr_seconds": 3.63,
+ "tokens_in": 362,
+ "tokens_out": 95,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

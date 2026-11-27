@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"DUNE GRASS KITCHENS & BATHS\",\n  \"contractor_license\": \"HIC 131400088014\",\n  \"contractor_email\": \"design@dunegrass.example\",\n  \"customer_name\": \"Hannah Greer\",\n  \"job_address\": \"25 Gull Ave\",\n  \"work_type\": \"bathroom\",\n  \"completion_date\": \"2025-08-30\",\n  \"total_amount\": 31900,\n  \"warranty_years\": 2\n}",
+ "seconds": 2.94,
+ "tokens_in": 1310,
+ "tokens_out": 128,
+ "model": "qwen3-vl:4b-instruct"
+}

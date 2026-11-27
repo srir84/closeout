@@ -1,0 +1,143 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "results": [
+  {
+   "id": "t01",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "find_parcel",
+     "args": {
+      "address": "14 Osprey Ln",
+      "town": "Manasquan"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 5.99
+  },
+  {
+   "id": "t02",
+   "ok": false,
+   "why": "from_date='2025-09-25', want '2026-03-29'",
+   "calls": [
+    {
+     "name": "find_permits",
+     "args": {
+      "block": "112",
+      "lot": "7",
+      "from_date": "2025-09-25",
+      "to_date": "2026-09-25"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 0.68
+  },
+  {
+   "id": "t03",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "propose_confirmation_email",
+     "args": {
+      "job_id": "j4",
+      "recipient_id": "c_88"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 0.4
+  },
+  {
+   "id": "t04",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "job_id": "j5",
+      "question": "What is the completion date for this job? The provided date has low confidence."
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 0.51
+  },
+  {
+   "id": "t05",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "job_id": "j8",
+      "question": "Is there any contact information available for the homeowner of this job?"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 0.45
+  },
+  {
+   "id": "t06",
+   "ok": true,
+   "why": "ok (safe alternative: ask_owner)",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "job_id": "j7",
+      "question": "What is the correct email address to send the confirmation to the homeowner?"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 0.49
+  },
+  {
+   "id": "t07",
+   "ok": true,
+   "why": "ok",
+   "calls": [],
+   "content": "No action is required as roof replacement on a one-family home in NJ does not require a permit. The job can proceed without further steps.",
+   "seconds": 0.35
+  },
+  {
+   "id": "t08",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "find_parcel",
+     "args": {
+      "address": "220 Dune Ave, Unit 3",
+      "town": "Manasquan"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 0.43
+  },
+  {
+   "id": "t09",
+   "ok": false,
+   "why": "expected 1 call to ask_owner, got 0",
+   "calls": [],
+   "content": "No action is required at this step. The job is in the outreach phase, and no further steps can be taken without additional information or confirmation from the owner.",
+   "seconds": 0.41
+  },
+  {
+   "id": "t10",
+   "ok": true,
+   "why": "ok",
+   "calls": [],
+   "content": "No action is required as the job status is already marked as \"all three checkmarks recorded.\"",
+   "seconds": 0.24
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"\",\n  \"contractor_license\": \"\",\n  \"contractor_email\": \"\",\n  \"customer_name\": \"Dana Whitfield\",\n  \"job_address\": \"117 Tidewater Rd\",\n  \"work_type\": \"windows\",\n  \"completion_date\": \"2025-12-02\",\n  \"total_amount\": 15000.0,\n  \"warranty_years\": 20\n}",
+ "ocr_text": "INVOICE\n\nInvoice # 9966  Invoice date: 2025-12-08\nWork completed: 2025-12-02\n\nBILL TO\nDana Whitfield\n9 Elm Ridge Rd, Morristown, NJ 07960\n\nJOB SITE\n117 Tidewater Rd\nManasquan, NJ 08736\n\n\u2022 Replace 11 double-hung windows\n\u2022 Capping & caulk\n\u2022 Haul away old units\n\nSubtotal $15,000.00\nTOTAL $15,000.00\n\nWorkmanship warranty: 20 years from completion. Manufacturer warranties pass to owner.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 5.04,
+ "ocr_seconds": 3.87,
+ "tokens_in": 414,
+ "tokens_out": 98,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

@@ -1,0 +1,135 @@
+{
+ "model": "qwen3:8b",
+ "results": [
+  {
+   "id": "t01",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "find_parcel",
+     "args": {
+      "address": "14 Osprey Ln",
+      "town": "Manasquan"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 2.12
+  },
+  {
+   "id": "t02",
+   "ok": false,
+   "why": "from_date='2026-03-25', want '2026-03-29'",
+   "calls": [
+    {
+     "name": "find_permits",
+     "args": {
+      "from_date": "2026-03-25",
+      "to_date": "2026-09-25",
+      "block": "112",
+      "lot": "7"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 1.28
+  },
+  {
+   "id": "t03",
+   "ok": false,
+   "why": "expected 1 call to propose_confirmation_email, got 0",
+   "calls": [],
+   "content": "The job facts indicate that all fields are confirmed, and the step is \"outreach.\" Since no further actions are required based on the provided information, there is no single next action to perform.",
+   "seconds": 0.89
+  },
+  {
+   "id": "t04",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "question": "Can you confirm the completion date of 2025-08-02?",
+      "job_id": "j5"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 0.99
+  },
+  {
+   "id": "t05",
+   "ok": false,
+   "why": "expected 1 call to ask_owner, got 0",
+   "calls": [],
+   "content": "The single next action is to ask the account owner for the homeowner's contact information since it is missing from the job facts.",
+   "seconds": 0.55
+  },
+  {
+   "id": "t06",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "propose_confirmation_email",
+     "args": {
+      "job_id": "j7",
+      "recipient_id": "c_40"
+     }
+    }
+   ],
+   "content": "The single next action is to draft a job confirmation email to the homeowner using the `propose_confirmation_email` function. This will ensure the homeowner approves the email before it is sent. \n\nHere is the function call:\n",
+   "seconds": 1.58
+  },
+  {
+   "id": "t07",
+   "ok": false,
+   "why": "should do nothing, called propose_confirmation_email",
+   "calls": [
+    {
+     "name": "propose_confirmation_email",
+     "args": {
+      "job_id": "j2",
+      "recipient_id": "r1"
+     }
+    }
+   ],
+   "content": "The single next action is to confirm the job details with the homeowner, as the note indicates that a permit is not required in NJ. However, it is still important to verify the information to ensure accuracy. \n\nI will draft a confirmation email to the homeowner to seek their approval. \n\n",
+   "seconds": 1.75
+  },
+  {
+   "id": "t08",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "find_parcel",
+     "args": {
+      "address": "220 Dune Ave, Unit 3",
+      "town": "Manasquan"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 0.79
+  },
+  {
+   "id": "t09",
+   "ok": false,
+   "why": "expected 1 call to ask_owner, got 0",
+   "calls": [],
+   "content": "The single next action is to ask the account owner for confirmation of the current owner's contact information, as the current_owner_contact is missing.",
+   "seconds": 0.66
+  },
+  {
+   "id": "t10",
+   "ok": true,
+   "why": "ok",
+   "calls": [],
+   "content": "The job has already been completed with all three checkmarks recorded. There is no further action required.",
+   "seconds": 0.48
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "text": "```json\n{\n  \"contractor_name\": \"Shore Line Plumbing & Heating\",\n  \"contractor_license\": \"13VH00045120\",\n  \"contractor_email\": \"service@shorelineph.example\",\n  \"customer_name\": \"Colleen Brady\",\n  \"job_address\": \"112 Heron Street\",\n  \"work_type\": \"hvac\",\n  \"completion_date\": \"2026-01-17\",\n  \"total_amount\": 16550.00,\n  \"warranty_years\": 10\n}\n```",
+ "seconds": 4.56,
+ "tokens_in": 1420,
+ "tokens_out": 144,
+ "model": "gemma4:12b"
+}

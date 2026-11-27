@@ -1,0 +1,7 @@
+{
+ "text": "```json\n{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"NJ HIC Reg. #13V00012345\",\n  \"contractor_email\": \"office@netborgine.example\",\n  \"customer_name\": \"Priscilla Vance\",\n  \"job_address\": \"128 Tidewater Rd\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"11-Aug-26\",\n  \"total_amount\": \"65,250.00\",\n  \"warranty_years\": 10\n}\n```",
+ "seconds": 1.45,
+ "tokens_in": 566,
+ "tokens_out": 149,
+ "model": "gemma4:e4b"
+}

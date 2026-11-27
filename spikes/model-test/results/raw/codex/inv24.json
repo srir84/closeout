@@ -1,0 +1,6 @@
+{
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"13VH00012345\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"159 Heron St\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"2026-08-21\",\n  \"total_amount\": 69150,\n  \"warranty_years\": 10\n}",
+ "seconds": 17.14,
+ "stderr_tail": "",
+ "model": "codex"
+}

@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"BRIGHTWATER ELECTRIC\",\n  \"contractor_license\": \"13VH0:00031876\",\n  \"contractor_email\": \"hello@brightwater-electric.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"185 Sandpiper Drive\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2026-02-24\",\n  \"total_amount\": 10076.06,\n  \"warranty_years\": null\n}",
+ "ocr_text": "BRIGHTWATER ELECTRIC\nHIC# 13VH00031876 hello@brightwater-electric.example\n\nCUSTOMER Lena Ostrowski\n\nJOB ADDRESS 185 Sandpiper Drive, Manasquan\n\nDATE 03/06/2026\n\nJOB COMPLETED 02/24/2026\n\nDESCRIPTION OF WORK\nupgrade service to 200A panel\nAdd 4 circuits, whole-house surge\nutility coordination\n\nSubtotal $9,450.00\nNJ sales tax 6.625% $626.06\nTOTAL $10,076.06\n\nManufacturer warranties apply. No separate workmanship warranty is provided.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 4.26,
+ "ocr_seconds": 2.82,
+ "tokens_in": 420,
+ "tokens_out": 129,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

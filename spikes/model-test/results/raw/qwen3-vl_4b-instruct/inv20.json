@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Dune Grass Kitchens & Baths\",\n  \"contractor_license\": \"REG 13VH00066014\",\n  \"contractor_email\": \"design@dunegrass.example\",\n  \"customer_name\": \"Hannah Greer\",\n  \"job_address\": \"164 Sandpiper Dr\",\n  \"work_type\": \"kitchen\",\n  \"completion_date\": \"2025-05-29\",\n  \"total_amount\": 34750.0,\n  \"warranty_years\": 2\n}",
+ "seconds": 4.8,
+ "tokens_in": 2226,
+ "tokens_out": 127,
+ "model": "qwen3-vl:4b-instruct"
+}

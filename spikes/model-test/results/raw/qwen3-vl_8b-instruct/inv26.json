@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Coastline Carpentry LLC\",\n  \"contractor_license\": \"REG 13VH00098761\",\n  \"contractor_email\": \"johs@coastlinecorp.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"144 Osprey Ln\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2025-03-25\",\n  \"total_amount\": 18950.00,\n  \"warranty_years\": 5\n}",
+ "seconds": 6.41,
+ "tokens_in": 1310,
+ "tokens_out": 131,
+ "model": "qwen3-vl:8b-instruct"
+}

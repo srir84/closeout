@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"Brightwater Electric\",\n  \"contractor_license\": \"23VH0003a1876\",\n  \"contractor_email\": \"hello@brightwater-electric.example\",\n  \"customer_name\": \"Victor Alonzo\",\n  \"job_address\": \"25 Kestrel Way\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2025-05-13\",\n  \"total_amount\": 4100.00,\n  \"warranty_years\": null\n}",
+ "ocr_text": "Brightwater Electric\nLicensed & Insured - Registration No. 23VH0003a1876\nManasquan, New Jersey - hello@brightwater-electric.example\n\nStatement for: Victor Alonzo\nProperty: 25 Kestrel Way, Manasquan NJ\nDate of statement: 05/19/2025\nProject finished on 05/13/2025\n\nDescription of work\nUpgrade service to 200A panel\nAdd 4 circuits, whole-house surge\nUtility coordination\n\nSubtotal $4,100.00\n\nCONTRACT TOTAL $4,100.00\n\nDeposit received -$1,640.00\n\nBALANCE DUE $2,460.00\n\nManufacturer warranties apply. No separate workmanship warranty is provided.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 2.79,
+ "ocr_seconds": 1.36,
+ "tokens_in": 444,
+ "tokens_out": 123,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

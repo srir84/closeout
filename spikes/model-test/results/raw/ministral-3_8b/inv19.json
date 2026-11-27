@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"COASTLINE CARPENTRY LLC\",\n  \"contractor_license\": \"13VH00098761\",\n  \"contractor_email\": \"jobs@coastlinecarp.example\",\n  \"customer_name\": \"Teo Marchetti\",\n  \"job_address\": \"119 Sandpiper Dr\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2025-12-30\",\n  \"total_amount\": 20050.00,\n  \"warranty_years\": 5\n}",
+ "seconds": 5.03,
+ "tokens_in": 1244,
+ "tokens_out": 131,
+ "model": "ministral-3:8b"
+}

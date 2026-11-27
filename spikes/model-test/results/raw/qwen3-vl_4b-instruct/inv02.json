@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Tidewater Window & Door\",\n  \"contractor_license\": \"13VH00052297\",\n  \"contractor_email\": \"info@tidewaterwd.example\",\n  \"customer_name\": \"Raj Malhotra\",\n  \"job_address\": \"140 Gull Ave\",\n  \"work_type\": \"windows\",\n  \"completion_date\": \"2026-04-08\",\n  \"total_amount\": 12800,\n  \"warranty_years\": 20\n}",
+ "seconds": 4.58,
+ "tokens_in": 2226,
+ "tokens_out": 123,
+ "model": "qwen3-vl:4b-instruct"
+}

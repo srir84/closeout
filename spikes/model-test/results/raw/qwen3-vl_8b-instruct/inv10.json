@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Coastline Carpentry LLC\",\n  \"contractor_license\": \"13VH00098761\",\n  \"contractor_email\": \"jobs@coastlinecarp.example\",\n  \"customer_name\": \"Dana Whitfield\",\n  \"job_address\": \"29 Heron St\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2025-12-03\",\n  \"total_amount\": 9650,\n  \"warranty_years\": 5\n}",
+ "seconds": 8.02,
+ "tokens_in": 2226,
+ "tokens_out": 121,
+ "model": "qwen3-vl:8b-instruct"
+}

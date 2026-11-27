@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"HIC Reg. # 13/H00012345\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Priscilla Vance\",\n  \"job_address\": \"126 Tidewater Rd\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"2026-08-11\",\n  \"total_amount\": 65250.00,\n  \"warranty_years\": 10\n}",
+ "seconds": 4.0,
+ "tokens_in": 880,
+ "tokens_out": 136,
+ "model": "ministral-3:8b"
+}

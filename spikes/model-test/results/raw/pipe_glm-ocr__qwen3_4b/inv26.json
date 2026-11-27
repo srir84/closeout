@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"COastline Carpentry LLC\",\n  \"contractor_license\": \"REQ 13VH00098761\",\n  \"contractor_email\": \"johns@coastlinecarp.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"144 Osprey Ln\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2025-03-07\",\n  \"total_amount\": 18950.00,\n  \"warranty_years\": 8\n}",
+ "ocr_text": "COastline Carpentry LLC\nREQ 13VH00098761\njohns@coastlinecarp.example\n\nCUST: Lena Ostrowski\nSITE: 144 Osprey Ln\nPRINTED 2025-03-15\nWORK DONE 7-Mar-25\n\nRemove existing deck\nBuild 14x18 composite deck w/ railings\nFootings per plan\n\nSubtotal $18,950.00\nTOTAL $18,950.00\n\nWorkmanship warranty: 8 years from completion. Manufacturer warranty goes to us\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 2.59,
+ "ocr_seconds": 1.13,
+ "tokens_in": 397,
+ "tokens_out": 131,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

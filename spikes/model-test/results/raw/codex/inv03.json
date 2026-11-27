@@ -1,0 +1,6 @@
+{
+ "text": "{\"contractor_name\":\"BRIGHTWATER ELECTRIC\",\"contractor_license\":\"13VH00031876\",\"contractor_email\":\"hello@brightwater-electric.example\",\"customer_name\":\"Lena Ostrowski\",\"job_address\":\"185 Sandpiper Drive\",\"work_type\":\"electrical\",\"completion_date\":\"2026-02-24\",\"total_amount\":10076.06,\"warranty_years\":null}",
+ "seconds": 19.08,
+ "stderr_tail": "",
+ "model": "codex"
+}

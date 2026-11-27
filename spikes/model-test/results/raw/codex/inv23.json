@@ -1,0 +1,6 @@
+{
+ "text": "{\"contractor_name\":\"Tidewater Window & Door\",\"contractor_license\":\"13VH00052297\",\"contractor_email\":\"info@tidewaterwd.example\",\"customer_name\":\"Owen Tabor\",\"job_address\":\"217 Tidewater Rd\",\"work_type\":\"windows\",\"completion_date\":\"2025-12-20\",\"total_amount\":11500,\"warranty_years\":20}",
+ "seconds": 20.06,
+ "stderr_tail": "",
+ "model": "codex"
+}

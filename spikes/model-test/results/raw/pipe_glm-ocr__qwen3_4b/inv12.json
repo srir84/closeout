@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"\",\n  \"contractor_license\": \"\",\n  \"contractor_email\": \"\",\n  \"customer_name\": \"Raj Malhotra\",\n  \"job_address\": \"115 Beacon Court\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"2026-01-22\",\n  \"total_amount\": 41250.00,\n  \"warranty_years\": 10\n}",
+ "ocr_text": "CUST: Raj Malhotra\nSITE: 115 Beacon Court\nPRINTED 2026-01-27\nWORK DONE 22-Jan-26\n\nFrame 12x16 sunroom addition\nWindows, insulation, drywall\nTie into existing roof\n\nSubtotal $41,250.00\nTOTAL $41,250.00\n\nWorkmanship warranty: 10 years from completion. Manufacturer warranties pass to o\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 3.9,
+ "ocr_seconds": 2.76,
+ "tokens_in": 366,
+ "tokens_out": 99,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

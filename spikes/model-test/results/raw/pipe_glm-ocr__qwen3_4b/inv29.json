@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"NJ HIC Reg # 13UH00012345\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Priscilla Vance\",\n  \"job_address\": \"128 Tidewater Rd\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"2026-08-11\",\n  \"total_amount\": 65250.00,\n  \"warranty_years\": 10\n}",
+ "ocr_text": "Harbor & Pine Builders\nNJ HIC Reg # 13UH00012345 | office@harborpine.example | (732) 555-0110\n\nINVOICE\n\nInvoice # 5642  Invoice date: 22-Aug-26\nWork completed: 11-Aug-26\n\nBILL TO\nPriscilla Vance\n128 Tidewater Rd\nManasquan, NJ 08736\n\n\u2022 Frame 12x16 sunroom addition\n\u2022 Windows, insulation, drywall\n\u2022 Tie into existing roof\n\nSubtotal $65,250.00\nTOTAL $65,250.00\n\nWorkmanship warranty: 10 years from completion. Manufacturer warranties pass to owner\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 2.83,
+ "ocr_seconds": 1.32,
+ "tokens_in": 435,
+ "tokens_out": 132,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

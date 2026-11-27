@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Brightwater Electric\",\n  \"contractor_license\": \"13VH00031876\",\n  \"contractor_email\": \"hello@brightwater-electric.example\",\n  \"customer_name\": \"Priscilla Vance\",\n  \"job_address\": \"158 Heron St\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2025-11-04\",\n  \"total_amount\": 8750,\n  \"warranty_years\": null\n}",
+ "seconds": 4.89,
+ "tokens_in": 1244,
+ "tokens_out": 122,
+ "model": "ministral-3:8b"
+}

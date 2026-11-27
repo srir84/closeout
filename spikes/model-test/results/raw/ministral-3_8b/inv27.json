@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Inlet Roofing Co.\",\n  \"contractor_license\": \"13VH00077302\",\n  \"contractor_email\": \"estimates@inletroof.example\",\n  \"customer_name\": \"Raj Malhotra\",\n  \"job_address\": \"170 Kestrel Way\",\n  \"work_type\": \"roof\",\n  \"completion_date\": \"2026-04-20\",\n  \"total_amount\": 16200,\n  \"warranty_years\": 10\n}",
+ "seconds": 4.83,
+ "tokens_in": 1280,
+ "tokens_out": 131,
+ "model": "ministral-3:8b"
+}

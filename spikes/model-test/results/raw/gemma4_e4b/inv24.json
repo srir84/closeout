@@ -1,0 +1,7 @@
+{
+ "text": "```json\n{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"13VH00012345\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"159 Heron St\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"2026-08-21\",\n  \"total_amount\": 69150.00,\n  \"warranty_years\": 10\n}\n```",
+ "seconds": 2.58,
+ "tokens_in": 1387,
+ "tokens_out": 143,
+ "model": "gemma4:e4b"
+}

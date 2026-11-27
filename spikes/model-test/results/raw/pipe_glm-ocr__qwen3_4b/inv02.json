@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"Raj Malhot: The document says \",\n  \"contractor_license\": \"\",\n  \"contractor_email\": \"\",\n  \"customer_name\": \"Raj Malhotra\",\n  \"job_address\": \"140 Gull Ave\",\n  \"work_type\": \"windows\",\n  \"completion_date\": \"2026-04-08\",\n  \"total_amount\": 12800.0,\n  \"warranty_years\": 20\n}",
+ "ocr_text": "Statement for: Raj Malhotra\nProperty: 140 Gull Ave, Manasquan NJ\nDate of statement: 04/20/2026\nProject finished on 04/08/2026\n\nDescription of work\nReplace 11 double-hung windows\nCapping & caulk\nHaul away old units\n\nSubtotal $12,800.00\n\nCONTRACT TOTAL $12,800.00\n\nDeposit received -$4,224.00\n\nBALANCE DUE $8,576.00\n\nWorkmanship warranty: 20 years from completion. Manufacturer warranties pass to owner.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 4.74,
+ "ocr_seconds": 3.51,
+ "tokens_in": 408,
+ "tokens_out": 108,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

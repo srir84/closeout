@@ -1,0 +1,7 @@
+{
+ "text": "```json\n{\n  \"contractor_name\": \"Coastline Carpentry LLC\",\n  \"contractor_license\": \"13VH00098761\",\n  \"contractor_email\": \"jobs@coastlinecarp.example\",\n  \"customer_name\": \"Raj Malhotra\",\n  \"job_address\": \"37 Brine Pl\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2026-02-14\",\n  \"total_amount\": \"19550.00\",\n  \"warranty_years\": 5\n}\n```",
+ "seconds": 2.66,
+ "tokens_in": 1416,
+ "tokens_out": 141,
+ "model": "gemma4:e4b"
+}

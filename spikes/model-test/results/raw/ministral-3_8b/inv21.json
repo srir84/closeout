@@ -1,0 +1,7 @@
+{
+ "text": "{\n  \"contractor_name\": \"Coastline Carpentry LLC\",\n  \"contractor_license\": \"13VH00098761\",\n  \"contractor_email\": \"jobs@coastlinecarp.example\",\n  \"customer_name\": \"Dana Whitfield\",\n  \"job_address\": \"117 Tidewater Rd\",\n  \"work_type\": \"windows\",\n  \"completion_date\": \"2025-12-02\",\n  \"total_amount\": 15000.00,\n  \"warranty_years\": 20\n}",
+ "seconds": 4.91,
+ "tokens_in": 1244,
+ "tokens_out": 132,
+ "model": "ministral-3:8b"
+}

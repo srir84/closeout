@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"the company that did the work\",\n  \"contractor_license\": \"the contractor's registration / HIC number, exactly as printed\",\n  \"contractor_email\": \"the contractor's email address as printed in the letterhead\",\n  \"customer_name\": \"the homeowner billed\",\n  \"job_address\": \"street line of the job site only (number and street, no town), e.g. \\\"12 Main St\\\"\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"the date the work was finished (not the invoice or print date), as YYYY-MM-DD\",\n  \"total_amount\": 0,\n  \"warranty_years\": null\n}",
+ "ocr_text": "INVOICE\n\nInvoice # 2318    Invoice date: 2025-11-16\nWork completed: 2025-11-14\n\nBILL TO\nColleen Brady\n169 Sandpiper Drive\nManasquan, NJ 08736\n\n\u2022 Replace 11 double-hung windows\n\u2022 Capping & caulk\n\u2022 Haul away old units\n\nSubtotal $12,600.00\nNJ sales tax 6.625% $834.75\nTOTAL $13,434.75\n\nWorkmanship warranty: 20 years from completion. Manufacturer warranties pass to owner.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 5.63,
+ "ocr_seconds": 3.97,
+ "tokens_in": 411,
+ "tokens_out": 145,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

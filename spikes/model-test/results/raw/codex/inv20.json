@@ -1,0 +1,6 @@
+{
+ "text": "{\"contractor_name\":\"Dune Grass Kitchens & Baths\",\"contractor_license\":\"13VH00066014\",\"contractor_email\":\"design@dunegrass.example\",\"customer_name\":\"Hannah Greer\",\"job_address\":\"164 Sandpiper Dr\",\"work_type\":\"kitchen\",\"completion_date\":\"2025-05-29\",\"total_amount\":34750,\"warranty_years\":2}",
+ "seconds": 18.75,
+ "stderr_tail": "",
+ "model": "codex"
+}

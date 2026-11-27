@@ -1,0 +1,6 @@
+{
+ "text": "{\"contractor_name\":\"DUNE GRASS KITCHENS & BATHS\",\"contractor_license\":\"13VH00066014\",\"contractor_email\":\"design@dunegrass.example\",\"customer_name\":\"Lena Ostrowski\",\"job_address\":\"71 Beacon Court\",\"work_type\":\"kitchen\",\"completion_date\":\"2025-11-15\",\"total_amount\":42650,\"warranty_years\":2}",
+ "seconds": 17.12,
+ "stderr_tail": "",
+ "model": "codex"
+}

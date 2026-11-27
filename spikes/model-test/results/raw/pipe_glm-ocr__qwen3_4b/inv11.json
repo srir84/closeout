@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"HARBOR & PINE BUILDERS\",\n  \"contractor_license\": \"13VH00012345\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Hannah Greer\",\n  \"job_address\": \"36 Beacon Ct\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2025-09-04\",\n  \"total_amount\": 19800.00,\n  \"warranty_years\": 5\n}",
+ "ocr_text": "HARBOR & PINE BUILDERS\nHIC# 13VH00012345  office@harborpine.example\n\nCUSTOMER Hannah Greer\n\nJOB ADDRESS 36 Beacon Ct, Manasquan\n\nDATE 09/15/2025\n\nJOB COMPLETED 09/04/2025\n\nDESCRIPTION OF WORK\nRemove existing deck\nBuild 14x18 composite deck w/ railings\nFootings per plan\n\nSubtotal $19,800.00\nTOTAL $19,800.00\n\nWorkmanship warranty: 5 years from completion. Manufacturer warranties pass to owner.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 5.72,
+ "ocr_seconds": 4.25,
+ "tokens_in": 406,
+ "tokens_out": 124,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

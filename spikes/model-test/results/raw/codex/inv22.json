@@ -1,0 +1,6 @@
+{
+ "text": "{\n  \"contractor_name\": \"Inlet Roofing Co.\",\n  \"contractor_license\": \"13VH00077302\",\n  \"contractor_email\": \"estimates@inletroof.example\",\n  \"customer_name\": \"Raj Malhotra\",\n  \"job_address\": \"227 Sandpiper Dr\",\n  \"work_type\": \"roof\",\n  \"completion_date\": \"2025-06-25\",\n  \"total_amount\": 12000,\n  \"warranty_years\": 10\n}",
+ "seconds": 19.61,
+ "stderr_tail": "",
+ "model": "codex"
+}

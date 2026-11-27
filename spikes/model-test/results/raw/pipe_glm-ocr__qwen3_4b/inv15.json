@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"DUNE GRASS KITCHENS & BATHS\",\n  \"contractor_license\": \"13VH00066014\",\n  \"contractor_email\": \"design@dunegrass.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"212 Sandpiper Dr\",\n  \"work_type\": \"bathroom\",\n  \"completion_date\": \"2025-11-08\",\n  \"total_amount\": 18450.00,\n  \"warranty_years\": 2\n}",
+ "ocr_text": "DUNE GRASS KITCHENS & BATHS\nHIC# 13VH00066014 design@dunegrass.example\n\nCUSTOMER Lena Ostrowski\nJOB ADDRESS 212 Sandpiper Dr, Manasquan\nDATE 11/16/2025\nJOB COMPLETED 11/08/2025\n\nDESCRIPTION OF WORK\nGut primary bath\nTile shower w/ glass door\nNew vanity, toilet, exhaust fan\n\nSubtotal $18,450.00\nCONTRACT TOTAL $18,450.00\nDeposit received -$6,088.50\nBALANCE DUE $12,361.50\n\nWorkmanship warranty: 2 years from completion. Manufacturer warranties pass to owner.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 4.59,
+ "ocr_seconds": 3.12,
+ "tokens_in": 438,
+ "tokens_out": 132,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

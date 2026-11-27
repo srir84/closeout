@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"SHORE LINE PLUMBING & HEATING\",\n  \"contractor_license\": \"13VH00045120\",\n  \"contractor_email\": \"service@shorelineph.example\",\n  \"customer_name\": \"Teo Marchetti\",\n  \"job_address\": \"233 Gull Ave\",\n  \"work_type\": \"hvac\",\n  \"completion_date\": \"2025-08-02\",\n  \"total_amount\": 11300.0,\n  \"warranty_years\": 10\n}",
+ "ocr_text": "SHORE LINE PLUMBING & HEATING\nHIC# 13VH00045120  service@shorelineph.example\n\nCUSTOMER Teo Marchetti\n\nJOB ADDRESS 233 Gull Ave, Manasquan\n\nDATE 08/13/2025\n\nJOB COMPLETED 08/02/2025\n\nDESCRIPTION OF WORK\nRemove old furnace & AC\nInstall 96% gas furnace + 3-ton AC\nNew thermostat, start-up & test\n\nOriginal contract $9,600.00\nChange order #1 (added scope) +$1,700.00\nAdjusted subtotal $11,300.00\n\nTOTAL $11,300.00\n\nWorkmanship warranty: 10 years from completion. Manufacturer warranties pass to owner.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 5.42,
+ "ocr_seconds": 3.92,
+ "tokens_in": 446,
+ "tokens_out": 128,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

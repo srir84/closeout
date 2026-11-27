@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"\",\n  \"contractor_license\": \"\",\n  \"contractor_email\": \"\",\n  \"customer_name\": \"Raj Malhot: 2026-02-22\",\n  \"job_address\": \"37 Brine Pl\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2026-02-14\",\n  \"total_amount\": 19550.00,\n  \"warranty_years\": 5\n}",
+ "ocr_text": "CUST: Raj Malhotra\nSITE: 37 Brine Pl\nPRINTED 2026-02-22\nWORK DONE 2026-02-14\n\nRemove existing deck\nBuild 14x18 composite deck w/ railings\nFootings per plan\n\nSubtotal $19,550.00\n\nTOTAL $19,550.00\n\nWorkmanship warranty: 5 years from completion. Manufacturer warranties pass to own.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 4.6,
+ "ocr_seconds": 3.36,
+ "tokens_in": 368,
+ "tokens_out": 108,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

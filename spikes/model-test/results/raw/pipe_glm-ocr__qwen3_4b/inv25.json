@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"DUNE GRASS KITCHENS & BATHS\",\n  \"contractor_license\": \"\",\n  \"contractor_email\": \"design@dunegrass.example\",\n  \"customer_name\": \"Hannah Greer\",\n  \"job_address\": \"25 Gull Ave\",\n  \"work_type\": \"bathroom\",\n  \"completion_date\": \"2025-08-30\",\n  \"total_amount\": 31900.00,\n  \"warranty_years\": 2\n}",
+ "ocr_text": "DUNE GRASS KITCHENS & BATHS\nPHONE 131400088014  design@dunegrass.example\n\nCUSTOMER Hannah Greer\nJOB ADDRESS 25 Gull Ave, Manasquan\nDATE 09/07/2025\nJOB COMPLETED 08/30/2025\n\nDESCRIPTION OF WORK\nGut primary bath\nTile shower w/ glass door\nNew vanity, toilet, exhaust fan\n\nSubtotal $31,900.00\nTOTAL $31,900.00\n\nWarranty warranty 2 years from completion. Manufacturer warranties pass to customer.\nThank you for your business Please note cheque payable to the company above.",
+ "seconds": 2.57,
+ "ocr_seconds": 1.23,
+ "tokens_in": 403,
+ "tokens_out": 116,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

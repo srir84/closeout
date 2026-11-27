@@ -1,0 +1,159 @@
+{
+ "model": "codex",
+ "results": [
+  {
+   "id": "t01",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "find_parcel",
+     "args": {
+      "address": "14 Osprey Ln",
+      "town": "Manasquan"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 8.03
+  },
+  {
+   "id": "t02",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "find_permits",
+     "args": {
+      "block": "112",
+      "lot": "7",
+      "from_date": "2026-03-29",
+      "to_date": "2026-09-25"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 10.51
+  },
+  {
+   "id": "t03",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "propose_confirmation_email",
+     "args": {
+      "job_id": "j4",
+      "recipient_id": "c_88"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 7.97
+  },
+  {
+   "id": "t04",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "job_id": "j5",
+      "question": "Can you confirm whether the completion date is August 2, 2025?"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 12.16
+  },
+  {
+   "id": "t05",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "job_id": "j8",
+      "question": "Which homeowner contact should receive the confirmation email? Please provide their contact ID."
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 14.99
+  },
+  {
+   "id": "t06",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "propose_confirmation_email",
+     "args": {
+      "job_id": "j7",
+      "recipient_id": "c_40"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 10.19
+  },
+  {
+   "id": "t07",
+   "ok": false,
+   "why": "should do nothing, called ask_owner",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "job_id": "j2",
+      "question": "What start and end dates (YYYY-MM-DD) should I use to search for permits on block 40, lot 3?"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 16.25
+  },
+  {
+   "id": "t08",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "find_parcel",
+     "args": {
+      "address": "220 Dune Ave, Unit 3",
+      "town": "Manasquan"
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 8.43
+  },
+  {
+   "id": "t09",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "job_id": "j6",
+      "question": "What is the current homeowner\u2019s contact ID? The only listed contact is a former owner."
+     }
+    }
+   ],
+   "content": "",
+   "seconds": 12.34
+  },
+  {
+   "id": "t10",
+   "ok": true,
+   "why": "ok",
+   "calls": [],
+   "content": "",
+   "seconds": 7.64
+  }
+ ]
+}

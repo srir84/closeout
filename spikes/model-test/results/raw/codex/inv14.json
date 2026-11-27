@@ -1,0 +1,6 @@
+{
+ "text": "{\n  \"contractor_name\": \"Inlet Roofing Co.\",\n  \"contractor_license\": \"13VH00077302\",\n  \"contractor_email\": \"estimates@inletroof.example\",\n  \"customer_name\": \"Dana Whitfield\",\n  \"job_address\": \"188 Osprey Ln\",\n  \"work_type\": \"roof\",\n  \"completion_date\": \"2025-03-01\",\n  \"total_amount\": 17950,\n  \"warranty_years\": 10\n}",
+ "seconds": 15.02,
+ "stderr_tail": "",
+ "model": "codex"
+}

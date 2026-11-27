@@ -1,0 +1,9 @@
+{
+ "text": "{\n  \"contractor_name\": \"the company that did the work\",\n  \"contractor_license\": \"the contractor's registration / HIC number, exactly as printed\",\n  \"contractor_email\": \"the contractor's email address as printed in the letterhead\",\n  \"customer_name\": \"the homeowner billed\",\n  \"job_address\": \"street line of the job site only (number and street, no town), e.g. \\\"12 Main St\\\"\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"the date the work was finished (not the invoice or print date), as YYYY-MM-DD\",\n  \"total_amount\": 0,\n  \"warranty_years\": null\n}",
+ "ocr_text": "INVOICE\n\nInvoice # 1656    Invoice date: 06/03/2026\nWork completed: 05/22/2026\n\nBILL TO\nTeo Marchetti\n113 Sandpiper Drive\nManasquan, NJ 08736\n\n\u2022 Upgrade service to 200A panel\n\u2022 Add 4 circuits, whole-house surge\n\u2022 Utility coordination\n\nSubtotal $6,650.00\nTOTAL $6,650.00\n\nManufacturer warranties apply. No separate workmanship warranty is provided.\nThank you for your business! Please make checks payable to the company above.",
+ "seconds": 5.2,
+ "ocr_seconds": 3.52,
+ "tokens_in": 388,
+ "tokens_out": 145,
+ "model": "pipe:glm-ocr+qwen3:4b"
+}

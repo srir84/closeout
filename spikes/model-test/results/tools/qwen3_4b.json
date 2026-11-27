@@ -1,0 +1,167 @@
+{
+ "model": "qwen3:4b",
+ "results": [
+  {
+   "id": "t01",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "find_parcel",
+     "args": {
+      "town": "Manasquan",
+      "address": "14 Osprey Ln"
+     }
+    }
+   ],
+   "content": "Okay, let's see. The user provided job facts for a home-records assistant. The job ID is j1, step is \"locate\", address is \"14 Osprey Ln\", town is \"Manasquan\". They want to know the single next action.\n\nFirst, I need to figure out what the next step should be. The tools available are find_parcel, fin",
+   "seconds": 6.67
+  },
+  {
+   "id": "t02",
+   "ok": false,
+   "why": "from_date='2026-03-25', want '2026-03-29'",
+   "calls": [
+    {
+     "name": "find_permits",
+     "args": {
+      "to_date": "2026-09-25",
+      "block": "112",
+      "lot": "7",
+      "from_date": "2026-03-25"
+     }
+    }
+   ],
+   "content": "Okay, let's see. The user is a home-records assistant, and they need to figure out the next action based on the job facts provided.\n\nFirst, the job facts given are:\n- job_id: \"j1\"\n- step: \"corroborate\"\n- block: \"112\"\n- lot: \"7\"\n- completion_date: \"2026-09-25\"\n- rule: \"search permits from 180 days be",
+   "seconds": 42.48
+  },
+  {
+   "id": "t03",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "propose_confirmation_email",
+     "args": {
+      "job_id": "j4",
+      "recipient_id": "c_88"
+     }
+    }
+   ],
+   "content": "Okay, let's see. The user provided the job facts for a home-records assistant. The job_id is \"j4\", step is \"outreach\", and there's a contact with id \"c_88\" who's the homeowner. All fields are confirmed.\n\nThe task is to figure out the next action. The tools available are find_parcel, find_permits, pr",
+   "seconds": 4.28
+  },
+  {
+   "id": "t04",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "job_id": "j5",
+      "question": "What is the correct completion date for this job?"
+     }
+    }
+   ],
+   "content": "Okay, let's see. The user provided job facts for a home-records assistant. The job is in the outreach step. The completion_date has a value of 2025-08-02 but with low confidence. The contacts list includes a homeowner with ID c_12.\n\nThe task is to figure out the single next action. The tools availab",
+   "seconds": 5.84
+  },
+  {
+   "id": "t05",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "job_id": "j8",
+      "question": "Do you have a homeowner contact on file?"
+     }
+    }
+   ],
+   "content": "Okay, let's see. The user provided job facts for a home-records assistant. The job_id is \"j8\", step is \"outreach\", contacts are empty, and the note says \"no homeowner contact on file\".\n\nHmm, the task is to figure out the single next action. The tools available are find_parcel, find_permits, propose_",
+   "seconds": 6.56
+  },
+  {
+   "id": "t06",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "propose_confirmation_email",
+     "args": {
+      "job_id": "j7",
+      "recipient_id": "c_40"
+     }
+    }
+   ],
+   "content": "Okay, let's see. The user is asking for the single next action based on the job facts provided. The job facts are in JSON format.\n\nFirst, I need to understand what the job facts tell us. The job_id is \"j7\", the step is \"outreach\", there's a contact with id \"c_40\" who's the homeowner, and the flag sa",
+   "seconds": 16.85
+  },
+  {
+   "id": "t07",
+   "ok": false,
+   "why": "should do nothing, called ask_owner",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "question": "What dates should we check for permits?",
+      "job_id": "j2"
+     }
+    }
+   ],
+   "content": "Okay, let's see. The user is a home-records assistant, and they need to figure out the next action based on the job facts provided. The job facts are for job_id \"j2\", step \"corroborate\", work_type \"roof\", block \"40\", lot \"3\", and a note saying \"roof replacement on a one-family home needs no permit i",
+   "seconds": 25.24
+  },
+  {
+   "id": "t08",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "find_parcel",
+     "args": {
+      "address": "220 Dune Ave, Unit 3",
+      "town": "Manasquan"
+     }
+    }
+   ],
+   "content": "Okay, let's see. The user provided job facts for a home-records assistant. The job ID is j3, step is \"locate\", address is \"220 Dune Ave, Unit 3\", and town is \"Manasquan\". The task is to figure out the single next action.\n\nFirst, I need to check what tools are available. The tools given are find_parc",
+   "seconds": 6.2
+  },
+  {
+   "id": "t09",
+   "ok": true,
+   "why": "ok",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "question": "Who is the current owner of the property?",
+      "job_id": "j6"
+     }
+    }
+   ],
+   "content": "Okay, let's see. The user is asking for the single next action based on the job facts provided. The job facts are for a home-records assistant.\n\nFirst, I need to understand what the job facts tell us. The job_id is \"j6\", the step is \"outreach\", and there's a contact with id \"c_51\" who is a former ow",
+   "seconds": 15.84
+  },
+  {
+   "id": "t10",
+   "ok": false,
+   "why": "should do nothing, called ask_owner",
+   "calls": [
+    {
+     "name": "ask_owner",
+     "args": {
+      "job_id": "j9",
+      "question": "What is the recipient ID for the confirmation email?"
+     }
+    }
+   ],
+   "content": "Okay, let's see. The user provided the job facts for a home-records assistant. The job_id is \"j9\", step is \"done\", and status is \"all three checkmarks recorded\". They're asking for the single next action.\n\nFirst, I need to check what the tools available are. The tools listed are find_parcel, find_pe",
+   "seconds": 18.59
+  }
+ ]
+}
