@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 5177,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Tidewater Window & Door\",\n  \"contractor_license\": \"13VH00052297\",\n  \"contractor_email\": \"info@tidewaterwd.example\",\n  \"customer_name\": \"Colleen Brady\",\n  \"job_address\": \"169 Sandpiper Drive\",\n  \"work_type\": \"windows\",\n  \"completion_date\": \"2025-11-14\",\n  \"total_amount\": 13434.75,\n  \"warranty_years\": 20\n}",
+ "tokens_in": 2226,
+ "tokens_out": 125
+}

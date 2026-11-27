@@ -14,10 +14,13 @@ def workflows() -> list[type]:
 
 
 def activities() -> list[Callable[..., Any]]:
-    from closeout.activities import common, permits
+    from closeout.activities import common, permits, reading
 
-    return [common.finish_command, permits.sync_permits]
+    return [common.finish_command, permits.sync_permits, reading.decide_facts]
 
 
 def model_activities() -> list[Callable[..., Any]]:
-    return []
+    """Run on the per-reader queues `model-reads-A` and `model-reads-B`, one at a time each."""
+    from closeout.activities import reading
+
+    return [reading.read_document]

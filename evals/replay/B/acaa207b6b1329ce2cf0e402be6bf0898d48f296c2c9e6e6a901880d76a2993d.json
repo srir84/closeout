@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 6636,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"REG 13VH00012345\",\n  \"contractor_email\": \"office@harbormpine.example\",\n  \"customer_name\": \"Raj Malhotra\",\n  \"job_address\": \"115 Beacon Court\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"2026-01-22\",\n  \"total_amount\": 41250.0,\n  \"warranty_years\": 10\n}",
+ "tokens_in": 1812,
+ "tokens_out": 127
+}

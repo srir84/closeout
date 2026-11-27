@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 4727,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"DUNE GRASS KITCHENS & BATHS\",\n  \"contractor_license\": \"HIC# 13VH00066014\",\n  \"contractor_email\": \"design@duneglass.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"212 Sandpiper Dr\",\n  \"work_type\": \"bathroom\",\n  \"completion_date\": \"2025-11-08\",\n  \"total_amount\": 18450.0,\n  \"warranty_years\": 2\n}",
+ "tokens_in": 1812,
+ "tokens_out": 136
+}

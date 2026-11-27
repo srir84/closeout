@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 8111,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"DUNE GRASS KITCHENS & BATHS\",\n  \"contractor_license\": \"HIC# 13VH00066014\",\n  \"contractor_email\": \"design@dunegrass.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"71 Beacon Court, Manasquan\",\n  \"work_type\": \"kitchen\",\n  \"completion_date\": \"2025-11-15\",\n  \"total_amount\": 42650.0,\n  \"warranty_years\": 2\n}",
+ "tokens_in": 2226,
+ "tokens_out": 136
+}

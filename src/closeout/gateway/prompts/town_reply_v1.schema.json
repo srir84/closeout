@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["permit_number", "result", "result_date"],
+  "properties": {
+    "permit_number": {"type": "string"},
+    "result": {"type": "string", "enum": ["final_on_file", "no_record", "unclear"]},
+    "result_date": {"type": "string"}
+  }
+}

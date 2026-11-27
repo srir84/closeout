@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 6491,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Shore Line Plumbing & Heating\",\n  \"contractor_license\": \"13VH00045120\",\n  \"contractor_email\": \"service@shorelineph.example\",\n  \"customer_name\": \"Colleen Brady\",\n  \"job_address\": \"112 Heron Street\",\n  \"work_type\": \"hvac\",\n  \"completion_date\": \"2026-01-17\",\n  \"total_amount\": 16550.0,\n  \"warranty_years\": 10\n}",
+ "tokens_in": 2226,
+ "tokens_out": 124
+}

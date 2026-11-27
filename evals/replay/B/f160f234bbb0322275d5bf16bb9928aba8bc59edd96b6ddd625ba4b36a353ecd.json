@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 6765,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"BRIGHTWATER ELECTRIC\",\n  \"contractor_license\": \"HIC# 13VH00031876\",\n  \"contractor_email\": \"hello@brightwater-electric.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"185 Sandpiper Drive\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2026-02-24\",\n  \"total_amount\": 10076.06,\n  \"warranty_years\": null\n}",
+ "tokens_in": 1812,
+ "tokens_out": 131
+}

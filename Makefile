@@ -85,3 +85,17 @@ demo-open:
 # Run the permit feed once now (fetches the whole town from data.nj.gov).
 sync:
 	$(COMPOSE) exec -T temporal temporal schedule trigger --schedule-id permit-sync-1329 --address 127.0.0.1:7233
+
+# Reading and attack evals in replay mode (what CI runs).
+eval:
+	$(PY) python -m evals.run_facts regression development
+	$(PY) python -m evals.run_attacks
+
+# Live models on this computer (needs Ollama with the two readers from evals/models.lock).
+eval-live:
+	$(PY) python -m evals.run_facts --live regression development sealed
+	$(PY) python -m evals.run_attacks --live
+
+# Read every eval document live and save replay files (owner's Mac; reviewed PR only).
+record:
+	$(PY) python -m evals.record regression development attacks messy town_replies

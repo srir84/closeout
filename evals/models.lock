@@ -1,0 +1,14 @@
+{
+  "note": "Pinned model digests for the two readers (design 3.10). Replay keys use these digests.",
+  "ollama_min_version": "0.40.18",
+  "readers": {
+    "A": {
+      "model": "qwen3-vl:4b-instruct",
+      "digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318"
+    },
+    "B": {
+      "model": "qwen3-vl:8b-instruct",
+      "digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb"
+    }
+  }
+}

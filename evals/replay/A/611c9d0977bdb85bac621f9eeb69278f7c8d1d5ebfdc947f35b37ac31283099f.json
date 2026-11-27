@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 6129,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"NJ HIC Reg. # 13VH00012345\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"159 Heron St\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"2026-08-21\",\n  \"total_amount\": 69150.0,\n  \"warranty_years\": 10\n}",
+ "tokens_in": 1812,
+ "tokens_out": 132
+}

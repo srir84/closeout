@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 4417,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Coastline Carpentry LLC\",\n  \"contractor_license\": \"REG 13VH0098761\",\n  \"contractor_email\": \"john@coastlinecarp.example\",\n  \"customer_name\": \"Lena Ostrowski\",\n  \"job_address\": \"144 Osprey Ln\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2023-03-15\",\n  \"total_amount\": 18950.0,\n  \"warranty_years\": 8\n}",
+ "tokens_in": 1310,
+ "tokens_out": 128
+}

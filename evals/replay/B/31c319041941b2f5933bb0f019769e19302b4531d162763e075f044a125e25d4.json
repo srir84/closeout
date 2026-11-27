@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 9774,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Brightwater Electric\",\n  \"contractor_license\": \"REG 13VH00031876\",\n  \"contractor_email\": \"hello@brightwater-electric.example\",\n  \"customer_name\": \"Priscilla Vance\",\n  \"job_address\": \"158 Heron St\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2025-11-04\",\n  \"total_amount\": 8750,\n  \"warranty_years\": null\n}",
+ "tokens_in": 2226,
+ "tokens_out": 120
+}

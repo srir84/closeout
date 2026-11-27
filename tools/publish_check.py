@@ -27,10 +27,26 @@ OK_EMAIL_DOMAINS = (
 )
 # Model answers from the model test (made-up invoices); a model invented a domain once.
 EMAIL_EXEMPT_PATHS = ("spikes/model-test/results/",)
+# Third-party font files and their licenses name the font designers' contact addresses.
+EMAIL_EXEMPT_PARTS = ("/fonts/", "_fonts/")
 ALLOW_MARK = "publish-check: allow"
 EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 HOME_PATH = re.compile(r"/(Users|home)/[a-z][a-z0-9_-]+/")
-SKIP_SUFFIX = (".png", ".jpg", ".jpeg", ".pdf", ".gif", ".mp4", ".webm", ".ico", ".woff", ".woff2", ".lock")
+SKIP_SUFFIX = (
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".pdf",
+    ".gif",
+    ".mp4",
+    ".webm",
+    ".ico",
+    ".woff",
+    ".woff2",
+    ".lock",
+    ".ttf",
+    ".otf",
+)
 
 
 def private_names() -> list[str]:
@@ -54,7 +70,7 @@ def history_hits(names: list[str]) -> list[str]:
     if not names:
         return []
     log = subprocess.run(
-        ["git", "log", "--all", "-p", "--format=%H %an %ae%n%B", "--name-status", "--text"],
+        ["git", "log", "--all", "-p", "--format=%H %an %ae %cn %ce%n%B", "--name-status", "--text"],
         cwd=ROOT,
         capture_output=True,
         text=True,
@@ -84,7 +100,7 @@ def scan(files: list[Path], names: list[str]) -> list[str]:
         for m in HOME_PATH.finditer(text):
             hits.append(f"{rel}: home-folder path {m.group(0)}")
         for m in EMAIL.finditer(text):
-            if rel.startswith(EMAIL_EXEMPT_PATHS):
+            if rel.startswith(EMAIL_EXEMPT_PATHS) or any(x in rel for x in EMAIL_EXEMPT_PARTS):
                 break
             line = text[text.rfind("\n", 0, m.start()) + 1 : text.find("\n", m.end())]
             if ALLOW_MARK in line:
