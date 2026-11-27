@@ -10,6 +10,7 @@ import json
 import os
 from datetime import date
 from typing import Any
+from uuid import UUID
 
 import httpx
 from pydantic import BaseModel
@@ -17,6 +18,7 @@ from sqlalchemy import Connection
 from temporalio import activity
 
 from closeout import db
+from closeout.activities.safety import scrubbed
 from closeout.core.permitdata import row_hash
 from closeout.seed import insert_permits, link_permits, permit_params
 
@@ -37,6 +39,7 @@ class SyncOut(BaseModel):
     rows_missing: int
     changed_pks: list[str]
     new_pks: list[str]
+    job_ids: list[UUID] = []  # unmarked open jobs on parcels whose permits changed: re-check them
 
 
 class FeedError(Exception):
@@ -100,8 +103,21 @@ def apply_sync(conn: Connection, town: str, rows: list[dict[str, Any]], today: d
     if missing:
         db.run(conn, "UPDATE permits SET missing_from_source_since=now() WHERE pk = ANY(:pks)", pks=missing)
     touched = [str(r["pk"]) for r in new + changed]
+    job_ids: list[UUID] = []
     if touched:
         link_permits(conn, touched)
+        job_ids = [
+            r["id"]
+            for r in db.all_rows(
+                conn,
+                """
+            SELECT DISTINCT j.id FROM jobs j JOIN permit_parcel pp ON pp.pin = j.pin AND pp.status = 'linked'
+            WHERE pp.permit_pk = ANY(:pks) AND j.status NOT IN ('dropped', 'stopped', 'retracted', 'recorded')
+              AND NOT EXISTS (SELECT 1 FROM events e WHERE e.stream = 'job-' || j.id AND e.kind = 'permit.matched')
+            ORDER BY j.id""",
+                pks=touched,
+            )
+        ]
     out = SyncOut(
         town=town,
         rows_seen=len(rows),
@@ -109,6 +125,7 @@ def apply_sync(conn: Connection, town: str, rows: list[dict[str, Any]], today: d
         rows_changed=len(changed),
         rows_missing=len(missing),
         new_pks=sorted(str(r["pk"]) for r in new),
+        job_ids=job_ids,
         changed_pks=sorted(str(r["pk"]) for r in changed),
     )
     db.run(
@@ -130,6 +147,7 @@ def apply_sync(conn: Connection, town: str, rows: list[dict[str, Any]], today: d
 
 
 @activity.defn
+@scrubbed
 def sync_permits(inp: SyncIn) -> SyncOut:
     rows = fetch_town(inp.town, inp.feed_url)
     with db.tx() as c:

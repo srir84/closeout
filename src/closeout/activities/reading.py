@@ -7,6 +7,7 @@ Results returned to workflows carry IDs and codes only.
 from __future__ import annotations
 
 import json
+import time
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,7 @@ from temporalio import activity
 from temporalio.exceptions import ApplicationError
 
 from closeout import db
+from closeout.activities.safety import scrubbed
 from closeout.core.compare import FactDecision, decide_reads
 from closeout.gateway.core import Gateway, ModelError, ReplayMiss
 from closeout.settings import get_settings
@@ -36,6 +38,7 @@ class ReadOut(BaseModel):
 class FactsIn(BaseModel):
     job_id: UUID
     document_id: UUID
+    light: bool = False
 
 
 class FactsOut(BaseModel):
@@ -91,7 +94,7 @@ def store_read(conn: Any, document_id: UUID, res: Any) -> UUID:
         m=res.model,
         g=res.model_digest,
         k=res.replay_key,
-        t=res.text,
+        t=res.text.replace("\x00", ""),
         ms=res.ms,
         ti=res.tokens_in,
         to=res.tokens_out,
@@ -101,20 +104,44 @@ def store_read(conn: Any, document_id: UUID, res: Any) -> UUID:
 
 
 @activity.defn
+@scrubbed
 def read_document(inp: ReadIn) -> ReadOut:
     with db.tx() as c:
         doc = db.one(c, "SELECT id, path, mime, removed_at FROM documents WHERE id = :id", id=inp.document_id)
     if doc is None or doc["removed_at"] is not None:
         raise ApplicationError("document missing", type="BadInput", non_retryable=True)
+    t0 = time.monotonic()
     try:
         res = gateway().read(document_bytes(doc["path"]), doc["mime"], inp.reader, inp.purpose)  # type: ignore[arg-type]
-    except ReplayMiss as e:
-        raise ApplicationError(str(e), type="ReplayMiss", non_retryable=True) from None
-    except ModelError as e:
-        raise ApplicationError(str(e), type="BadInput", non_retryable=True) from None
+    except Exception as e:
+        # Failed calls are logged too (R-OBS-1), with a code and no model text.
+        log_failed_call(inp, type(e).__name__, int((time.monotonic() - t0) * 1000))
+        if isinstance(e, ReplayMiss):
+            raise ApplicationError(str(e), type="ReplayMiss", non_retryable=True) from None
+        if isinstance(e, ModelError):
+            raise ApplicationError(str(e), type="BadInput", non_retryable=True) from None
+        raise ApplicationError(type(e).__name__, type="ModelCallFailed") from None
     with db.tx() as c:
         rid = store_read(c, inp.document_id, res)
     return ReadOut(read_id=rid, valid=res.valid)
+
+
+def log_failed_call(inp: ReadIn, error: str, ms: int) -> None:
+    gw = gateway()
+    provider = gw.provider_for(inp.reader)  # type: ignore[arg-type]
+    with db.tx() as c:
+        db.run(
+            c,
+            """INSERT INTO model_calls (document_id, reader, purpose, provider, model, ms, error)
+                     VALUES (:d, :r, :pu, :pr, :m, :ms, :e)""",
+            d=inp.document_id,
+            r=inp.reader,
+            pu=inp.purpose,
+            pr=provider,
+            m=gw.model_for(inp.reader) if provider != "replay" else "replay",  # type: ignore[arg-type]
+            ms=ms,
+            e=error,
+        )
 
 
 def fact_text(v: object) -> str | None:
@@ -150,8 +177,9 @@ def store_facts(conn: Any, job_id: UUID, decisions: list[FactDecision], light: b
 
 
 @activity.defn
+@scrubbed
 def decide_facts(inp: FactsIn) -> FactsOut:
-    light = get_settings().closeout_mode == "light"
+    light = inp.light or get_settings().closeout_mode == "light"
     with db.tx() as c:
         reads = {
             r["reader"]: r

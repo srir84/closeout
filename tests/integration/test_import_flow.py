@@ -98,7 +98,7 @@ async def test_wrong_address_wrong_total_and_other_contractor_need_a_look(dev_en
             "HP-25-004": ("ready", None),
         }
         with db.tx() as c:
-            items = db.all_rows(c, "SELECT kind FROM review_items")
+            items = db.all_rows(c, "SELECT kind, reason FROM review_items WHERE resolved_at IS NULL")
             emails = {
                 r["email"]
                 for r in db.all_rows(
@@ -109,7 +109,13 @@ async def test_wrong_address_wrong_total_and_other_contractor_need_a_look(dev_en
             }
             assert "service@baysideph.example" in emails  # the other contractor's stored contact is unchanged
             job1 = db.one(c, "SELECT id FROM jobs WHERE batch_id=:b AND job_ref='HP-25-001'", b=bid)
-        assert [i["kind"] for i in items] == ["other_contractor"]
+        got_items = {(i["kind"], i["reason"]) for i in items}
+        assert {
+            ("needs_a_look", "address_unmatched"),
+            ("needs_a_look", "facts_asked"),
+            ("other_contractor", "other_contractor"),
+        } <= got_items
+        assert {k for k, _ in got_items} == {"needs_a_look", "other_contractor"}
 
         # A fix made after the batch ended still reaches the job.
         ref = commands.save(
@@ -146,3 +152,89 @@ async def test_startup_check_finds_jobs_without_a_workflow(dev_env, env_setup) -
     with db.tx() as c:
         rows = db.all_rows(c, "SELECT kind, reason FROM review_items")
     assert rows == [{"kind": "job_without_workflow", "reason": "workflow_missing"}]
+
+
+@pytest.mark.req("R-COR-1")
+@pytest.mark.slice("S5")
+async def test_demo_permits_and_a_later_permit(dev_env, env_setup) -> None:
+    """Persona jobs get their permit mark (H11 gets 'no work details'); a permit added later is picked up."""
+    import asyncio
+    import csv as csvmod
+    import io
+    import json
+    from datetime import date
+
+    from closeout.activities.permits import apply_sync
+
+    rows = list(csvmod.DictReader(io.StringIO((sl.DEMO / "harbor_pine_jobs.csv").read_text())))
+    extra = dict(rows[11], job_ref="HP-LATE-1", job_address="6 Driftwood Ter", invoice_file="HP-25-012.png")
+    buf = io.StringIO()
+    w = csvmod.DictWriter(buf, fieldnames=list(rows[0]), lineterminator="\n")
+    w.writeheader()
+    w.writerows([*rows, extra])
+    files = {p.name: p.read_bytes() for p in (sl.DEMO / "invoices").glob("HP-*.png")}
+    tq = f"tq-{uuid.uuid4()}"
+    from closeout.settings import get_settings
+
+    get_settings().task_queue = tq  # type: ignore[misc]
+    async with sl.workers(dev_env.client, tq):
+        bid = sl.stage_batch(csv_bytes=buf.getvalue().encode(), invoice_files=files)
+        await sl.run_batch(dev_env.client, tq, bid)
+        await sl.wait_jobs(bid)
+        want = {f"HP-25-{i:03d}": ("on_file", True) for i in range(1, 13)}
+        want["HP-25-011"] = ("no_details", False)
+        want["HP-LATE-1"] = ("none", False)
+        for _ in range(100):  # the mark is recorded just after the job settles
+            with db.tx() as c:
+                got = {
+                    r["job_ref"]: (r["permit_result"], r["marked"])
+                    for r in db.all_rows(
+                        c,
+                        """
+                    SELECT j.job_ref, j.permit_result, EXISTS (SELECT 1 FROM events e WHERE e.stream = 'job-' || j.id
+                           AND e.kind = 'permit.matched') AS marked FROM jobs j WHERE j.batch_id = :b""",
+                        b=bid,
+                    )
+                }
+            if got == want:
+                break
+            await asyncio.sleep(0.2)
+        assert got == want
+
+        # A permit for 6 Driftwood Ter arrives in a later sync: the job is re-checked and gets the mark.
+        world = json.loads((sl.ROOT / "data/seed/sampleton/world.json").read_text())
+        pin = next(m["pin"] for m in world["match_cases"] if m["address"] == "6 DRIFTWOOD TER")
+        _, block, lot = pin.split("_")
+        sample = json.loads((sl.ROOT / "data/seed/sampleton/permits_9999.json").read_text())
+        new_row = dict(
+            sample[0],
+            pk="999999999001",
+            block=block,
+            lot=lot,
+            permitno="25-9001",
+            permittypedesc="Alteration",
+            buildfee="120",
+            plumbfee="0",
+            electfee="0",
+            firefee="0",
+            permitdate="2025-05-20T00:00:00.000",
+        )
+        new_row.pop("certdate", None)
+        with db.tx() as c:
+            out = apply_sync(c, "9999", [*sample, new_row], date(2026, 11, 27))
+        late = db.tx
+        with late() as c:
+            late_id = db.scalar(c, "SELECT id FROM jobs WHERE job_ref='HP-LATE-1'")
+        assert out.job_ids == [late_id]
+        await dev_env.client.get_workflow_handle(f"job-{late_id}").signal("permits_changed")
+        for _ in range(100):
+            with db.tx() as c:
+                if db.scalar(
+                    c,
+                    "SELECT count(*) FROM events WHERE stream=:s AND kind='permit.matched'",
+                    s=f"job-{late_id}",
+                ):
+                    break
+            await asyncio.sleep(0.2)
+        else:
+            raise AssertionError("the later permit was not matched")

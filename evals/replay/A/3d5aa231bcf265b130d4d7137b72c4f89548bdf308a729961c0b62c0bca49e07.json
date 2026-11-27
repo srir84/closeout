@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 13139,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"13VH01234567\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Tomasz Halvorsen\",\n  \"job_address\": \"26 Bayberry Cir\",\n  \"work_type\": \"kitchen\",\n  \"completion_date\": \"2024-09-25\",\n  \"total_amount\": 28147.07,\n  \"warranty_years\": 1\n}",
+ "tokens_in": 4399,
+ "tokens_out": 126
+}

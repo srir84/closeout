@@ -15,7 +15,7 @@ from temporalio.common import RetryPolicy
 from temporalio.exceptions import ActivityError, ApplicationError
 
 with workflow.unsafe.imports_passed_through():
-    from closeout.activities import common, reading
+    from closeout.activities import common, permit_match, reading
     from closeout.activities import jobs as acts
     from closeout.core.jobs import Refused, homeowner_started_next, next_state
     from closeout.workflows.commands import CommandQueue
@@ -43,6 +43,16 @@ def command_kinds() -> dict[str, tuple[str, ...]]:
         "fix_fact": ("needs_a_look",),
         "approve_facts": ("needs_a_look",),
         "drop": ("needs_a_look",),
+        "pick_permit": (
+            "imported",
+            "needs_a_look",
+            "ready",
+            "asking_homeowner",
+            "answered",
+            "confirmed",
+            "no_answer",
+            "on_hold",
+        ),
     }
 
 
@@ -55,6 +65,9 @@ class Job:
         self.origin = "contractor"
         self.inp: JobIn | None = None
         self.document_id: UUID | None = None
+        self.permit_candidates: list[str] = []
+        self.permit_marked = False
+        self.permits_dirty = False
 
     # --- commands --------------------------------------------------------------------------------
     def _allowed(self, ref: CommandRef) -> str | None:
@@ -63,7 +76,16 @@ class Job:
             return "unknown_command"
         if self.status not in states:
             return f"not_allowed_in_{self.status}"
+        if ref.kind == "pick_permit" and (
+            self.permit_marked or ref.codes.get("pk") not in self.permit_candidates
+        ):
+            return "not_a_candidate"
         return None
+
+    @workflow.signal
+    def permits_changed(self) -> None:
+        """The permit sync found new or changed permits on this job's parcel (design 3.2, later permits)."""
+        self.permits_dirty = True
 
     @workflow.update
     async def command(self, ref: CommandRef) -> CommandResult:
@@ -120,7 +142,8 @@ class Job:
             except ActivityError:
                 pass  # a failed read counts as invalid: the person is asked
         await self._db(
-            reading.decide_facts, reading.FactsIn(job_id=self.inp.job_id, document_id=self.document_id)
+            reading.decide_facts,
+            reading.FactsIn(job_id=self.inp.job_id, document_id=self.document_id, light=self.inp.light),
         )
 
     async def _settle(self, key: str) -> None:
@@ -140,8 +163,22 @@ class Job:
         await self.on_settled()
 
     async def on_settled(self) -> None:
-        """Hook for later slices (permit match)."""
-        return None
+        await self._match_permit()
+
+    async def _match_permit(self) -> None:
+        """R-COR-1: exactly one permit counts -> the mark. Several -> the contractor picks one."""
+        assert self.inp is not None
+        if self.permit_marked:
+            return
+        m: permit_match.MatchPermitOut = await self._db(
+            permit_match.match_permit, permit_match.MatchIn(job_id=self.inp.job_id)
+        )
+        self.permit_candidates = m.pks if m.result == "possible" else []
+        if m.already_marked:
+            self.permit_marked = True
+        elif m.result == "on_file":
+            await self._record("permit.matched", f"match:job-{self.inp.job_id}:{m.pks[0]}", pk=m.pks[0])
+            self.permit_marked = True
 
     async def _finish(self, ref: CommandRef, ok: bool, code: str) -> None:
         result = CommandResult(command_id=ref.command_id, ok=ok, code=code, state=self.status)
@@ -153,6 +190,11 @@ class Job:
     async def handle(self, ref: CommandRef) -> None:
         assert self.inp is not None
         ckey = f"cmd:{ref.command_id}"
+        # Checked again when its turn comes: an earlier command may have moved the job on.
+        stale = self._allowed(ref)
+        if stale is not None:
+            await self._finish(ref, False, stale)
+            return
         if ref.kind in ("fix_fact", "approve_facts"):
             out: acts.CommandOut = await self._db(
                 acts.apply_fix, acts.CommandIn(job_id=self.inp.job_id, command_id=ref.command_id)
@@ -168,6 +210,18 @@ class Job:
             )
             await self._settle(ckey)
             await self._finish(ref, True, out.code)
+        elif ref.kind == "pick_permit":
+            pk = ref.codes["pk"]
+            await self._record(
+                "permit.matched",
+                f"match:job-{self.inp.job_id}:{pk}",
+                pk=pk,
+                picked_by_contractor=True,
+                command_id=str(ref.command_id),
+            )
+            self.permit_marked = True
+            self.permit_candidates = []
+            await self._finish(ref, True, "picked")
         elif ref.kind == "drop":
             await self._record("job.dropped", f"{ckey}:job.dropped", command_id=str(ref.command_id))
             await self._finish(ref, True, "dropped")
@@ -188,8 +242,16 @@ class Job:
         await self._read()
         await self._settle(f"wf:job-{inp.job_id}:1:first")
         while self.is_open():
-            await workflow.wait_condition(lambda: self.q.has_work() or not self.is_open())
+            await workflow.wait_condition(
+                lambda: self.q.has_work() or not self.is_open() or self.permits_dirty
+            )
+            if self.permits_dirty:
+                self.permits_dirty = False
+                if self.status not in ("recorded", "retracted"):
+                    await self._match_permit()
             if self.q.has_work():
                 await self.handle(self.q.pop())
+        while self.q.has_work():  # commands queued behind the one that closed the job get an answer
+            await self._finish(self.q.pop(), False, "job_closed")
         await workflow.wait_condition(workflow.all_handlers_finished)
         return JobOut(job_id=inp.job_id, status=self.status or "imported", round=self.round)

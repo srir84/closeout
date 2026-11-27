@@ -144,7 +144,7 @@ def validate(purpose: Purpose, text: str) -> tuple[dict[str, Any] | None, list[s
     """Typed fields only: the answer must be one JSON object with exactly the schema's keys and types."""
     _, _, schema, _ = prompt(purpose)
     try:
-        data = json.loads(text)
+        data = _no_nul(json.loads(text))
     except (json.JSONDecodeError, TypeError):
         return None, ["not_json"]
     if not isinstance(data, dict):
@@ -166,6 +166,17 @@ def validate(purpose: Purpose, text: str) -> tuple[dict[str, Any] | None, list[s
         elif "enum" in props[k] and v not in props[k]["enum"]:
             errors.append(f"enum:{k}")
     return (data if not errors else None), errors
+
+
+def _no_nul(v: Any) -> Any:
+    """NUL characters can't be stored and never mean anything in a typed field: drop them."""
+    if isinstance(v, str):
+        return v.replace("\x00", "")
+    if isinstance(v, dict):
+        return {_no_nul(k): _no_nul(x) for k, x in v.items()}
+    if isinstance(v, list):
+        return [_no_nul(x) for x in v]
+    return v
 
 
 def _is(v: object, t: str) -> bool:

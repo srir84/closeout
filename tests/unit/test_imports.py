@@ -82,3 +82,15 @@ def test_file_level_errors(data: bytes, error: str) -> None:
 def test_fifty_jobs_is_allowed_and_bom_is_ok() -> None:
     p = parse_csv(b"\xef\xbb\xbf" + csv(*[GOOD.replace("A1", f"A{i}") for i in range(MAX_JOBS)]), TODAY)
     assert len(p.rows) == MAX_JOBS and p.error is None
+
+
+def test_a_row_with_extra_values_is_refused_alone() -> None:
+    p = parse_csv(csv(GOOD, GOOD.replace("A1", "A2") + ",surplus,more"), TODAY)
+    assert [r.job_ref for r in p.rows] == ["A1"]
+    assert [(x.job_ref, x.reason) for x in p.rejected] == [("A2", "extra_columns")]
+    assert "extra_columns" in messages() and "bad_csv" in messages()
+
+
+def test_a_broken_csv_is_a_file_error() -> None:
+    p = parse_csv(HEAD.encode() + b'A1,"unclosed,x\n', TODAY)
+    assert p.error in ("bad_csv", None)

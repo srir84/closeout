@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 26447,
+ "prompt_version": "invoice_v1",
+ "text": "{\n    \"contractor_name\": \"Inlet Roofing Co.\",\n    \"contractor_license\": \"HIC Reg # 13VH00077302\",\n    \"contractor_email\": \"estimates@inletroof.example\",\n    \"customer_name\": \"Ingrid Adeyemi\",\n    \"job_address\": \"54 Bayberry Cir\",\n    \"work_type\": \"roof\",\n    \"completion_date\": \"2025-07-01\",\n    \"total_amount\": 32387.0,\n    \"warranty_years\": 5\n}",
+ "tokens_in": 4269,
+ "tokens_out": 128
+}

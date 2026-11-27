@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 14807,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Tidewater Electric LLC\",\n  \"contractor_license\": \"13VH00938114\",\n  \"contractor_email\": \"jobs@tidewater-elec.example\",\n  \"customer_name\": \"Tomasz Moreau\",\n  \"job_address\": \"111 Bayberry Cir\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2024-04-21\",\n  \"total_amount\": 13096,\n  \"warranty_years\": 2\n}",
+ "tokens_in": 3894,
+ "tokens_out": 123
+}

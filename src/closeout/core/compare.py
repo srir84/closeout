@@ -17,7 +17,8 @@ NAME_SUFFIXES = ("llc", "inc", "co", "corp", "company", "ltd")
 
 
 def name_key(s: str) -> str:
-    words = re.sub(r"[^a-z0-9& ]", " ", s.lower().replace(".", "")).split()
+    # Any letter in any script counts, so two different non-Latin names never both become "".
+    words = re.sub(r"[^\w& ]|_", " ", s.lower().replace(".", "")).split()
     while words and words[-1] in NAME_SUFFIXES:
         words.pop()
     return " ".join(words)
@@ -31,7 +32,8 @@ def same_value(field: str, a: object, b: object) -> bool:
         assert isinstance(a, Decimal) and isinstance(b, Decimal)
         return abs(a - b) <= Decimal("0.01")
     if field in ("contractor_name", "customer_name"):
-        return name_key(str(a)) == name_key(str(b))
+        ka, kb = name_key(str(a)), name_key(str(b))
+        return bool(ka) and ka == kb
     if field == "job_address":
         return address.normalise(str(a)) == address.normalise(str(b))
     return a == b

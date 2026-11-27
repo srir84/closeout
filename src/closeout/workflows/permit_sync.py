@@ -22,6 +22,13 @@ FEED_RETRY = RetryPolicy(
 class PermitSync:
     @workflow.run
     async def run(self, inp: SyncIn) -> SyncOut:
-        return await workflow.execute_activity(
+        out: SyncOut = await workflow.execute_activity(
             sync_permits, inp, start_to_close_timeout=timedelta(seconds=120), retry_policy=FEED_RETRY
         )
+        for jid in out.job_ids:
+            # Later permits (design 3.2): each unmarked job on a changed parcel checks again.
+            try:
+                await workflow.get_external_workflow_handle(f"job-{jid}").signal("permits_changed")
+            except Exception:  # a closed or missing job workflow has nothing to re-check
+                workflow.logger.info("job %s not running", jid)
+        return out

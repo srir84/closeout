@@ -128,8 +128,17 @@ def clean_warranty(raw: object) -> Cleaned:
     return Cleaned(value=int(n))
 
 
+def link_tlds() -> str:
+    return (
+        "com|net|org|edu|gov|example|test|io|co|dev|app|xyz|info|biz|us|me|ly|gg|ai|link|site|online|top|"
+        "page|click|live|shop|store|pay|cash|money|help|support|tech|cloud|email|ws|tk|ru|cn|uk"
+    )
+
+
+# Any scheme (http, ftp, javascript, data...), www., or a domain-shaped word with a known ending.
 URL_RX = re.compile(
-    r"(?i)\b(?:https?://|www\.)\S+|\b[a-z0-9.-]+\.(?:com|net|org|example|test|io|co)(?:/\S*)?\b"
+    r"(?i)\b[a-z][a-z0-9+.-]*:/{1,3}\S*|\bwww\.\S+|\b(?:javascript|data|mailto|file):\S+|"
+    rf"\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:{link_tlds()})(?:[/?#:]\S*)?\b"
 )
 EMAIL_RX = re.compile(r"(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}")
 

@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 15212,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Inlet Roofing Co.\",\n  \"contractor_license\": \"13VH00077302\",\n  \"contractor_email\": \"estimates@inletroof.example\",\n  \"customer_name\": \"Hiroshi Novak\",\n  \"job_address\": \"44 Lantern Pl\",\n  \"work_type\": \"roof\",\n  \"completion_date\": \"2024-01-02\",\n  \"total_amount\": 8618.0,\n  \"warranty_years\": 10\n}",
+ "tokens_in": 3894,
+ "tokens_out": 122
+}

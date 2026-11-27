@@ -21,7 +21,7 @@ class ImportBatch:
         if out.job_ids:
             await workflow.execute_activity(
                 "start_jobs",
-                acts.StartJobsIn(job_ids=out.job_ids, clock=inp.clock),
+                acts.StartJobsIn(job_ids=out.job_ids, clock=inp.clock, light=inp.light),
                 start_to_close_timeout=timedelta(seconds=120),
                 retry_policy=DB_RETRY,
             )

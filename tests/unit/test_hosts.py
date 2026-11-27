@@ -36,3 +36,19 @@ def test_templates_autoescape() -> None:
         request=None, message="<b>hi</b>", account=None, csrf="", clock={}
     )
     assert t is not None
+
+
+@pytest.mark.slice("S4")
+@pytest.mark.req("R-IMP-1")
+def test_oversized_upload_refused_before_it_is_read(client: TestClient) -> None:
+    from closeout.app.security import MAX_UPLOAD_BYTES
+
+    r = client.post(
+        "/c/import",
+        headers={
+            "content-type": "multipart/form-data; boundary=x",
+            "content-length": str(MAX_UPLOAD_BYTES + 1),
+        },
+        content=b"--x--",
+    )
+    assert r.status_code == 413

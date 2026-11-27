@@ -15,6 +15,7 @@ from starlette.types import ASGIApp
 from closeout import keys
 
 COOKIE = "closeout_session"
+MAX_UPLOAD_BYTES = 100 * 1024 * 1024
 CSP = (
     "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; "
     "form-action 'self'; frame-ancestors 'none'; base-uri 'none'"
@@ -62,6 +63,13 @@ class HostAndHeaders(BaseHTTPMiddleware):
         host = request.headers.get("host", "").lower()
         if host not in self.allowed:
             return PlainTextResponse("Unknown host", status_code=400)
+        # Uploads are refused by size before anything is read or spooled to disk.
+        if request.method == "POST" and "multipart/" in request.headers.get("content-type", ""):
+            length = request.headers.get("content-length")
+            if length is None:
+                return PlainTextResponse("Uploads need a Content-Length.", status_code=411)
+            if not length.isdigit() or int(length) > MAX_UPLOAD_BYTES:
+                return PlainTextResponse("The upload is too big (at most 100 MB in one go).", status_code=413)
         response: Response = await call_next(request)
         response.headers["Content-Security-Policy"] = CSP
         response.headers["Referrer-Policy"] = "no-referrer"

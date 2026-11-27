@@ -125,8 +125,14 @@ def test_light_mode_keeps_nothing_without_a_person(replay_env, monkeypatch: pyte
     assert (out.kept, out.unconfirmed) == (0, 9)
     with db.tx() as c:
         # Nothing a model read is kept. The contractor's details come from our list, not the read.
-        assert db.scalar(c, "SELECT count(*) FROM facts WHERE job_id=:j AND status='kept' AND source<>'registry'",
-                         j=job) == 0
+        assert (
+            db.scalar(
+                c,
+                "SELECT count(*) FROM facts WHERE job_id=:j AND status='kept' AND source<>'registry'",
+                j=job,
+            )
+            == 0
+        )
         assert db.scalar(c, "SELECT count(*) FROM facts WHERE job_id=:j AND status='unconfirmed'", j=job) == 6
 
 

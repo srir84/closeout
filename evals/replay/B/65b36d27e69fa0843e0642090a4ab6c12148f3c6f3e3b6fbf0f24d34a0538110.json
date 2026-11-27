@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 23687,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Tidewater Electric LLC\",\n  \"contractor_license\": \"13VH00938114\",\n  \"contractor_email\": \"jobs@tidewater-elec.example\",\n  \"customer_name\": \"Mateo Haddad\",\n  \"job_address\": \"50 Heron Way\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2025-06-21\",\n  \"total_amount\": 10017.65,\n  \"warranty_years\": 3\n}",
+ "tokens_in": 3894,
+ "tokens_out": 125
+}

@@ -9,7 +9,7 @@ from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 from closeout import clockdb, commands, db, files
-from closeout.activities.jobs import BatchIn
+from closeout.activities.jobs import REGISTRY_FIELDS, BatchIn
 from closeout.app import deps
 from closeout.app.deps import render
 from closeout.core.clean import invoice_fields
@@ -57,6 +57,46 @@ def job_facts(job_id: uuid.UUID) -> list[dict[str, Any]]:
         {"field": f, "label": FIELD_LABELS[f], **rows.get(f, {"status": "missing", "value": None})}
         for f in invoice_fields()
     ]
+
+
+def permit_view(job: dict[str, Any]) -> dict[str, Any]:
+    """The permit result for the job page (R-COR-1, R-COR-2)."""
+    from closeout.core import permits as pm
+
+    with db.tx() as c:
+        marked = db.one(
+            c,
+            """SELECT payload FROM events WHERE stream = :s AND kind = 'permit.matched'
+                              ORDER BY seq DESC LIMIT 1""",
+            s=f"job-{job['id']}",
+        )
+        pks = [marked["payload"]["pk"]] if marked else list(job["permit_pks"] or [])
+        rows = db.all_rows(
+            c,
+            """SELECT pk, permit_no, permit_type, trades, issued_on, final_on, cost FROM permits
+                                WHERE pk = ANY(:p) ORDER BY issued_on""",
+            p=pks,
+        )
+    result = "on_file" if marked else (job["permit_result"] or "none")
+    keys = ("pk", "permit_no", "permit_type", "trades", "issued_on", "final_on")
+    first = pm.Permit(**{k: rows[0][k] for k in keys}) if rows else None
+    m = pm.PermitMatch(result=result, pks=pks)
+    statement = (
+        job["work_type"] in ("roof", "windows")
+        and result in ("none", "no_details")
+        and bool(job["stated_like_for_like"])
+        and bool(job["stated_detached_1_2_family"])
+    )
+    return {
+        "result": result,
+        "headline": pm.headline(result),
+        "sentence": pm.sentence(m, first),
+        "permits": rows,
+        "picked": bool(marked and marked["payload"].get("picked_by_contractor")),
+        "statement": pm.STATEMENT_LINE if statement else None,
+        "final_missing": pm.FINAL_MISSING,
+        "trade_words": pm.trade_words,
+    }
 
 
 def register(app: FastAPI) -> None:
@@ -134,7 +174,9 @@ def register(app: FastAPI) -> None:
         client = await deps.temporal()
         await client.start_workflow(
             "ImportBatch",
-            BatchIn(batch_id=batch_id, clock=clockdb.clock_in(clk)),
+            BatchIn(
+                batch_id=batch_id, clock=clockdb.clock_in(clk), light=get_settings().closeout_mode == "light"
+            ),
             id=f"import-{batch_id}",
             task_queue=get_settings().task_queue,
         )
@@ -187,6 +229,7 @@ def register(app: FastAPI) -> None:
             msg=msg,
             sample=True,
             command_id=uuid.uuid4(),
+            permit=permit_view(job),
         )
 
     @app.get("/c/review/{job_id}", response_class=HTMLResponse)
@@ -244,7 +287,7 @@ def register(app: FastAPI) -> None:
         acct = deps.require_account(request, "contractor")
         deps.check_csrf(request, csrf)
         own_job(acct, job_id)
-        if field not in invoice_fields():
+        if field not in invoice_fields() or field in REGISTRY_FIELDS:
             raise HTTPException(status_code=400, detail="Unknown field")
         out = await send(
             acct,
@@ -264,6 +307,22 @@ def register(app: FastAPI) -> None:
         deps.check_csrf(request, csrf)
         own_job(acct, job_id)
         out = await send(acct, job_id, "approve_facts", command_id)
+        return RedirectResponse(f"/c/jobs/{job_id}?msg={outcome_msg(out)}", status_code=303)
+
+    @app.post("/c/jobs/{job_id}/pick")
+    async def pick_permit(
+        request: Request,
+        job_id: uuid.UUID,
+        pk: str = Form(...),
+        command_id: uuid.UUID = Form(...),
+        csrf: str = Form(""),
+    ) -> Any:
+        acct = deps.require_account(request, "contractor")
+        deps.check_csrf(request, csrf)
+        job = own_job(acct, job_id)
+        if pk not in (job["permit_pks"] or []):
+            raise HTTPException(status_code=400, detail="That permit isn't one of the choices.")
+        out = await send(acct, job_id, "pick_permit", command_id, codes={"pk": pk})
         return RedirectResponse(f"/c/jobs/{job_id}?msg={outcome_msg(out)}", status_code=303)
 
     @app.post("/c/review/{job_id}/drop")

@@ -9,7 +9,22 @@
   <dt>Property</dt><dd id="parcel">{{ job.parcel_address or "Not matched yet" }}</dd>
   <dt>Type of work</dt><dd>{{ job.work_type }}</dd>
 </dl>
-{% block permit %}{% endblock %}
+<h2>Town permit</h2>
+<div class="card" id="permit">
+  <h3 id="permit-result">{{ permit.headline }}{% if permit.picked %} <small>(picked by the contractor)</small>{% endif %}</h3>
+  <p id="permit-sentence">{{ permit.sentence }}</p>
+  {% if permit.statement %}<p id="statement" class="muted">{{ permit.statement }}</p>{% endif %}
+  {% if permit.permits %}
+  <table>
+    <tr><th>Permit</th><th>Type</th><th>Work</th><th>Issued</th><th>Final approval</th><th>Cost</th><th></th></tr>
+    {% for p in permit.permits %}
+    <tr><td>{{ p.permit_no or p.pk }}</td><td>{{ p.permit_type }}</td><td>{{ permit.trade_words(p.trades) or 'No work details' }}</td><td>{{ p.issued_on }}</td>
+      <td>{{ p.final_on if p.final_on else permit.final_missing }}</td><td>{{ '${:,.0f}'.format(p.cost) if p.cost is not none else '' }}</td>
+      <td>{% if permit.result == 'possible' %}<form method="post" action="/c/jobs/{{ job.id }}/pick"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="pk" value="{{ p.pk }}"><input type="hidden" name="command_id" value="{{ command_id }}"><button class="secondary">This one</button></form>{% endif %}</td></tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+</div>
 <h2>What the invoice says</h2>
 <table id="facts">
   <tr><th>Fact</th><th>Value</th><th>Status</th></tr>

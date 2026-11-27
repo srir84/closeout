@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 16997,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Inlet Roofing Co.\",\n  \"contractor_license\": \"13VH00077302\",\n  \"contractor_email\": \"estimates@inletroof.example\",\n  \"customer_name\": \"Rahul Mensah\",\n  \"job_address\": \"200 Bayberry Cir\",\n  \"work_type\": \"roof\",\n  \"completion_date\": \"2025-07-06\",\n  \"total_amount\": 40490.0,\n  \"warranty_years\": 10\n}",
+ "tokens_in": 4269,
+ "tokens_out": 125
+}

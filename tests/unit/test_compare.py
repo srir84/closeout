@@ -112,3 +112,11 @@ def test_same_contractor(lic, name, same: bool) -> None:
     assert other_contractor(lic, name, "13VH01234567", "Harbor & Pine Builders") is (
         not same and (lic or name) is not None
     )
+
+
+def test_non_latin_names_are_compared_not_emptied() -> None:
+    assert name_key("王芳") == "王芳"
+    assert not same_value("customer_name", "王芳", "李明")
+    assert same_value("customer_name", "王芳", "王芳")
+    assert not same_value("customer_name", "LLC", "Inc.")  # both empty after suffixes: never agree
+    assert name_key("José Núñez") == "josé núñez"

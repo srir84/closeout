@@ -10,7 +10,7 @@ from temporalio import activity
 from temporalio.client import WorkflowUpdateFailedError
 
 from closeout.activities import jobs as acts
-from closeout.activities import reading
+from closeout.activities import permit_match, reading
 from closeout.workflows.job import Job, JobIn
 from closeout.workflows.payloads import ClockIn, CommandRef, CommandResult
 
@@ -19,7 +19,10 @@ NOW = datetime(2026, 3, 2, 9, tzinfo=UTC)
 
 
 class Fakes:
-    def __init__(self, reasons: list[list[str]], fix_ok: bool = True) -> None:
+    def __init__(
+        self, reasons: list[list[str]], fix_ok: bool = True, permit: tuple[str, list[str]] = ("none", [])
+    ) -> None:
+        self.permit = permit
         self.reasons = list(reasons)
         self.fix_ok = fix_ok
         self.recorded: list[str] = []
@@ -59,6 +62,10 @@ class Fakes:
         async def apply_fix(inp: acts.CommandIn) -> acts.CommandOut:
             return acts.CommandOut(ok=f.fix_ok, code="fixed" if f.fix_ok else "bad_value")
 
+        @activity.defn(name="match_permit")
+        async def match_permit(inp: permit_match.MatchIn) -> permit_match.MatchPermitOut:
+            return permit_match.MatchPermitOut(result=f.permit[0], pks=f.permit[1], already_marked=False)
+
         @activity.defn(name="finish_command")
         async def finish_command(r: CommandResult) -> None:
             f.finished.append(r)
@@ -72,6 +79,7 @@ class Fakes:
             check_job,
             apply_fix,
             finish_command,
+            match_permit,
         ]
 
 
@@ -193,3 +201,82 @@ async def test_drop_ends_the_workflow(ts_env) -> None:
 
     await run_job(ts_env, f, script=script)
     assert f.recorded[-1] == "job.dropped"
+
+
+@pytest.mark.req("R-COR-1")
+@pytest.mark.slice("S5")
+async def test_one_permit_gives_the_mark_event(ts_env) -> None:
+    f = Fakes([[]], permit=("on_file", ["p1"]))
+
+    async def script(h):
+        await wait_state(h, "ready")
+        with pytest.raises(WorkflowUpdateFailedError):
+            await h.execute_update(Job.command, ref("pick_permit", pk="p1"), id="p0")  # already marked
+        await h.terminate("done")
+
+    await run_job(ts_env, f, script=script)
+    assert f.recorded == ["job.imported", "job.ready", "permit.matched"]
+
+
+@pytest.mark.req("R-COR-1")
+@pytest.mark.slice("S5")
+async def test_several_permits_the_contractor_picks_one(ts_env) -> None:
+    f = Fakes([[]], permit=("possible", ["p1", "p2"]))
+
+    async def script(h):
+        await wait_state(h, "ready")
+        with pytest.raises(WorkflowUpdateFailedError):
+            await h.execute_update(Job.command, ref("pick_permit", pk="p9"), id="p1")  # not a candidate
+        r = await h.execute_update(Job.command, ref("pick_permit", pk="p2"), id="p2")
+        assert (r.ok, r.code) == (True, "picked")
+        await h.terminate("done")
+
+    await run_job(ts_env, f, script=script)
+    assert f.recorded == ["job.imported", "job.ready", "permit.matched"]
+
+
+async def test_two_queued_commands_never_both_apply(ts_env) -> None:
+    """Whichever runs first wins; the other is re-checked when its turn comes and refused, never stuck."""
+    import asyncio
+
+    f = Fakes([["facts_asked"], []])
+
+    async def script(h):
+        await wait_state(h, "needs_a_look")
+        drop = asyncio.create_task(h.execute_update(Job.command, ref("drop"), id="q1"))
+        fix = asyncio.create_task(
+            h.execute_update(Job.command, ref("fix_fact", field="total_amount"), id="q2")
+        )
+        d, x = await asyncio.wait_for(asyncio.gather(drop, fix, return_exceptions=True), timeout=10)
+        oks = [r for r in (d, x) if not isinstance(r, BaseException) and r.ok]
+        assert len(oks) == 1
+        if oks[0] is d:
+            assert (await h.result()).status == "dropped"
+            assert isinstance(x, BaseException) or x.code in ("job_closed", "not_allowed_in_dropped")
+        else:
+            assert isinstance(d, BaseException) or d.code == "not_allowed_in_ready"
+            await h.terminate("done")
+
+    await run_job(ts_env, f, script=script)
+    assert not ("job.dropped" in f.recorded and "job.fact_fixed" in f.recorded)
+
+
+async def test_an_idle_job_does_not_spin(ts_env) -> None:
+    """While waiting for a person, the workflow does nothing: its history stays small."""
+    import asyncio
+
+    f = Fakes([[]])
+
+    async def script(h):
+        await wait_state(h, "ready")
+        before = len((await h.fetch_history()).events)
+        await asyncio.sleep(1.0)
+        after = len((await h.fetch_history()).events)
+        assert after == before < 80
+        await h.signal(Job.permits_changed)
+        await asyncio.sleep(0.5)
+        grown = len((await h.fetch_history()).events) - after
+        assert 0 < grown < 20  # one re-check, then quiet again
+        await h.terminate("done")
+
+    await run_job(ts_env, f, script=script)

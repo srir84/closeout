@@ -12,8 +12,10 @@ from pydantic import BaseModel
 from temporalio import activity
 from temporalio.client import Client
 from temporalio.common import WorkflowIDConflictPolicy, WorkflowIDReusePolicy
+from temporalio.exceptions import WorkflowAlreadyStartedError
 
 from closeout import db, events, files
+from closeout.activities.safety import scrubbed
 from closeout.core import address as addr
 from closeout.core.clean import clean_field, invoice_fields
 from closeout.core.compare import other_contractor, same_value
@@ -22,6 +24,9 @@ from closeout.core.jobs import Refused, homeowner_started_next, next_state
 from closeout.privacy_hmac import email_hmac
 from closeout.settings import get_settings
 from closeout.workflows.payloads import ClockIn
+
+# R-IMP-4: who the contractor is comes from our list. A person can't type over it.
+REGISTRY_FIELDS = ("contractor_name", "contractor_license", "contractor_email")
 
 
 class RecordIn(BaseModel):
@@ -72,6 +77,7 @@ def job_stream(job_id: UUID) -> str:
 
 
 @activity.defn
+@scrubbed
 def record(inp: RecordIn) -> RecordOut:
     """Add one job event and keep jobs.status equal to what the events say."""
     with db.tx() as c:
@@ -99,6 +105,7 @@ def record(inp: RecordIn) -> RecordOut:
 
 
 @activity.defn
+@scrubbed
 def prepare_job(inp: JobRef) -> PrepOut:
     with db.tx() as c:
         job = db.one(c, "SELECT origin FROM jobs WHERE id = :id", id=inp.job_id)
@@ -133,6 +140,7 @@ def parcel_addresses(conn: Any, town: str) -> list[addr.ParcelAddress]:
 
 
 @activity.defn
+@scrubbed
 def match_job_address(inp: JobRef) -> MatchOut:
     """R-IMP-2: one parcel, or needs a look, never a guess."""
     with db.tx() as c:
@@ -150,7 +158,7 @@ def open_review(conn: Any, kind: str, ref: str, reason: str, evidence: dict[str,
         conn,
         """INSERT INTO review_items (kind, ref, reason, evidence, dedupe_key)
                              VALUES (:k, :r, :re, CAST(:e AS jsonb), :d)
-                             ON CONFLICT (dedupe_key) DO NOTHING RETURNING id""",
+                             ON CONFLICT (dedupe_key) DO UPDATE SET resolved_at = NULL, resolution = NULL RETURNING id""",
         k=kind,
         r=ref,
         re=reason,
@@ -167,6 +175,7 @@ def facts_of(conn: Any, job_id: UUID) -> dict[str, dict[str, Any]]:
 
 
 @activity.defn
+@scrubbed
 def check_job(inp: JobRef) -> CheckOut:
     """After reading: what still needs a person? Returns reason codes; opens review items where ops must look."""
     reasons: list[str] = []
@@ -239,6 +248,28 @@ def check_job(inp: JobRef) -> CheckOut:
             reasons.append("address_unmatched")
         order = ("read_failed", "other_contractor", "address_unmatched", "facts_asked", "light_review")
         reasons.sort(key=order.index)
+        # R-OPS-1: everything the system won't guess is on the one list, with the reason and IDs as proof.
+        for r in reasons:
+            if r != "other_contractor":
+                items.append(
+                    open_review(
+                        c,
+                        "needs_a_look",
+                        f"job-{inp.job_id}",
+                        r,
+                        {"job_id": str(inp.job_id), "pin": job["pin"]},
+                        f"{r}:{inp.job_id}",
+                    )
+                )
+        # Reasons that no longer apply are settled.
+        db.run(
+            c,
+            """UPDATE review_items SET resolved_at = now(), resolution = 'fixed'
+                     WHERE ref = :ref AND resolved_at IS NULL AND kind IN ('needs_a_look', 'other_contractor')
+                     AND NOT (reason = ANY(:keep))""",
+            ref=f"job-{inp.job_id}",
+            keep=reasons,
+        )
         db.run(
             c,
             "UPDATE jobs SET needs_reason = :r WHERE id = :id",
@@ -249,6 +280,7 @@ def check_job(inp: JobRef) -> CheckOut:
 
 
 @activity.defn
+@scrubbed
 def apply_fix(inp: CommandIn) -> CommandOut:
     """A person fixed a fact (or approved all facts in light mode). The typed value stays in the database."""
     with db.tx() as c:
@@ -272,9 +304,20 @@ def apply_fix(inp: CommandIn) -> CommandOut:
                     "UPDATE facts SET status='asked', reason='no_value' WHERE job_id=:j AND status='unconfirmed'",
                     j=inp.job_id,
                 )
+            # The approved job address is the address now: it is matched again before the job can be ready.
+            approved = db.scalar(
+                c,
+                """SELECT value FROM facts WHERE job_id = :j AND field = 'job_address'
+                                       AND status = 'kept' AND source = 'person'""",
+                j=inp.job_id,
+            )
+            if approved:
+                db.run(c, "UPDATE jobs SET address_raw = :a WHERE id = :id", a=approved, id=inp.job_id)
             return CommandOut(ok=True, code="approved")
         field = str(cmd["payload"].get("field", ""))
         raw = cmd["payload"].get("value")
+        if field in REGISTRY_FIELDS:
+            return CommandOut(ok=False, code="registry_field")
         if field not in invoice_fields():
             return CommandOut(ok=False, code="bad_field")
         cleaned = clean_field(field, raw, today)
@@ -309,6 +352,7 @@ def apply_fix(inp: CommandIn) -> CommandOut:
 class BatchIn(BaseModel):
     batch_id: UUID
     clock: ClockIn
+    light: bool = False  # fixed when the batch starts, so every job reads the same way
 
 
 class BatchOut(BaseModel):
@@ -379,6 +423,7 @@ def _rej(line: int, ref: str | None, reason: str) -> Any:
 
 
 @activity.defn
+@scrubbed
 def prepare_batch(inp: BatchIn) -> BatchOut:
     """Check the CSV rows and files, make the people, recipients, jobs and documents. Idempotent per batch."""
     with db.tx() as c:
@@ -423,6 +468,7 @@ def prepare_batch(inp: BatchIn) -> BatchOut:
 
 
 @activity.defn
+@scrubbed
 def finish_batch(inp: BatchIn) -> None:
     with db.tx() as c:
         db.run(
@@ -435,6 +481,7 @@ def finish_batch(inp: BatchIn) -> None:
 class StartJobsIn(BaseModel):
     job_ids: list[UUID]
     clock: ClockIn
+    light: bool = False
 
 
 class Starter:
@@ -444,18 +491,22 @@ class Starter:
         self.client = client
 
     @activity.defn(name="start_jobs")
+    @scrubbed
     async def start_jobs(self, inp: StartJobsIn) -> int:
         from closeout.workflows.job import JobIn
 
         n = 0
         for jid in inp.job_ids:
-            await self.client.start_workflow(
-                "Job",
-                JobIn(job_id=jid, clock=inp.clock),
-                id=f"job-{jid}",
-                task_queue=get_settings().task_queue,
-                id_reuse_policy=WorkflowIDReusePolicy.REJECT_DUPLICATE,
-                id_conflict_policy=WorkflowIDConflictPolicy.USE_EXISTING,
-            )
+            try:
+                await self.client.start_workflow(
+                    "Job",
+                    JobIn(job_id=jid, clock=inp.clock, light=inp.light),
+                    id=f"job-{jid}",
+                    task_queue=get_settings().task_queue,
+                    id_reuse_policy=WorkflowIDReusePolicy.REJECT_DUPLICATE,
+                    id_conflict_policy=WorkflowIDConflictPolicy.USE_EXISTING,
+                )
+            except WorkflowAlreadyStartedError:
+                pass  # started by an earlier try, even if it has finished since: that counts
             n += 1
         return n

@@ -75,6 +75,8 @@ def messages() -> dict[str, str]:
         "missing_file": "The invoice file named in this row wasn't uploaded.",
         "bad_file": "The invoice file was refused.",
         "text_too_long": "A value is longer than 200 characters.",
+        "extra_columns": "This row has more values than there are columns.",
+        "bad_csv": "The CSV file couldn't be read.",
     }
 
 
@@ -104,7 +106,16 @@ def parse_csv(data: bytes, today: date, already: set[str] | None = None) -> Pars
         return Parsed(rows=[], rejected=[], error="missing_header")
     if any(c not in header for c, req in columns() if req):
         return Parsed(rows=[], rejected=[], error="missing_columns")
-    raw = [{(k or "").strip(): (v or "").strip() for k, v in r.items()} for r in reader]
+    try:
+        records = list(reader)
+    except csv.Error:
+        return Parsed(rows=[], rejected=[], error="bad_csv")
+    # A row with more values than columns keeps the extras under the key None: refuse just that row.
+    raw = [
+        {(k or "").strip(): (v if isinstance(v, str) else "").strip() for k, v in r.items() if k is not None}
+        | ({"__extra__": "1"} if None in r else {})
+        for r in records
+    ]
     if len(raw) > MAX_JOBS:
         return Parsed(rows=[], rejected=[], error="too_many_jobs")
     rows: list[Row] = []
@@ -112,7 +123,7 @@ def parse_csv(data: bytes, today: date, already: set[str] | None = None) -> Pars
     seen: set[str] = set()
     for i, r in enumerate(raw, start=2):
         ref = r.get("job_ref") or None
-        reason = check_row(r, today)
+        reason = "extra_columns" if r.get("__extra__") else check_row(r, today)
         if reason is None and ref in seen:
             reason = "duplicate_ref"
         if reason is None and ref in already:

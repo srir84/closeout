@@ -211,3 +211,22 @@ EXACT = [
 def test_exact_values_and_refusal_codes(fn, args, value, flags) -> None:
     c = fn(*args)
     assert (c.value, c.flags) == (value, flags)
+
+
+@pytest.mark.req("R-SAFE-1")
+@pytest.mark.parametrize(
+    "raw",
+    [
+        "ftp://evil.dev/x",
+        "javascript:alert(1)",
+        "data:text/html,hi",
+        "HTTP://X.EXAMPLE",
+        "pay-here.shop/now",
+        "file:///etc/passwd",
+        "evil.app",
+        "sftp://host.example",
+    ],
+)
+def test_every_link_form_is_removed(raw: str) -> None:
+    c = clean_text("Lena " + raw + " Ostrowski")
+    assert c.value == "Lena Ostrowski", c.value
