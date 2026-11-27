@@ -10,15 +10,14 @@ import functools
 import inspect
 import logging
 from collections.abc import Callable
-from typing import Any, TypeVar
+from typing import Any
 
 from temporalio.exceptions import ApplicationError
 
-F = TypeVar("F", bound=Callable[..., Any])
 log = logging.getLogger("closeout.activities")
 
 
-def scrubbed(fn: F) -> F:
+def scrubbed[F: Callable[..., Any]](fn: F) -> F:
     if inspect.iscoroutinefunction(fn):
 
         @functools.wraps(fn)
