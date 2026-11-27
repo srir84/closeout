@@ -1,0 +1,13 @@
+job_ref,homeowner_name,homeowner_email,job_address,work_type,same_size_replacement,detached_1_2_family,finish_date,total,invoice_file
+HP-25-001,Dana Whitfield,dana.whitfield@sampleton.example,14 Osprey Ln,kitchen,,,2025-03-28,48250.00,HP-25-001.png
+HP-25-002,Marcus Ortega,marcus.ortega@sampleton.example,22 Osprey Ln,bathroom,,,2025-05-16,21400.00,HP-25-002.png
+HP-25-003,Grace Liu,grace.liu@sampleton.example,7 Heron Way,deck,,,2025-06-20,18900.00,HP-25-003.png
+HP-25-004,Rosa Delgado,rosa.delgado@sampleton.example,31 Heron Way,windows,,,2025-04-11,12600.00,HP-25-004.png
+HP-25-005,Samuel Okafor,samuel.okafor@sampleton.example,126 Tidewater Rd,roof,,,2025-07-25,23800.00,HP-25-005.png
+HP-25-006,Helen Park,helen.park@sampleton.example,128 Tidewater Rd,hvac,,,2025-02-14,15350.00,HP-25-006.png
+HP-25-007,Victor Hale,victor.hale@sampleton.example,5 Sandbar Ct,addition,,,2025-09-12,96500.00,HP-25-007.png
+HP-25-008,Nina Petrova,nina.petrova@sampleton.example,9 Sandbar Ct,plumbing,,,2025-08-08,4200.00,HP-25-008.png
+HP-25-009,Owen Fitzgerald,owen.fitzgerald@sampleton.example,40 Beacon Ave,electrical,,,2025-10-03,6800.00,HP-25-009.png
+HP-25-010,Leah Cohen,leah.cohen@sampleton.example,44 Beacon Ave,kitchen,,,2025-11-07,52900.00,HP-25-010.png
+HP-25-011,Ivan Morales,ivan.morales@sampleton.example,3 Lantern Pl,bathroom,,,2025-06-06,19750.00,HP-25-011.png
+HP-25-012,Ruth Adams,ruth.adams@sampleton.example,12 Lantern Pl,deck,,,2025-05-30,14300.00,HP-25-012.png

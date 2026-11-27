@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Job {{ job.job_ref }}{% endblock %}
+{% block content %}
+<h1>Job {{ job.job_ref }} <span class="state {{ job.status }}" id="job-status">{{ job.status | replace('_', ' ') }}</span></h1>
+{% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
+{% if job.status == 'needs_a_look' %}<p class="warn">{{ reasons.get(job.needs_reason, 'This job needs a look.') }} <a class="button" href="/c/review/{{ job.id }}" id="review-link">Review</a></p>{% endif %}
+<dl class="kv">
+  <dt>Address on file</dt><dd>{{ job.address_raw }}</dd>
+  <dt>Property</dt><dd id="parcel">{{ job.parcel_address or "Not matched yet" }}</dd>
+  <dt>Type of work</dt><dd>{{ job.work_type }}</dd>
+</dl>
+{% block permit %}{% endblock %}
+<h2>What the invoice says</h2>
+<table id="facts">
+  <tr><th>Fact</th><th>Value</th><th>Status</th></tr>
+  {% for f in facts %}
+  <tr><td>{{ f.label }}</td><td>{{ f.value if f.value is not none else "—" }}</td><td>{{ {'kept': 'Both reads agree', 'asked': 'Needs checking', 'unconfirmed': 'Not confirmed yet', 'answered': 'Answered', 'missing': '—'}.get(f.status, f.status) }}{% if f.source == 'person' %} (you){% endif %}</td></tr>
+  {% endfor %}
+</table>
+{% block actions %}{% endblock %}
+{% endblock %}

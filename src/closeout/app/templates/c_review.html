@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Review job {{ job.job_ref }}{% endblock %}
+{% block content %}
+<h1>Review job {{ job.job_ref }}</h1>
+{% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
+<p>{{ reasons.get(job.needs_reason, '') }}</p>
+<p class="muted">Address on file: {{ job.address_raw }}{% if job.parcel_address %} · matched to {{ job.parcel_address }}{% endif %}</p>
+<table id="review">
+  <tr><th>Fact</th><th>Read A</th><th>Read B</th><th>Status</th><th>Fix</th></tr>
+  {% for f in facts %}
+  <tr id="fact-{{ f.field }}"><td>{{ f.label }}</td><td>{{ f.value_a if f.value_a is not none else "—" }}</td><td>{{ f.value_b if f.value_b is not none else "—" }}</td>
+    <td>{{ {'kept': 'OK', 'asked': 'Needs checking', 'unconfirmed': 'Check this', 'missing': 'Missing'}.get(f.status, f.status) }}</td>
+    <td>{% if job.status == 'needs_a_look' and f.status != 'kept' or f.field == 'job_address' and not job.parcel_address %}
+      <form method="post" action="/c/review/{{ job.id }}/fix" class="inline">
+        <input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="field" value="{{ f.field }}">
+        <input type="hidden" name="command_id" value="{{ command_ids[f.field] }}">
+        <input name="value" value="{{ f.value if f.value is not none else (f.value_a if f.value_a is not none else '') }}" size="22">
+        <button class="secondary">Save</button>
+      </form>{% endif %}</td></tr>
+  {% endfor %}
+</table>
+{% if job.status == 'needs_a_look' %}
+<form method="post" action="/c/review/{{ job.id }}/approve"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_ids['approve'] }}"><button id="approve-all">All facts are right</button></form>
+<form method="post" action="/c/review/{{ job.id }}/drop"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_ids['drop'] }}"><button class="danger" id="drop">Drop this job</button></form>
+{% endif %}
+<p><a href="/c/jobs/{{ job.id }}">Back to the job</a></p>
+{% endblock %}

@@ -1,0 +1,1679 @@
+{
+ "rule": "keep if Tesseract OR the hosted reader (Codex CLI) finds the total and >= 7 of 9 fields; on failure soften x0.7 and retry up to 3 times, then regenerate with a new seed (max 2)",
+ "hosted_reader": "codex exec (default model), read-only, prompt in make_messy.py INVOICE_PROMPT",
+ "summary": {
+  "passed_first_try": 30
+ },
+ "docs": {
+  "messy01": {
+   "kind": "crumpled_photo",
+   "file": "messy01.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112710,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "crumple": 1.2,
+     "folds": 2,
+     "displace": 25.0
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Nadia Marchetti",
+      "job_address": "72 Bayberry Cir",
+      "work_type": "bathroom",
+      "completion_date": "2025-02-06",
+      "total_amount": 30041.59,
+      "warranty_years": 2
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112710,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy02": {
+   "kind": "folded_coffee",
+   "file": "messy02.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112720,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "coffee_ring": {
+      "center": [
+       543,
+       530
+      ],
+      "radius": 276
+     },
+     "creases": "thirds"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Dune Grass Decks",
+      "contractor_license": "13VH 00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Yesenia Lindqvist",
+      "job_address": "61 Tidewater Rd",
+      "work_type": "deck",
+      "completion_date": "2026-01-01",
+      "total_amount": 23325,
+      "warranty_years": 3
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112720,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy03": {
+   "kind": "photocopy_fax_scan",
+   "file": "messy03.pdf",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112730,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "variant": "photocopy",
+     "skew_deg": -0.76,
+     "scale": 0.8,
+     "jpeg": 55
+    },
+    {
+     "page": 2,
+     "variant": "photocopy",
+     "skew_deg": 0.47,
+     "scale": 0.8,
+     "jpeg": 55
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "DUNE GRASS DECKS",
+      "contractor_license": "13VH00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Marcus Alonzo",
+      "job_address": "132 Lantern Place",
+      "work_type": "deck",
+      "completion_date": "2025-08-13",
+      "total_amount": 25950,
+      "warranty_years": 5
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112730,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy04": {
+   "kind": "carbon_copy",
+   "file": "messy04.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112740,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "step": "camera"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 2,
+      "missing": [
+       "contractor_name",
+       "contractor_license",
+       "contractor_email",
+       "customer_name",
+       "job_address",
+       "total_amount",
+       "warranty_years"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "DUNE GRASS DECKS",
+      "contractor_license": "13VH00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Kwame Harrow",
+      "job_address": "36 Saltmeadow Drive",
+      "work_type": "deck",
+      "completion_date": "2025-06-23",
+      "total_amount": 25669.97,
+      "warranty_years": 5
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112740,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy05": {
+   "kind": "handwritten_fix",
+   "file": "messy05.pdf",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112750,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "step": "light photo"
+    },
+    {
+     "page": 2,
+     "step": "light photo"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 8,
+      "missing": [
+       "total_amount"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Silas Abernathy",
+      "job_address": "142 Heron Way",
+      "work_type": "roof",
+      "completion_date": "2025-02-06",
+      "total_amount": 14605.0,
+      "warranty_years": 5
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112750,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy06": {
+   "kind": "faded_receipt",
+   "file": "messy06.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112760,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "fade": 1.0,
+     "curl": true
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 0,
+      "missing": [
+       "contractor_name",
+       "contractor_license",
+       "contractor_email",
+       "customer_name",
+       "job_address",
+       "work_type",
+       "completion_date",
+       "total_amount",
+       "warranty_years"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "HARBOR & PINE BUILDERS",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Ingrid Marchetti",
+      "job_address": "150 Osprey Ln",
+      "work_type": "windows",
+      "completion_date": "2025-12-26",
+      "total_amount": 20500,
+      "warranty_years": 20
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112760,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy07": {
+   "kind": "crumpled_photo",
+   "file": "messy07.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112770,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "crumple": 1.2,
+     "folds": 2,
+     "displace": 25.0
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Marcus Quill",
+      "job_address": "28 Saltmeadow Dr",
+      "work_type": "roof",
+      "completion_date": "2026-08-25",
+      "total_amount": 12375,
+      "warranty_years": 10
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112770,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy08": {
+   "kind": "folded_coffee",
+   "file": "messy08.pdf",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112780,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "coffee_ring": {
+      "center": [
+       1085,
+       1679
+      ],
+      "radius": 275
+     },
+     "creases": "thirds"
+    },
+    {
+     "page": 2,
+     "creases": "thirds"
+    },
+    {
+     "page": 3,
+     "creases": "thirds"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 7,
+      "missing": [
+       "contractor_license",
+       "contractor_email"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Dune Grass Decks",
+      "contractor_license": "13VH00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Tomasz Kowalczyk",
+      "job_address": "247 Bayberry Cir",
+      "work_type": "deck",
+      "completion_date": "2025-09-20",
+      "total_amount": 18446.12,
+      "warranty_years": 3
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112780,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy09": {
+   "kind": "photocopy_fax_scan",
+   "file": "messy09.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112790,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "variant": "fax",
+     "header": "MAY 9, 2025  12:59   FROM: 732 555 0140   P.01",
+     "skew_deg": 0.4,
+     "scale": 1.0,
+     "jpeg": 60
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Nadia Lindqvist",
+      "job_address": "128 Tidewater Road",
+      "work_type": "addition",
+      "completion_date": "2025-04-25",
+      "total_amount": 69732.75,
+      "warranty_years": 10
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112790,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy10": {
+   "kind": "carbon_copy",
+   "file": "messy10.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112800,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "step": "camera"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 4,
+      "missing": [
+       "contractor_name",
+       "contractor_license",
+       "contractor_email",
+       "customer_name",
+       "total_amount"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "HARBOR & PINE BUILDERS",
+      "contractor_license": "13VH 01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Kwame Harrow",
+      "job_address": "196 Beacon Avenue",
+      "work_type": "bathroom",
+      "completion_date": "2026-08-17",
+      "total_amount": 16800,
+      "warranty_years": 1
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112800,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy11": {
+   "kind": "handwritten_fix",
+   "file": "messy11.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112810,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "step": "light photocopy",
+     "variant": "photocopy",
+     "skew_deg": -0.75,
+     "scale": 0.8,
+     "jpeg": 55
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 8,
+      "missing": [
+       "total_amount"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "DUNE GRASS DECKS",
+      "contractor_license": "13VH00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Raj Delacroix",
+      "job_address": "155 Saltmeadow Drive",
+      "work_type": "deck",
+      "completion_date": "2026-01-24",
+      "total_amount": 29775.84,
+      "warranty_years": 3
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112810,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy12": {
+   "kind": "faded_receipt",
+   "file": "messy12.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112820,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "fade": 1.0,
+     "curl": true
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 1,
+      "missing": [
+       "contractor_license",
+       "contractor_email",
+       "customer_name",
+       "job_address",
+       "work_type",
+       "completion_date",
+       "total_amount",
+       "warranty_years"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "HARBOR & PINE BUILDERS",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Yesenia Abernathy",
+      "job_address": "161 Sandbar Court",
+      "work_type": "bathroom",
+      "completion_date": "2025-06-28",
+      "total_amount": 23324.22,
+      "warranty_years": null
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112820,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy13": {
+   "kind": "crumpled_photo",
+   "file": "messy13.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112830,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "crumple": 1.2,
+     "folds": 0,
+     "displace": 25.0
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "BAYSIDE PLUMBING & HEATING",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Beatrice Szabo",
+      "job_address": "210 Beacon Ave",
+      "work_type": "plumbing",
+      "completion_date": "2025-05-02",
+      "total_amount": 3786.2,
+      "warranty_years": 1
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112830,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy14": {
+   "kind": "folded_coffee",
+   "file": "messy14.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112840,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "coffee_ring": {
+      "center": [
+       485,
+       515
+      ],
+      "radius": 240
+     },
+     "creases": "thirds"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 8,
+      "missing": [
+       "contractor_email"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Dune Grass Decks",
+      "contractor_license": "13VH 00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Lena Rourke",
+      "job_address": "168 Osprey Lane",
+      "work_type": "deck",
+      "completion_date": "2025-04-04",
+      "total_amount": 15750.0,
+      "warranty_years": 10
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112840,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy15": {
+   "kind": "photocopy_fax_scan",
+   "file": "messy15.pdf",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112850,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "variant": "lowres",
+     "skew_deg": 1.16,
+     "scale": 0.5,
+     "jpeg": 40
+    },
+    {
+     "page": 2,
+     "variant": "lowres",
+     "skew_deg": 0.54,
+     "scale": 0.5,
+     "jpeg": 40
+    },
+    {
+     "page": 3,
+     "variant": "lowres",
+     "skew_deg": -0.91,
+     "scale": 0.5,
+     "jpeg": 40
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH 00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Everett Ellery",
+      "job_address": "3 Sandbar Ct",
+      "work_type": "roof",
+      "completion_date": "2026-03-18",
+      "total_amount": 19672.31,
+      "warranty_years": 15
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112850,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy16": {
+   "kind": "carbon_copy",
+   "file": "messy16.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112860,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "step": "camera"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 0,
+      "missing": [
+       "contractor_name",
+       "contractor_license",
+       "contractor_email",
+       "customer_name",
+       "job_address",
+       "work_type",
+       "completion_date",
+       "total_amount",
+       "warranty_years"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "DUNE GRASS DECKS",
+      "contractor_license": "13VH 00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Lena Brady",
+      "job_address": "33 Heron Way",
+      "work_type": "deck",
+      "completion_date": "2026-02-23",
+      "total_amount": 14625,
+      "warranty_years": 10
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112860,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy17": {
+   "kind": "handwritten_fix",
+   "file": "messy17.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112870,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "step": "light photocopy",
+     "variant": "photocopy",
+     "skew_deg": 0.68,
+     "scale": 0.8,
+     "jpeg": 55
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 8,
+      "missing": [
+       "total_amount"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH 00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Colleen Ostrowski",
+      "job_address": "17 Osprey Ln",
+      "work_type": "roof",
+      "completion_date": "2025-04-08",
+      "total_amount": 24758.91,
+      "warranty_years": 10
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112870,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy18": {
+   "kind": "faded_receipt",
+   "file": "messy18.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112880,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "fade": 1.0,
+     "curl": true
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 1,
+      "missing": [
+       "contractor_name",
+       "contractor_license",
+       "contractor_email",
+       "customer_name",
+       "job_address",
+       "work_type",
+       "completion_date",
+       "total_amount"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "BAYSIDE PLUMBING & HEATING",
+      "contractor_license": "13VH 00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Raj Fairbanks",
+      "job_address": "245 Sandbar Ct",
+      "work_type": "plumbing",
+      "completion_date": "2025-11-27",
+      "total_amount": 3175.0,
+      "warranty_years": null
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112880,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy19": {
+   "kind": "crumpled_photo",
+   "file": "messy19.pdf",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112890,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "crumple": 1.2,
+     "folds": 2,
+     "displace": 25.0
+    },
+    {
+     "page": 2,
+     "crumple": 1.2,
+     "folds": 2,
+     "displace": 25.0
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 7,
+      "missing": [
+       "contractor_license",
+       "contractor_email"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Teo Brady",
+      "job_address": "51 Heron Way",
+      "work_type": "windows",
+      "completion_date": "2026-05-08",
+      "total_amount": 17966.31,
+      "warranty_years": 20
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112890,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy20": {
+   "kind": "folded_coffee",
+   "file": "messy20.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112900,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "coffee_ring": {
+      "center": [
+       1071,
+       867
+      ],
+      "radius": 260
+     },
+     "creases": "thirds"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Ingrid Pemberton",
+      "job_address": "95 Heron Way",
+      "work_type": "bathroom",
+      "completion_date": "2026-10-03",
+      "total_amount": 25483.38,
+      "warranty_years": null
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112900,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy21": {
+   "kind": "photocopy_fax_scan",
+   "file": "messy21.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112910,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "variant": "photocopy",
+     "skew_deg": -1.38,
+     "scale": 0.8,
+     "jpeg": 55
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "TIDEWATER ELECTRIC LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Yesenia Harrow",
+      "job_address": "73 Tidewater Road",
+      "work_type": "electrical",
+      "completion_date": "2026-09-12",
+      "total_amount": 5650,
+      "warranty_years": 2
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112910,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy22": {
+   "kind": "carbon_copy",
+   "file": "messy22.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112920,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "step": "camera"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 2,
+      "missing": [
+       "contractor_license",
+       "contractor_email",
+       "customer_name",
+       "job_address",
+       "completion_date",
+       "total_amount",
+       "warranty_years"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "BAYSIDE PLUMBING & HEATING",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Priscilla Hollis",
+      "job_address": "212 Driftwood Terrace",
+      "work_type": "plumbing",
+      "completion_date": "2025-01-30",
+      "total_amount": 2612.31,
+      "warranty_years": 6
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112920,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy23": {
+   "kind": "handwritten_fix",
+   "file": "messy23.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112930,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "step": "light photocopy",
+     "variant": "photocopy",
+     "skew_deg": -0.12,
+     "scale": 0.8,
+     "jpeg": 55
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 8,
+      "missing": [
+       "total_amount"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH 00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Marcus Whitlock",
+      "job_address": "22 Tidewater Road",
+      "work_type": "roof",
+      "completion_date": "2025-05-11",
+      "total_amount": 21290.0,
+      "warranty_years": 10
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112930,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy24": {
+   "kind": "faded_receipt",
+   "file": "messy24.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112940,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "fade": 1.0,
+     "curl": true
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 0,
+      "missing": [
+       "contractor_name",
+       "contractor_license",
+       "contractor_email",
+       "customer_name",
+       "job_address",
+       "work_type",
+       "completion_date",
+       "total_amount",
+       "warranty_years"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "INLET ROOFING CO.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "June Harrow",
+      "job_address": "95 Gull Rock Rd",
+      "work_type": "roof",
+      "completion_date": "2025-05-11",
+      "total_amount": 12025,
+      "warranty_years": 10
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112940,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy25": {
+   "kind": "crumpled_photo",
+   "file": "messy25.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112950,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "crumple": 1.2,
+     "folds": 1,
+     "displace": 25.0
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 8,
+      "missing": [
+       "customer_name"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Raj Ellery",
+      "job_address": "16 Sandbar Court",
+      "work_type": "roof",
+      "completion_date": "2025-01-31",
+      "total_amount": 20225,
+      "warranty_years": 15
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112950,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy26": {
+   "kind": "folded_coffee",
+   "file": "messy26.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112960,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "coffee_ring": {
+      "center": [
+       1240,
+       1331
+      ],
+      "radius": 250
+     },
+     "creases": "thirds"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Colleen Rourke",
+      "job_address": "208 Heron Way",
+      "work_type": "plumbing",
+      "completion_date": "2026-05-18",
+      "total_amount": 1946.44,
+      "warranty_years": null
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112960,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy27": {
+   "kind": "photocopy_fax_scan",
+   "file": "messy27.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112970,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "variant": "fax",
+     "header": "FEB 26, 2026  14:27   FROM: 732 555 0159   P.01",
+     "skew_deg": -0.75,
+     "scale": 1.0,
+     "jpeg": 60
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Nadia Ellery",
+      "job_address": "229 Saltmeadow Dr",
+      "work_type": "kitchen",
+      "completion_date": "2026-02-16",
+      "total_amount": 52246.25,
+      "warranty_years": null
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112970,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy28": {
+   "kind": "carbon_copy",
+   "file": "messy28.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112980,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "step": "camera"
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 0,
+      "missing": [
+       "contractor_name",
+       "contractor_license",
+       "contractor_email",
+       "customer_name",
+       "job_address",
+       "work_type",
+       "completion_date",
+       "total_amount",
+       "warranty_years"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "INLET ROOFING CO.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Everett Ferreira",
+      "job_address": "225 Driftwood Ter",
+      "work_type": "roof",
+      "completion_date": "2025-08-09",
+      "total_amount": 19150,
+      "warranty_years": 5
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112980,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy29": {
+   "kind": "handwritten_fix",
+   "file": "messy29.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026112990,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "step": "light photocopy",
+     "variant": "photocopy",
+     "skew_deg": 0.59,
+     "scale": 0.8,
+     "jpeg": 55
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "HARBOR & PINE BUILDERS",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Rosalind Delacroix",
+      "job_address": "42 Beacon Ave",
+      "work_type": "kitchen",
+      "completion_date": "2025-08-26",
+      "total_amount": 45710,
+      "warranty_years": 1
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026112990,
+     "strength": 1.0
+    }
+   ]
+  },
+  "messy30": {
+   "kind": "faded_receipt",
+   "file": "messy30.jpg",
+   "outcome": "passed_first_try",
+   "final": {
+    "regen": 0,
+    "level": 0,
+    "seed": 2026113000,
+    "strength": 1.0
+   },
+   "effects": [
+    {
+     "page": 1,
+     "fade": 1.0,
+     "curl": true
+    }
+   ],
+   "attempts": [
+    {
+     "tesseract": {
+      "total": false,
+      "fields_found": 0,
+      "missing": [
+       "contractor_name",
+       "contractor_license",
+       "contractor_email",
+       "customer_name",
+       "job_address",
+       "work_type",
+       "completion_date",
+       "total_amount",
+       "warranty_years"
+      ]
+     },
+     "hosted": {
+      "total": true,
+      "fields_found": 9,
+      "missing": []
+     },
+     "hosted_error": null,
+     "hosted_answer": {
+      "contractor_name": "INLET ROOFING CO.",
+      "contractor_license": "13VH 00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Kwame Moreau",
+      "job_address": "129 Lantern Place",
+      "work_type": "roof",
+      "completion_date": "2026-01-12",
+      "total_amount": 16625,
+      "warranty_years": 5
+     },
+     "pass": true,
+     "regen": 0,
+     "level": 0,
+     "seed": 2026113000,
+     "strength": 1.0
+    }
+   ]
+  }
+ }
+}

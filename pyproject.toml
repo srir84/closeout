@@ -75,6 +75,9 @@ ignore = ["S101", "S311", "E501", "S608", "B008"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S", "DTZ"]
+"conftest.py" = ["S", "DTZ", "E402"]
+# Document generators: one-off drawing scripts, style rules relaxed.
+"evals/generators/**" = ["S", "DTZ", "B905", "E741", "E731", "B007", "UP031"]
 "tools/**" = ["S"]
 "data/**" = ["S", "DTZ"]
 "evals/**" = ["S", "DTZ"]

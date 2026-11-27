@@ -1,0 +1,1802 @@
+[
+  {
+    "id": "dev001",
+    "file": "dev001.jpg",
+    "layout": "sidebar",
+    "photo": true,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Aaliyah Delgado",
+      "job_address": "175 Saltmeadow Dr",
+      "work_type": "windows",
+      "completion_date": "2024-02-15",
+      "total_amount": 22953.0,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev002",
+    "file": "dev002.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Fatima O'Sullivan",
+      "job_address": "255 Beacon Ave",
+      "work_type": "bathroom",
+      "completion_date": "2026-08-18",
+      "total_amount": 42546.0,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev003",
+    "file": "dev003.jpg",
+    "layout": "sidebar",
+    "photo": true,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Priya Raman",
+      "job_address": "110 Tidewater Rd",
+      "work_type": "kitchen",
+      "completion_date": "2024-08-08",
+      "total_amount": 28367.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev004",
+    "file": "dev004.pdf",
+    "layout": "sidebar",
+    "photo": false,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Samir Szabo",
+      "job_address": "168 Bayberry Cir",
+      "work_type": "windows",
+      "completion_date": "2025-07-23",
+      "total_amount": 23572.57,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev005",
+    "file": "dev005.png",
+    "layout": "band",
+    "photo": false,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Ingrid Takahashi",
+      "job_address": "183 Bayberry Cir",
+      "work_type": "addition",
+      "completion_date": "2024-12-16",
+      "total_amount": 79391.78,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev006",
+    "file": "dev006.jpg",
+    "layout": "receipt",
+    "photo": true,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Grace Moreau",
+      "job_address": "30 Driftwood Ter",
+      "work_type": "other",
+      "completion_date": "2025-08-26",
+      "total_amount": 5775.88,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev007",
+    "file": "dev007.png",
+    "layout": "sidebar",
+    "photo": false,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Tomasz Castellano",
+      "job_address": "133 Gull Rock Rd",
+      "work_type": "addition",
+      "completion_date": "2024-06-24",
+      "total_amount": 65673.33,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev008",
+    "file": "dev008.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Tidewater Electric LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Marcus Oyelaran",
+      "job_address": "166 Sandbar Ct",
+      "work_type": "electrical",
+      "completion_date": "2024-08-29",
+      "total_amount": 5670.0,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev009",
+    "file": "dev009.pdf",
+    "layout": "form",
+    "photo": false,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Jamal Achterberg",
+      "job_address": "29 Gull Rock Rd",
+      "work_type": "deck",
+      "completion_date": "2026-09-12",
+      "total_amount": 15639.0,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev010",
+    "file": "dev010.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Wei Gallagher",
+      "job_address": "219 Osprey Ln",
+      "work_type": "windows",
+      "completion_date": "2025-11-10",
+      "total_amount": 5646.16,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev011",
+    "file": "dev011.png",
+    "layout": "band",
+    "photo": false,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Tidewater Electric LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Mateo Haddad",
+      "job_address": "50 Heron Way",
+      "work_type": "electrical",
+      "completion_date": "2025-06-21",
+      "total_amount": 10017.65,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev012",
+    "file": "dev012.jpg",
+    "layout": "receipt",
+    "photo": true,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Hiroshi Novak",
+      "job_address": "67 Osprey Ln",
+      "work_type": "roof",
+      "completion_date": "2024-07-24",
+      "total_amount": 13547.77,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev013",
+    "file": "dev013.jpg",
+    "layout": "letter",
+    "photo": true,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Dune Grass Decks",
+      "contractor_license": "13VH00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Connor Raman",
+      "job_address": "159 Lantern Pl",
+      "work_type": "deck",
+      "completion_date": "2024-08-22",
+      "total_amount": 12434.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev014",
+    "file": "dev014.png",
+    "layout": "band",
+    "photo": false,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Tidewater Electric LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Ethan Novak",
+      "job_address": "28 Osprey Ln",
+      "work_type": "electrical",
+      "completion_date": "2025-01-24",
+      "total_amount": 8516.83,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev015",
+    "file": "dev015.jpg",
+    "layout": "form",
+    "photo": true,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Darnell Nakamura",
+      "job_address": "184 Osprey Ln",
+      "work_type": "plumbing",
+      "completion_date": "2024-06-10",
+      "total_amount": 3201.23,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev016",
+    "file": "dev016.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Nadia Takahashi",
+      "job_address": "172 Tidewater Rd",
+      "work_type": "deck",
+      "completion_date": "2026-07-28",
+      "total_amount": 9026.83,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev017",
+    "file": "dev017.png",
+    "layout": "sidebar",
+    "photo": false,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Jamal Kowalski",
+      "job_address": "37 Sandbar Ct",
+      "work_type": "plumbing",
+      "completion_date": "2025-10-19",
+      "total_amount": 10326.27,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev018",
+    "file": "dev018.png",
+    "layout": "band",
+    "photo": false,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Zainab Fitzgerald",
+      "job_address": "35 Beacon Ave",
+      "work_type": "other",
+      "completion_date": "2024-08-13",
+      "total_amount": 22507.94,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev019",
+    "file": "dev019.png",
+    "layout": "form",
+    "photo": false,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Fatima Mensah",
+      "job_address": "140 Bayberry Cir",
+      "work_type": "kitchen",
+      "completion_date": "2026-09-02",
+      "total_amount": 98274.84,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev020",
+    "file": "dev020.png",
+    "layout": "form",
+    "photo": false,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Hiroshi Novak",
+      "job_address": "44 Lantern Pl",
+      "work_type": "roof",
+      "completion_date": "2024-01-02",
+      "total_amount": 8618.0,
+      "warranty_years": 10
+    }
+  },
+  {
+    "id": "dev021",
+    "file": "dev021.png",
+    "layout": "form",
+    "photo": false,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Noor and Connor Mensah",
+      "job_address": "8 Osprey Ln",
+      "work_type": "kitchen",
+      "completion_date": "2024-10-18",
+      "total_amount": 28827.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev022",
+    "file": "dev022.jpg",
+    "layout": "band",
+    "photo": true,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Samir and Anjali Haddad",
+      "job_address": "228 Driftwood Ter",
+      "work_type": "other",
+      "completion_date": "2026-08-04",
+      "total_amount": 14255.0,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev023",
+    "file": "dev023.png",
+    "layout": "band",
+    "photo": false,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Dune Grass Decks",
+      "contractor_license": "13VH00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Owen Lindqvist",
+      "job_address": "172 Lantern Pl",
+      "work_type": "deck",
+      "completion_date": "2025-01-27",
+      "total_amount": 12297.0,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev024",
+    "file": "dev024.jpg",
+    "layout": "form",
+    "photo": true,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Kofi Kowalski",
+      "job_address": "103 Osprey Ln",
+      "work_type": "windows",
+      "completion_date": "2024-07-29",
+      "total_amount": 24676.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev025",
+    "file": "dev025.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Tidewater Electric LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Tomasz Moreau",
+      "job_address": "111 Bayberry Cir",
+      "work_type": "electrical",
+      "completion_date": "2024-04-21",
+      "total_amount": 13096.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev026",
+    "file": "dev026.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Darnell Yilmaz",
+      "job_address": "67 Lantern Pl",
+      "work_type": "addition",
+      "completion_date": "2025-04-25",
+      "total_amount": 131903.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev027",
+    "file": "dev027.png",
+    "layout": "form",
+    "photo": false,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Hannah Gallagher",
+      "job_address": "138 Osprey Ln",
+      "work_type": "other",
+      "completion_date": "2025-06-22",
+      "total_amount": 2739.0,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev028",
+    "file": "dev028.pdf",
+    "layout": "form",
+    "photo": false,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Tomasz Halvorsen",
+      "job_address": "26 Bayberry Cir",
+      "work_type": "kitchen",
+      "completion_date": "2024-09-25",
+      "total_amount": 28147.07,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev029",
+    "file": "dev029.png",
+    "layout": "band",
+    "photo": false,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Dune Grass Decks",
+      "contractor_license": "13VH00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Thandiwe Okafor",
+      "job_address": "85 Bayberry Cir",
+      "work_type": "deck",
+      "completion_date": "2024-09-11",
+      "total_amount": 12533.77,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev030",
+    "file": "dev030.jpg",
+    "layout": "receipt",
+    "photo": true,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Aaliyah Reyes-Morgan",
+      "job_address": "114 Saltmeadow Dr",
+      "work_type": "hvac",
+      "completion_date": "2024-03-23",
+      "total_amount": 8906.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev031",
+    "file": "dev031.png",
+    "layout": "sidebar",
+    "photo": false,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Nadia Patel",
+      "job_address": "291 Gull Rock Rd",
+      "work_type": "bathroom",
+      "completion_date": "2025-05-11",
+      "total_amount": 22828.0,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev032",
+    "file": "dev032.pdf",
+    "layout": "band",
+    "photo": false,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Fatima Delgado",
+      "job_address": "58 Gull Rock Rd",
+      "work_type": "plumbing",
+      "completion_date": "2025-09-30",
+      "total_amount": 9542.94,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev033",
+    "file": "dev033.jpg",
+    "layout": "band",
+    "photo": true,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Kofi and Thandiwe Novak",
+      "job_address": "245 Heron Way",
+      "work_type": "plumbing",
+      "completion_date": "2026-10-28",
+      "total_amount": 2588.0,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev034",
+    "file": "dev034.png",
+    "layout": "band",
+    "photo": false,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Mateo Haddad",
+      "job_address": "254 Bayberry Cir",
+      "work_type": "bathroom",
+      "completion_date": "2025-06-23",
+      "total_amount": 55208.88,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev035",
+    "file": "dev035.jpg",
+    "layout": "letter",
+    "photo": true,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Jamal Delgado",
+      "job_address": "284 Lantern Pl",
+      "work_type": "kitchen",
+      "completion_date": "2026-02-13",
+      "total_amount": 77392.0,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev036",
+    "file": "dev036.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Tidewater Electric LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Ethan Raman",
+      "job_address": "107 Driftwood Ter",
+      "work_type": "electrical",
+      "completion_date": "2024-11-29",
+      "total_amount": 2298.64,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev037",
+    "file": "dev037.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Marcus Novak",
+      "job_address": "10 Saltmeadow Dr",
+      "work_type": "addition",
+      "completion_date": "2024-12-23",
+      "total_amount": 93493.0,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev038",
+    "file": "dev038.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Zainab Mahmoud",
+      "job_address": "95 Bayberry Cir",
+      "work_type": "deck",
+      "completion_date": "2024-02-17",
+      "total_amount": 37591.09,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev039",
+    "file": "dev039.jpg",
+    "layout": "sidebar",
+    "photo": true,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Rahul Mensah",
+      "job_address": "200 Bayberry Cir",
+      "work_type": "roof",
+      "completion_date": "2025-07-06",
+      "total_amount": 40490.0,
+      "warranty_years": 10
+    }
+  },
+  {
+    "id": "dev040",
+    "file": "dev040.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Tidewater Electric LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Priya Kim",
+      "job_address": "71 Osprey Ln",
+      "work_type": "electrical",
+      "completion_date": "2024-03-25",
+      "total_amount": 4649.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev041",
+    "file": "dev041.jpg",
+    "layout": "form",
+    "photo": true,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Ingrid Adeyemi",
+      "job_address": "54 Bayberry Cir",
+      "work_type": "roof",
+      "completion_date": "2025-07-01",
+      "total_amount": 32387.0,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev042",
+    "file": "dev042.png",
+    "layout": "band",
+    "photo": false,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Aaliyah Halvorsen",
+      "job_address": "178 Beacon Ave",
+      "work_type": "plumbing",
+      "completion_date": "2024-07-19",
+      "total_amount": 3666.46,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev043",
+    "file": "dev043.pdf",
+    "layout": "form",
+    "photo": false,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Dune Grass Decks",
+      "contractor_license": "13VH00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Mateo Yilmaz",
+      "job_address": "26 Tidewater Rd",
+      "work_type": "deck",
+      "completion_date": "2026-01-22",
+      "total_amount": 32717.08,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev044",
+    "file": "dev044.png",
+    "layout": "sidebar",
+    "photo": false,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Chloe Novak",
+      "job_address": "70 Beacon Ave",
+      "work_type": "other",
+      "completion_date": "2026-04-18",
+      "total_amount": 18034.0,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev045",
+    "file": "dev045.jpg",
+    "layout": "receipt",
+    "photo": true,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Tidewater Electric LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Samir Haddad",
+      "job_address": "244 Beacon Ave",
+      "work_type": "electrical",
+      "completion_date": "2026-03-02",
+      "total_amount": 1961.14,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev046",
+    "file": "dev046.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Gabriel Okafor",
+      "job_address": "141 Saltmeadow Dr",
+      "work_type": "windows",
+      "completion_date": "2024-08-20",
+      "total_amount": 17979.53,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev047",
+    "file": "dev047.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Tidewater Electric LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Aaliyah Chen",
+      "job_address": "258 Heron Way",
+      "work_type": "electrical",
+      "completion_date": "2024-02-02",
+      "total_amount": 2586.98,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev048",
+    "file": "dev048.jpg",
+    "layout": "letter",
+    "photo": true,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Kofi Ferreira",
+      "job_address": "117 Beacon Ave",
+      "work_type": "windows",
+      "completion_date": "2026-09-02",
+      "total_amount": 5933.0,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev049",
+    "file": "dev049.jpg",
+    "layout": "sidebar",
+    "photo": true,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Tidewater Electric LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Zainab Achterberg",
+      "job_address": "152 Osprey Ln",
+      "work_type": "electrical",
+      "completion_date": "2025-03-03",
+      "total_amount": 5202.87,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev050",
+    "file": "dev050.jpg",
+    "layout": "classic",
+    "photo": true,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Sofia Takahashi",
+      "job_address": "248 Lantern Pl",
+      "work_type": "plumbing",
+      "completion_date": "2025-01-30",
+      "total_amount": 1737.0,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev051",
+    "file": "dev051.png",
+    "layout": "band",
+    "photo": false,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Nadia Raman",
+      "job_address": "70 Sandbar Ct",
+      "work_type": "other",
+      "completion_date": "2025-09-27",
+      "total_amount": 4070.27,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev052",
+    "file": "dev052.pdf",
+    "layout": "form",
+    "photo": false,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Wei Delgado",
+      "job_address": "210 Osprey Ln",
+      "work_type": "bathroom",
+      "completion_date": "2025-02-16",
+      "total_amount": 22381.39,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev053",
+    "file": "dev053.jpg",
+    "layout": "form",
+    "photo": true,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Tidewater Electric LLC",
+      "contractor_license": "13VH00938114",
+      "contractor_email": "jobs@tidewater-elec.example",
+      "customer_name": "Sofia O'Sullivan",
+      "job_address": "31 Heron Way",
+      "work_type": "electrical",
+      "completion_date": "2024-10-29",
+      "total_amount": 8896.08,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev054",
+    "file": "dev054.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Marcus Nakamura",
+      "job_address": "104 Bayberry Cir",
+      "work_type": "kitchen",
+      "completion_date": "2024-11-28",
+      "total_amount": 98579.0,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev055",
+    "file": "dev055.jpg",
+    "layout": "receipt",
+    "photo": true,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Marcus Quispe",
+      "job_address": "173 Lantern Pl",
+      "work_type": "addition",
+      "completion_date": "2026-05-21",
+      "total_amount": 121269.15,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev056",
+    "file": "dev056.jpg",
+    "layout": "band",
+    "photo": true,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Samir Nakamura",
+      "job_address": "275 Sandbar Ct",
+      "work_type": "bathroom",
+      "completion_date": "2025-08-04",
+      "total_amount": 15109.0,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev057",
+    "file": "dev057.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Dune Grass Decks",
+      "contractor_license": "13VH00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Nadia Nguyen",
+      "job_address": "195 Tidewater Rd",
+      "work_type": "deck",
+      "completion_date": "2025-09-29",
+      "total_amount": 43762.4,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev058",
+    "file": "dev058.jpg",
+    "layout": "classic",
+    "photo": true,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Hiroshi Novak",
+      "job_address": "203 Beacon Ave",
+      "work_type": "kitchen",
+      "completion_date": "2026-03-20",
+      "total_amount": 62000.0,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev059",
+    "file": "dev059.pdf",
+    "layout": "form",
+    "photo": false,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Lucia Achterberg",
+      "job_address": "216 Beacon Ave",
+      "work_type": "other",
+      "completion_date": "2026-07-29",
+      "total_amount": 6945.3,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev060",
+    "file": "dev060.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Grace O'Sullivan",
+      "job_address": "299 Saltmeadow Dr",
+      "work_type": "windows",
+      "completion_date": "2024-04-20",
+      "total_amount": 9815.02,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev061",
+    "file": "dev061.png",
+    "layout": "form",
+    "photo": false,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Beatriz Kowalski",
+      "job_address": "270 Beacon Ave",
+      "work_type": "hvac",
+      "completion_date": "2025-12-28",
+      "total_amount": 10825.0,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev062",
+    "file": "dev062.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Diego Halvorsen",
+      "job_address": "75 Heron Way",
+      "work_type": "hvac",
+      "completion_date": "2025-11-06",
+      "total_amount": 18252.73,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev063",
+    "file": "dev063.pdf",
+    "layout": "sidebar",
+    "photo": false,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Andrei Brennan",
+      "job_address": "185 Lantern Pl",
+      "work_type": "roof",
+      "completion_date": "2026-01-21",
+      "total_amount": 10012.0,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev064",
+    "file": "dev064.png",
+    "layout": "band",
+    "photo": false,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Fatima Delgado",
+      "job_address": "196 Sandbar Ct",
+      "work_type": "deck",
+      "completion_date": "2024-09-27",
+      "total_amount": 14537.75,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev065",
+    "file": "dev065.png",
+    "layout": "sidebar",
+    "photo": false,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Anjali Ferreira",
+      "job_address": "223 Bayberry Cir",
+      "work_type": "kitchen",
+      "completion_date": "2026-08-10",
+      "total_amount": 60239.67,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev066",
+    "file": "dev066.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Elena Adeyemi",
+      "job_address": "40 Lantern Pl",
+      "work_type": "kitchen",
+      "completion_date": "2024-11-17",
+      "total_amount": 36843.87,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev067",
+    "file": "dev067.jpg",
+    "layout": "form",
+    "photo": true,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Darnell Nguyen",
+      "job_address": "187 Tidewater Rd",
+      "work_type": "bathroom",
+      "completion_date": "2024-12-25",
+      "total_amount": 25559.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev068",
+    "file": "dev068.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Marcus O'Sullivan",
+      "job_address": "277 Gull Rock Rd",
+      "work_type": "windows",
+      "completion_date": "2026-10-09",
+      "total_amount": 6314.76,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev069",
+    "file": "dev069.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Rosa Oyelaran",
+      "job_address": "176 Sandbar Ct",
+      "work_type": "hvac",
+      "completion_date": "2026-08-27",
+      "total_amount": 10834.08,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev070",
+    "file": "dev070.png",
+    "layout": "sidebar",
+    "photo": false,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Ingrid Adeyemi",
+      "job_address": "67 Lantern Pl",
+      "work_type": "roof",
+      "completion_date": "2025-07-31",
+      "total_amount": 13972.47,
+      "warranty_years": 10
+    }
+  },
+  {
+    "id": "dev071",
+    "file": "dev071.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Priya Okafor",
+      "job_address": "101 Driftwood Ter",
+      "work_type": "plumbing",
+      "completion_date": "2026-09-13",
+      "total_amount": 11599.0,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev072",
+    "file": "dev072.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Olusegun Castellano",
+      "job_address": "51 Lantern Pl",
+      "work_type": "addition",
+      "completion_date": "2024-12-20",
+      "total_amount": 110139.36,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev073",
+    "file": "dev073.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Andrei Halvorsen",
+      "job_address": "248 Saltmeadow Dr",
+      "work_type": "windows",
+      "completion_date": "2026-04-28",
+      "total_amount": 8028.53,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev074",
+    "file": "dev074.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Dune Grass Decks",
+      "contractor_license": "13VH00410267",
+      "contractor_email": "build@dunegrassdecks.example",
+      "customer_name": "Amara Abernathy",
+      "job_address": "2 Tidewater Rd",
+      "work_type": "deck",
+      "completion_date": "2024-09-06",
+      "total_amount": 10665.11,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev075",
+    "file": "dev075.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Amara Ferreira",
+      "job_address": "97 Bayberry Cir",
+      "work_type": "bathroom",
+      "completion_date": "2024-01-28",
+      "total_amount": 21900.49,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev076",
+    "file": "dev076.pdf",
+    "layout": "band",
+    "photo": false,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Anjali Fitzgerald",
+      "job_address": "76 Gull Rock Rd",
+      "work_type": "hvac",
+      "completion_date": "2025-03-26",
+      "total_amount": 12513.0,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev077",
+    "file": "dev077.pdf",
+    "layout": "classic",
+    "photo": false,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Andrei Chen",
+      "job_address": "63 Osprey Ln",
+      "work_type": "roof",
+      "completion_date": "2024-10-30",
+      "total_amount": 14202.98,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev078",
+    "file": "dev078.jpg",
+    "layout": "classic",
+    "photo": true,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Darnell Quispe",
+      "job_address": "79 Beacon Ave",
+      "work_type": "bathroom",
+      "completion_date": "2026-05-18",
+      "total_amount": 37031.89,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev079",
+    "file": "dev079.jpg",
+    "layout": "letter",
+    "photo": true,
+    "trap": "deposit",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Grace Okafor",
+      "job_address": "167 Beacon Ave",
+      "work_type": "plumbing",
+      "completion_date": "2024-02-26",
+      "total_amount": 2718.01,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev080",
+    "file": "dev080.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Thandiwe Haddad",
+      "job_address": "48 Driftwood Ter",
+      "work_type": "other",
+      "completion_date": "2024-11-21",
+      "total_amount": 15905.47,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev081",
+    "file": "dev081.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Tomasz and Grace Petrov",
+      "job_address": "75 Lantern Pl",
+      "work_type": "hvac",
+      "completion_date": "2024-10-12",
+      "total_amount": 5881.44,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev082",
+    "file": "dev082.jpg",
+    "layout": "sidebar",
+    "photo": true,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Leilani Nguyen",
+      "job_address": "253 Osprey Ln",
+      "work_type": "other",
+      "completion_date": "2025-11-30",
+      "total_amount": 4755.43,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev083",
+    "file": "dev083.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Rahul Chen",
+      "job_address": "100 Heron Way",
+      "work_type": "roof",
+      "completion_date": "2024-08-20",
+      "total_amount": 37320.18,
+      "warranty_years": 10
+    }
+  },
+  {
+    "id": "dev084",
+    "file": "dev084.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Amara Halvorsen",
+      "job_address": "222 Bayberry Cir",
+      "work_type": "bathroom",
+      "completion_date": "2026-09-03",
+      "total_amount": 15639.49,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev085",
+    "file": "dev085.png",
+    "layout": "form",
+    "photo": false,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Gabriel Szabo",
+      "job_address": "46 Heron Way",
+      "work_type": "roof",
+      "completion_date": "2024-10-08",
+      "total_amount": 13455.0,
+      "warranty_years": 10
+    }
+  },
+  {
+    "id": "dev086",
+    "file": "dev086.jpg",
+    "layout": "sidebar",
+    "photo": true,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Rahul Petrov",
+      "job_address": "285 Saltmeadow Dr",
+      "work_type": "hvac",
+      "completion_date": "2024-03-21",
+      "total_amount": 12432.85,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev087",
+    "file": "dev087.png",
+    "layout": "sidebar",
+    "photo": false,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Yuki and Darnell Castellano",
+      "job_address": "7 Bayberry Cir",
+      "work_type": "addition",
+      "completion_date": "2025-09-03",
+      "total_amount": 66651.74,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev088",
+    "file": "dev088.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Chloe Kim",
+      "job_address": "148 Osprey Ln",
+      "work_type": "bathroom",
+      "completion_date": "2025-07-06",
+      "total_amount": 57876.65,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev089",
+    "file": "dev089.png",
+    "layout": "sidebar",
+    "photo": false,
+    "trap": "no_warranty",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Olusegun Halvorsen",
+      "job_address": "225 Driftwood Ter",
+      "work_type": "hvac",
+      "completion_date": "2025-12-21",
+      "total_amount": 15660.0,
+      "warranty_years": null
+    }
+  },
+  {
+    "id": "dev090",
+    "file": "dev090.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Liam Moreau",
+      "job_address": "122 Saltmeadow Dr",
+      "work_type": "kitchen",
+      "completion_date": "2026-07-11",
+      "total_amount": 61902.0,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev091",
+    "file": "dev091.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Wei and Owen Kim",
+      "job_address": "195 Bayberry Cir",
+      "work_type": "windows",
+      "completion_date": "2024-02-15",
+      "total_amount": 15151.41,
+      "warranty_years": 1
+    }
+  },
+  {
+    "id": "dev092",
+    "file": "dev092.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "other_address",
+    "expected": {
+      "contractor_name": "Inlet Roofing Co.",
+      "contractor_license": "13VH00077302",
+      "contractor_email": "estimates@inletroof.example",
+      "customer_name": "Wei Haddad",
+      "job_address": "11 Gull Rock Rd",
+      "work_type": "roof",
+      "completion_date": "2024-03-20",
+      "total_amount": 26635.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev093",
+    "file": "dev093.png",
+    "layout": "receipt",
+    "photo": false,
+    "trap": "none",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Elena Oyelaran",
+      "job_address": "56 Tidewater Rd",
+      "work_type": "addition",
+      "completion_date": "2025-09-20",
+      "total_amount": 119760.0,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev094",
+    "file": "dev094.png",
+    "layout": "letter",
+    "photo": false,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Ethan Novak",
+      "job_address": "200 Heron Way",
+      "work_type": "hvac",
+      "completion_date": "2026-08-10",
+      "total_amount": 17172.0,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev095",
+    "file": "dev095.jpg",
+    "layout": "receipt",
+    "photo": true,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Aaliyah Abernathy",
+      "job_address": "22 Saltmeadow Dr",
+      "work_type": "other",
+      "completion_date": "2024-06-23",
+      "total_amount": 18667.53,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev096",
+    "file": "dev096.jpg",
+    "layout": "form",
+    "photo": true,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Aaliyah Novak",
+      "job_address": "70 Tidewater Rd",
+      "work_type": "hvac",
+      "completion_date": "2026-02-06",
+      "total_amount": 8842.23,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev097",
+    "file": "dev097.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "billing_address",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Beatriz Ferreira",
+      "job_address": "211 Osprey Ln",
+      "work_type": "plumbing",
+      "completion_date": "2024-03-29",
+      "total_amount": 5129.35,
+      "warranty_years": 2
+    }
+  },
+  {
+    "id": "dev098",
+    "file": "dev098.png",
+    "layout": "classic",
+    "photo": false,
+    "trap": "invoice_date",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Darnell Halvorsen",
+      "job_address": "290 Bayberry Cir",
+      "work_type": "addition",
+      "completion_date": "2025-10-13",
+      "total_amount": 69238.0,
+      "warranty_years": 5
+    }
+  },
+  {
+    "id": "dev099",
+    "file": "dev099.jpg",
+    "layout": "sidebar",
+    "photo": true,
+    "trap": "sales_tax",
+    "expected": {
+      "contractor_name": "Bayside Plumbing & Heating",
+      "contractor_license": "13VH00551920",
+      "contractor_email": "service@baysideph.example",
+      "customer_name": "Amara Lindqvist",
+      "job_address": "80 Saltmeadow Dr",
+      "work_type": "plumbing",
+      "completion_date": "2024-08-25",
+      "total_amount": 12042.04,
+      "warranty_years": 3
+    }
+  },
+  {
+    "id": "dev100",
+    "file": "dev100.jpg",
+    "layout": "band",
+    "photo": true,
+    "trap": "change_order",
+    "expected": {
+      "contractor_name": "Harbor & Pine Builders",
+      "contractor_license": "13VH01234567",
+      "contractor_email": "office@harborpine.example",
+      "customer_name": "Owen Moreau",
+      "job_address": "100 Osprey Ln",
+      "work_type": "addition",
+      "completion_date": "2024-02-09",
+      "total_amount": 110002.08,
+      "warranty_years": 5
+    }
+  }
+]

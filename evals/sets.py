@@ -25,7 +25,12 @@ class Case:
         return MIME[self.path.suffix.lower()]
 
 
+DEMO = Path(__file__).parents[1] / "data" / "demo"
+
+
 def set_dir(name: str) -> Path:
+    if name == "demo":
+        return DEMO
     return SEALED if name == "sealed" else ROOT / name
 
 

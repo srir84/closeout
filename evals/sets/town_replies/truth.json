@@ -1,0 +1,426 @@
+[
+ {
+  "id": "tr01",
+  "file": "tr01.jpg",
+  "expected": {
+   "permit_number": "22-0147",
+   "result": "final_on_file",
+   "result_date": "2022-12-16"
+  },
+  "first10": true,
+  "variant": "ca_issued",
+  "damage": null,
+  "pages": 1,
+  "address": "153 Tidewater Road"
+ },
+ {
+  "id": "tr02",
+  "file": "tr02.jpg",
+  "expected": {
+   "permit_number": "23-0388",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "search_none",
+  "damage": null,
+  "pages": 1,
+  "address": "141 Lantern Place"
+ },
+ {
+  "id": "tr03",
+  "file": "tr03.jpg",
+  "expected": {
+   "permit_number": "21-0912",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "scheduled",
+  "damage": "fax",
+  "pages": 1,
+  "address": "232 Beacon Avenue"
+ },
+ {
+  "id": "tr04",
+  "file": "tr04.jpg",
+  "expected": {
+   "permit_number": "21-0290",
+   "result": "final_on_file",
+   "result_date": "2021-06-05"
+  },
+  "first10": true,
+  "variant": "final_passed",
+  "damage": null,
+  "pages": 1,
+  "address": "187 Saltmeadow Drive"
+ },
+ {
+  "id": "tr05",
+  "file": "tr05.pdf",
+  "expected": {
+   "permit_number": "19-0301",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "partial",
+  "damage": null,
+  "pages": 2,
+  "address": "173 Osprey Lane"
+ },
+ {
+  "id": "tr06",
+  "file": "tr06.jpg",
+  "expected": {
+   "permit_number": "24-0648",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "open_no_final",
+  "damage": "photo",
+  "pages": 1,
+  "address": "81 Bayberry Circle"
+ },
+ {
+  "id": "tr07",
+  "file": "tr07.jpg",
+  "expected": {
+   "permit_number": "24-0342",
+   "result": "final_on_file",
+   "result_date": "2024-10-31"
+  },
+  "first10": true,
+  "variant": "table",
+  "damage": null,
+  "pages": 1,
+  "address": "134 Gull Rock Rd"
+ },
+ {
+  "id": "tr08",
+  "file": "tr08.jpg",
+  "expected": {
+   "permit_number": "19-0369",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "no_responsive",
+  "damage": null,
+  "pages": 1,
+  "address": "224 Osprey Lane"
+ },
+ {
+  "id": "tr09",
+  "file": "tr09.jpg",
+  "expected": {
+   "permit_number": "22-1211",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "missing_date",
+  "damage": "photocopy",
+  "pages": 1,
+  "address": "52 Saltmeadow Dr"
+ },
+ {
+  "id": "tr10",
+  "file": "tr10.jpg",
+  "expected": {
+   "permit_number": "25-0461",
+   "result": "final_on_file",
+   "result_date": "2026-06-15"
+  },
+  "first10": true,
+  "variant": "ca_issued",
+  "damage": null,
+  "pages": 1,
+  "address": "130 Sandbar Ct"
+ },
+ {
+  "id": "tr11",
+  "file": "tr11.jpg",
+  "expected": {
+   "permit_number": "24-0145",
+   "result": "final_on_file",
+   "result_date": "2025-01-13"
+  },
+  "first10": false,
+  "variant": "final_passed",
+  "damage": null,
+  "pages": 1,
+  "address": "41 Beacon Avenue"
+ },
+ {
+  "id": "tr12",
+  "file": "tr12.jpg",
+  "expected": {
+   "permit_number": "24-0345",
+   "result": "final_on_file",
+   "result_date": "2025-01-13"
+  },
+  "first10": false,
+  "variant": "table",
+  "damage": "fax",
+  "pages": 1,
+  "address": "54 Osprey Lane"
+ },
+ {
+  "id": "tr13",
+  "file": "tr13.jpg",
+  "expected": {
+   "permit_number": "21-0429",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "search_none",
+  "damage": null,
+  "pages": 1,
+  "address": "155 Tidewater Rd"
+ },
+ {
+  "id": "tr14",
+  "file": "tr14.pdf",
+  "expected": {
+   "permit_number": "20-0982",
+   "result": "final_on_file",
+   "result_date": "2021-08-09"
+  },
+  "first10": false,
+  "variant": "ca_issued",
+  "damage": null,
+  "pages": 2,
+  "address": "152 Driftwood Terrace"
+ },
+ {
+  "id": "tr15",
+  "file": "tr15.jpg",
+  "expected": {
+   "permit_number": "19-0617",
+   "result": "final_on_file",
+   "result_date": "2020-10-14"
+  },
+  "first10": false,
+  "variant": "co_issued",
+  "damage": "photo",
+  "pages": 1,
+  "address": "240 Driftwood Ter"
+ },
+ {
+  "id": "tr16",
+  "file": "tr16.jpg",
+  "expected": {
+   "permit_number": "21-1217",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "open_no_final",
+  "damage": null,
+  "pages": 1,
+  "address": "142 Sandbar Court"
+ },
+ {
+  "id": "tr17",
+  "file": "tr17.jpg",
+  "expected": {
+   "permit_number": "20-0807",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "no_responsive",
+  "damage": null,
+  "pages": 1,
+  "address": "30 Saltmeadow Dr"
+ },
+ {
+  "id": "tr18",
+  "file": "tr18.jpg",
+  "expected": {
+   "permit_number": "24-0518",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "other_permit",
+  "damage": "photocopy",
+  "pages": 1,
+  "address": "233 Heron Way",
+  "other_permit_in_letter": "24-0545"
+ },
+ {
+  "id": "tr19",
+  "file": "tr19.jpg",
+  "expected": {
+   "permit_number": "22-0408",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "more_info",
+  "damage": null,
+  "pages": 1,
+  "address": "238 Saltmeadow Drive",
+  "other_permit_in_letter": "22-0498"
+ },
+ {
+  "id": "tr20",
+  "file": "tr20.jpg",
+  "expected": {
+   "permit_number": "19-0291",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "search_none",
+  "damage": null,
+  "pages": 1,
+  "address": "155 Bayberry Circle"
+ },
+ {
+  "id": "tr21",
+  "file": "tr21.jpg",
+  "expected": {
+   "permit_number": "25-0078",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "interim",
+  "damage": "fax",
+  "pages": 1,
+  "address": "198 Gull Rock Rd"
+ },
+ {
+  "id": "tr22",
+  "file": "tr22.pdf",
+  "expected": {
+   "permit_number": "22-0767",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "scheduled",
+  "damage": null,
+  "pages": 2,
+  "address": "120 Bayberry Cir"
+ },
+ {
+  "id": "tr23",
+  "file": "tr23.jpg",
+  "expected": {
+   "permit_number": "23-1210",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "other_permit",
+  "damage": null,
+  "pages": 1,
+  "address": "175 Sandbar Ct",
+  "other_permit_in_letter": "23-1237"
+ },
+ {
+  "id": "tr24",
+  "file": "tr24.jpg",
+  "expected": {
+   "permit_number": "19-1242",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "open_no_final",
+  "damage": "photo",
+  "pages": 1,
+  "address": "59 Driftwood Ter"
+ },
+ {
+  "id": "tr25",
+  "file": "tr25.jpg",
+  "expected": {
+   "permit_number": "19-0467",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "partial",
+  "damage": null,
+  "pages": 1,
+  "address": "32 Gull Rock Rd"
+ },
+ {
+  "id": "tr26",
+  "file": "tr26.jpg",
+  "expected": {
+   "permit_number": "21-0283",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "no_responsive",
+  "damage": null,
+  "pages": 1,
+  "address": "92 Bayberry Circle"
+ },
+ {
+  "id": "tr27",
+  "file": "tr27.jpg",
+  "expected": {
+   "permit_number": "23-1089",
+   "result": "final_on_file",
+   "result_date": "2024-08-20"
+  },
+  "first10": false,
+  "variant": "final_passed",
+  "damage": "photocopy",
+  "pages": 1,
+  "address": "109 Lantern Place"
+ },
+ {
+  "id": "tr28",
+  "file": "tr28.pdf",
+  "expected": {
+   "permit_number": "20-0352",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "search_none",
+  "damage": null,
+  "pages": 2,
+  "address": "62 Beacon Ave"
+ },
+ {
+  "id": "tr29",
+  "file": "tr29.jpg",
+  "expected": {
+   "permit_number": "25-0349",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "more_info",
+  "damage": null,
+  "pages": 1,
+  "address": "217 Gull Rock Road",
+  "other_permit_in_letter": "25-0376"
+ },
+ {
+  "id": "tr30",
+  "file": "tr30.jpg",
+  "expected": {
+   "permit_number": "19-0101",
+   "result": "final_on_file",
+   "result_date": "2020-02-05"
+  },
+  "first10": false,
+  "variant": "table",
+  "damage": "fax",
+  "pages": 1,
+  "address": "110 Tidewater Rd"
+ }
+]

@@ -1,0 +1,872 @@
+[
+ {
+  "id": "messy01",
+  "file": "messy01.jpg",
+  "kind": "crumpled_photo",
+  "expected": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Nadia Marchetti",
+   "job_address": "72 Bayberry Cir",
+   "work_type": "bathroom",
+   "completion_date": "2025-02-06",
+   "total_amount": 30041.59,
+   "warranty_years": 2
+  },
+  "printed": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Nadia Marchetti",
+   "job_address": "72 Bayberry Cir",
+   "work_type": "bathroom",
+   "completion_date": "6-Feb-25",
+   "total_amount": "$30,041.59",
+   "warranty_years": "2 years"
+  },
+  "pages": 1,
+  "layout": "modern"
+ },
+ {
+  "id": "messy02",
+  "file": "messy02.jpg",
+  "kind": "folded_coffee",
+  "expected": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Yesenia Lindqvist",
+   "job_address": "61 Tidewater Rd",
+   "work_type": "deck",
+   "completion_date": "2026-01-01",
+   "total_amount": 23325.0,
+   "warranty_years": 3
+  },
+  "printed": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH 00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Yesenia Lindqvist",
+   "job_address": "61 Tidewater Rd",
+   "work_type": "deck",
+   "completion_date": "Jan 1, 2026",
+   "total_amount": "$23,325.00",
+   "warranty_years": "3 years"
+  },
+  "pages": 1,
+  "layout": "classic"
+ },
+ {
+  "id": "messy03",
+  "file": "messy03.pdf",
+  "kind": "photocopy_fax_scan",
+  "expected": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Marcus Alonzo",
+   "job_address": "132 Lantern Pl",
+   "work_type": "deck",
+   "completion_date": "2025-08-13",
+   "total_amount": 25950.0,
+   "warranty_years": 5
+  },
+  "printed": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Marcus Alonzo",
+   "job_address": "132 Lantern Place",
+   "work_type": "deck",
+   "completion_date": "2025-08-13",
+   "total_amount": "$25,950.00",
+   "warranty_years": "5 years"
+  },
+  "pages": 2,
+  "layout": "form"
+ },
+ {
+  "id": "messy04",
+  "file": "messy04.jpg",
+  "kind": "carbon_copy",
+  "expected": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Kwame Harrow",
+   "job_address": "36 Saltmeadow Dr",
+   "work_type": "deck",
+   "completion_date": "2025-06-23",
+   "total_amount": 25669.97,
+   "warranty_years": 5
+  },
+  "printed": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Kwame Harrow",
+   "job_address": "36 Saltmeadow Drive",
+   "work_type": "deck",
+   "completion_date": "6/23/2025",
+   "total_amount": "$25,669.97",
+   "warranty_years": "5 yr"
+  },
+  "pages": 1,
+  "layout": "carbon"
+ },
+ {
+  "id": "messy05",
+  "file": "messy05.pdf",
+  "kind": "handwritten_fix",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Silas Abernathy",
+   "job_address": "142 Heron Way",
+   "work_type": "roof",
+   "completion_date": "2025-02-06",
+   "total_amount": 14605.0,
+   "warranty_years": 5
+  },
+  "printed": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Silas Abernathy",
+   "job_address": "142 Heron Way",
+   "work_type": "shingles",
+   "completion_date": "February 6, 2025",
+   "total_amount": "$14,605.00",
+   "warranty_years": "5 years"
+  },
+  "pages": 2,
+  "layout": "modern"
+ },
+ {
+  "id": "messy06",
+  "file": "messy06.jpg",
+  "kind": "faded_receipt",
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Ingrid Marchetti",
+   "job_address": "150 Osprey Ln",
+   "work_type": "windows",
+   "completion_date": "2025-12-26",
+   "total_amount": 20500.0,
+   "warranty_years": 20
+  },
+  "printed": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Ingrid Marchetti",
+   "job_address": "150 Osprey Ln",
+   "work_type": "windows",
+   "completion_date": "12/26/2025",
+   "total_amount": "$20,500.00",
+   "warranty_years": "20 yr"
+  },
+  "pages": 1,
+  "layout": "receipt"
+ },
+ {
+  "id": "messy07",
+  "file": "messy07.jpg",
+  "kind": "crumpled_photo",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Marcus Quill",
+   "job_address": "28 Saltmeadow Dr",
+   "work_type": "roof",
+   "completion_date": "2026-08-25",
+   "total_amount": 12375.0,
+   "warranty_years": 10
+  },
+  "printed": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Marcus Quill",
+   "job_address": "28 Saltmeadow Dr",
+   "work_type": "shingles",
+   "completion_date": "Aug 25, 2026",
+   "total_amount": "$12,375.00",
+   "warranty_years": "10 years"
+  },
+  "pages": 1,
+  "layout": "classic"
+ },
+ {
+  "id": "messy08",
+  "file": "messy08.pdf",
+  "kind": "folded_coffee",
+  "expected": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Tomasz Kowalczyk",
+   "job_address": "247 Bayberry Cir",
+   "work_type": "deck",
+   "completion_date": "2025-09-20",
+   "total_amount": 18446.12,
+   "warranty_years": 3
+  },
+  "printed": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Tomasz Kowalczyk",
+   "job_address": "247 Bayberry Cir",
+   "work_type": "deck",
+   "completion_date": "Sep 20, 2025",
+   "total_amount": "$18,446.12",
+   "warranty_years": "3 years"
+  },
+  "pages": 3,
+  "layout": "modern"
+ },
+ {
+  "id": "messy09",
+  "file": "messy09.jpg",
+  "kind": "photocopy_fax_scan",
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Nadia Lindqvist",
+   "job_address": "128 Tidewater Rd",
+   "work_type": "addition",
+   "completion_date": "2025-04-25",
+   "total_amount": 69732.75,
+   "warranty_years": 10
+  },
+  "printed": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Nadia Lindqvist",
+   "job_address": "128 Tidewater Road",
+   "work_type": "addition",
+   "completion_date": "04/25/2025",
+   "total_amount": "$69,732.75",
+   "warranty_years": "10 years"
+  },
+  "pages": 1,
+  "layout": "modern"
+ },
+ {
+  "id": "messy10",
+  "file": "messy10.jpg",
+  "kind": "carbon_copy",
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Kwame Harrow",
+   "job_address": "196 Beacon Ave",
+   "work_type": "bathroom",
+   "completion_date": "2026-08-17",
+   "total_amount": 16800.0,
+   "warranty_years": 1
+  },
+  "printed": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH 01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Kwame Harrow",
+   "job_address": "196 Beacon Avenue",
+   "work_type": "bathroom",
+   "completion_date": "8/17/26",
+   "total_amount": "$16,800.00",
+   "warranty_years": "1 yr"
+  },
+  "pages": 1,
+  "layout": "carbon"
+ },
+ {
+  "id": "messy11",
+  "file": "messy11.jpg",
+  "kind": "handwritten_fix",
+  "expected": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Raj Delacroix",
+   "job_address": "155 Saltmeadow Dr",
+   "work_type": "deck",
+   "completion_date": "2026-01-24",
+   "total_amount": 29775.84,
+   "warranty_years": 3
+  },
+  "printed": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Raj Delacroix",
+   "job_address": "155 Saltmeadow Drive",
+   "work_type": "deck",
+   "completion_date": "1/24/26",
+   "total_amount": "$29,775.84",
+   "warranty_years": "3 years"
+  },
+  "pages": 1,
+  "layout": "form"
+ },
+ {
+  "id": "messy12",
+  "file": "messy12.jpg",
+  "kind": "faded_receipt",
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Yesenia Abernathy",
+   "job_address": "161 Sandbar Ct",
+   "work_type": "bathroom",
+   "completion_date": "2025-06-28",
+   "total_amount": 23324.22,
+   "warranty_years": null
+  },
+  "printed": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Yesenia Abernathy",
+   "job_address": "161 Sandbar Court",
+   "work_type": "bathroom",
+   "completion_date": "Jun 28, 2025",
+   "total_amount": "$23,324.22",
+   "warranty_years": "no labor warranty"
+  },
+  "pages": 1,
+  "layout": "receipt"
+ },
+ {
+  "id": "messy13",
+  "file": "messy13.jpg",
+  "kind": "crumpled_photo",
+  "expected": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Beatrice Szabo",
+   "job_address": "210 Beacon Ave",
+   "work_type": "plumbing",
+   "completion_date": "2025-05-02",
+   "total_amount": 3786.2,
+   "warranty_years": 1
+  },
+  "printed": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Beatrice Szabo",
+   "job_address": "210 Beacon Ave",
+   "work_type": "water heater",
+   "completion_date": "05/02/2025",
+   "total_amount": "$3,786.20",
+   "warranty_years": "1 years"
+  },
+  "pages": 1,
+  "layout": "form"
+ },
+ {
+  "id": "messy14",
+  "file": "messy14.jpg",
+  "kind": "folded_coffee",
+  "expected": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Lena Rourke",
+   "job_address": "168 Osprey Ln",
+   "work_type": "deck",
+   "completion_date": "2025-04-04",
+   "total_amount": 15750.0,
+   "warranty_years": 10
+  },
+  "printed": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH 00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Lena Rourke",
+   "job_address": "168 Osprey Lane",
+   "work_type": "deck",
+   "completion_date": "April 4, 2025",
+   "total_amount": "$15,750.00",
+   "warranty_years": "10 years"
+  },
+  "pages": 1,
+  "layout": "classic"
+ },
+ {
+  "id": "messy15",
+  "file": "messy15.pdf",
+  "kind": "photocopy_fax_scan",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Everett Ellery",
+   "job_address": "3 Sandbar Ct",
+   "work_type": "roof",
+   "completion_date": "2026-03-18",
+   "total_amount": 19672.31,
+   "warranty_years": 15
+  },
+  "printed": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH 00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Everett Ellery",
+   "job_address": "3 Sandbar Ct",
+   "work_type": "shingles",
+   "completion_date": "03/18/2026",
+   "total_amount": "$19,672.31",
+   "warranty_years": "15 years"
+  },
+  "pages": 3,
+  "layout": "classic"
+ },
+ {
+  "id": "messy16",
+  "file": "messy16.jpg",
+  "kind": "carbon_copy",
+  "expected": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Lena Brady",
+   "job_address": "33 Heron Way",
+   "work_type": "deck",
+   "completion_date": "2026-02-23",
+   "total_amount": 14625.0,
+   "warranty_years": 10
+  },
+  "printed": {
+   "contractor_name": "Dune Grass Decks",
+   "contractor_license": "13VH 00410267",
+   "contractor_email": "build@dunegrassdecks.example",
+   "customer_name": "Lena Brady",
+   "job_address": "33 Heron Way",
+   "work_type": "deck",
+   "completion_date": "2/23/2026",
+   "total_amount": "$14,625.00",
+   "warranty_years": "10 yr"
+  },
+  "pages": 1,
+  "layout": "carbon"
+ },
+ {
+  "id": "messy17",
+  "file": "messy17.jpg",
+  "kind": "handwritten_fix",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Colleen Ostrowski",
+   "job_address": "17 Osprey Ln",
+   "work_type": "roof",
+   "completion_date": "2025-04-08",
+   "total_amount": 24758.91,
+   "warranty_years": 10
+  },
+  "printed": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH 00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Colleen Ostrowski",
+   "job_address": "17 Osprey Ln",
+   "work_type": "shingles",
+   "completion_date": "Apr 8, 2025",
+   "total_amount": "$24,758.91",
+   "warranty_years": "10 years"
+  },
+  "pages": 1,
+  "layout": "classic"
+ },
+ {
+  "id": "messy18",
+  "file": "messy18.jpg",
+  "kind": "faded_receipt",
+  "expected": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Raj Fairbanks",
+   "job_address": "245 Sandbar Ct",
+   "work_type": "plumbing",
+   "completion_date": "2025-11-27",
+   "total_amount": 3175.0,
+   "warranty_years": null
+  },
+  "printed": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH 00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Raj Fairbanks",
+   "job_address": "245 Sandbar Ct",
+   "work_type": "water heater",
+   "completion_date": "2025-11-27",
+   "total_amount": "$3,175.00",
+   "warranty_years": "no labor warranty"
+  },
+  "pages": 1,
+  "layout": "receipt"
+ },
+ {
+  "id": "messy19",
+  "file": "messy19.pdf",
+  "kind": "crumpled_photo",
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Teo Brady",
+   "job_address": "51 Heron Way",
+   "work_type": "windows",
+   "completion_date": "2026-05-08",
+   "total_amount": 17966.31,
+   "warranty_years": 20
+  },
+  "printed": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Teo Brady",
+   "job_address": "51 Heron Way",
+   "work_type": "windows",
+   "completion_date": "05/08/2026",
+   "total_amount": "$17,966.31",
+   "warranty_years": "20 years"
+  },
+  "pages": 2,
+  "layout": "modern"
+ },
+ {
+  "id": "messy20",
+  "file": "messy20.jpg",
+  "kind": "folded_coffee",
+  "expected": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Ingrid Pemberton",
+   "job_address": "95 Heron Way",
+   "work_type": "bathroom",
+   "completion_date": "2026-10-03",
+   "total_amount": 25483.38,
+   "warranty_years": null
+  },
+  "printed": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Ingrid Pemberton",
+   "job_address": "95 Heron Way",
+   "work_type": "bathroom",
+   "completion_date": "2026-10-03",
+   "total_amount": "$25,483.38",
+   "warranty_years": "no separate workmanship warranty"
+  },
+  "pages": 1,
+  "layout": "classic"
+ },
+ {
+  "id": "messy21",
+  "file": "messy21.jpg",
+  "kind": "photocopy_fax_scan",
+  "expected": {
+   "contractor_name": "Tidewater Electric LLC",
+   "contractor_license": "13VH00938114",
+   "contractor_email": "jobs@tidewater-elec.example",
+   "customer_name": "Yesenia Harrow",
+   "job_address": "73 Tidewater Rd",
+   "work_type": "electrical",
+   "completion_date": "2026-09-12",
+   "total_amount": 5650.0,
+   "warranty_years": 2
+  },
+  "printed": {
+   "contractor_name": "Tidewater Electric LLC",
+   "contractor_license": "13VH00938114",
+   "contractor_email": "jobs@tidewater-elec.example",
+   "customer_name": "Yesenia Harrow",
+   "job_address": "73 Tidewater Road",
+   "work_type": "panel",
+   "completion_date": "09/12/2026",
+   "total_amount": "$5,650.00",
+   "warranty_years": "2 years"
+  },
+  "pages": 1,
+  "layout": "form"
+ },
+ {
+  "id": "messy22",
+  "file": "messy22.jpg",
+  "kind": "carbon_copy",
+  "expected": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Priscilla Hollis",
+   "job_address": "212 Driftwood Ter",
+   "work_type": "plumbing",
+   "completion_date": "2025-01-30",
+   "total_amount": 2612.31,
+   "warranty_years": 6
+  },
+  "printed": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Priscilla Hollis",
+   "job_address": "212 Driftwood Terrace",
+   "work_type": "water heater",
+   "completion_date": "1/30/25",
+   "total_amount": "$2,612.31",
+   "warranty_years": "6 yr"
+  },
+  "pages": 1,
+  "layout": "carbon"
+ },
+ {
+  "id": "messy23",
+  "file": "messy23.jpg",
+  "kind": "handwritten_fix",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Marcus Whitlock",
+   "job_address": "22 Tidewater Rd",
+   "work_type": "roof",
+   "completion_date": "2025-05-11",
+   "total_amount": 21290.0,
+   "warranty_years": 10
+  },
+  "printed": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH 00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Marcus Whitlock",
+   "job_address": "22 Tidewater Road",
+   "work_type": "shingles",
+   "completion_date": "5/11/25",
+   "total_amount": "$21,290.00",
+   "warranty_years": "10 years"
+  },
+  "pages": 1,
+  "layout": "modern"
+ },
+ {
+  "id": "messy24",
+  "file": "messy24.jpg",
+  "kind": "faded_receipt",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "June Harrow",
+   "job_address": "95 Gull Rock Rd",
+   "work_type": "roof",
+   "completion_date": "2025-05-11",
+   "total_amount": 12025.0,
+   "warranty_years": 10
+  },
+  "printed": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "June Harrow",
+   "job_address": "95 Gull Rock Rd",
+   "work_type": "shingles",
+   "completion_date": "May 11, 2025",
+   "total_amount": "$12,025.00",
+   "warranty_years": "10 yr"
+  },
+  "pages": 1,
+  "layout": "receipt"
+ },
+ {
+  "id": "messy25",
+  "file": "messy25.jpg",
+  "kind": "crumpled_photo",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Raj Ellery",
+   "job_address": "16 Sandbar Ct",
+   "work_type": "roof",
+   "completion_date": "2025-01-31",
+   "total_amount": 20225.0,
+   "warranty_years": 15
+  },
+  "printed": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Raj Ellery",
+   "job_address": "16 Sandbar Court",
+   "work_type": "shingles",
+   "completion_date": "31-Jan-25",
+   "total_amount": "$20,225.00",
+   "warranty_years": "15 years"
+  },
+  "pages": 1,
+  "layout": "classic"
+ },
+ {
+  "id": "messy26",
+  "file": "messy26.jpg",
+  "kind": "folded_coffee",
+  "expected": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Colleen Rourke",
+   "job_address": "208 Heron Way",
+   "work_type": "plumbing",
+   "completion_date": "2026-05-18",
+   "total_amount": 1946.44,
+   "warranty_years": null
+  },
+  "printed": {
+   "contractor_name": "Bayside Plumbing & Heating",
+   "contractor_license": "13VH00551920",
+   "contractor_email": "service@baysideph.example",
+   "customer_name": "Colleen Rourke",
+   "job_address": "208 Heron Way",
+   "work_type": "water heater",
+   "completion_date": "May 18, 2026",
+   "total_amount": "$1,946.44",
+   "warranty_years": "no separate workmanship warranty"
+  },
+  "pages": 1,
+  "layout": "modern"
+ },
+ {
+  "id": "messy27",
+  "file": "messy27.jpg",
+  "kind": "photocopy_fax_scan",
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Nadia Ellery",
+   "job_address": "229 Saltmeadow Dr",
+   "work_type": "kitchen",
+   "completion_date": "2026-02-16",
+   "total_amount": 52246.25,
+   "warranty_years": null
+  },
+  "printed": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Nadia Ellery",
+   "job_address": "229 Saltmeadow Dr",
+   "work_type": "kitchen",
+   "completion_date": "Feb 16, 2026",
+   "total_amount": "$52,246.25",
+   "warranty_years": "no separate workmanship warranty"
+  },
+  "pages": 1,
+  "layout": "modern"
+ },
+ {
+  "id": "messy28",
+  "file": "messy28.jpg",
+  "kind": "carbon_copy",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Everett Ferreira",
+   "job_address": "225 Driftwood Ter",
+   "work_type": "roof",
+   "completion_date": "2025-08-09",
+   "total_amount": 19150.0,
+   "warranty_years": 5
+  },
+  "printed": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Everett Ferreira",
+   "job_address": "225 Driftwood Ter",
+   "work_type": "shingles",
+   "completion_date": "8/9/25",
+   "total_amount": "$19,150.00",
+   "warranty_years": "5 yr"
+  },
+  "pages": 1,
+  "layout": "carbon"
+ },
+ {
+  "id": "messy29",
+  "file": "messy29.jpg",
+  "kind": "handwritten_fix",
+  "expected": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Rosalind Delacroix",
+   "job_address": "42 Beacon Ave",
+   "work_type": "kitchen",
+   "completion_date": "2025-08-26",
+   "total_amount": 45710.0,
+   "warranty_years": 1
+  },
+  "printed": {
+   "contractor_name": "Harbor & Pine Builders",
+   "contractor_license": "13VH01234567",
+   "contractor_email": "office@harborpine.example",
+   "customer_name": "Rosalind Delacroix",
+   "job_address": "42 Beacon Ave",
+   "work_type": "kitchen",
+   "completion_date": "Aug 26, 2025",
+   "total_amount": "$45,710.00",
+   "warranty_years": "1 years"
+  },
+  "pages": 1,
+  "layout": "form"
+ },
+ {
+  "id": "messy30",
+  "file": "messy30.jpg",
+  "kind": "faded_receipt",
+  "expected": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Kwame Moreau",
+   "job_address": "129 Lantern Pl",
+   "work_type": "roof",
+   "completion_date": "2026-01-12",
+   "total_amount": 16625.0,
+   "warranty_years": 5
+  },
+  "printed": {
+   "contractor_name": "Inlet Roofing Co.",
+   "contractor_license": "13VH 00077302",
+   "contractor_email": "estimates@inletroof.example",
+   "customer_name": "Kwame Moreau",
+   "job_address": "129 Lantern Place",
+   "work_type": "shingles",
+   "completion_date": "2026-01-12",
+   "total_amount": "$16,625.00",
+   "warranty_years": "5 yr"
+  },
+  "pages": 1,
+  "layout": "receipt"
+ }
+]

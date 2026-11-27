@@ -1,0 +1,1010 @@
+{
+ "rule": "keep if Tesseract OR the hosted reader (Codex CLI) finds the permit number and, for final_on_file, the approval date; damaged letters that fail are softened x0.7, up to 3 times. hosted_result_agrees records whether the hosted reader's result kind matched truth (not gated, so hard 'unclear' letters stay in).",
+ "summary": {
+  "passed_first_try": 29,
+  "softened": 1
+ },
+ "hosted_result_agreement": 30,
+ "docs": {
+  "tr01": {
+   "kind": "final_on_file",
+   "variant": "ca_issued",
+   "damage": null,
+   "file": "tr01.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true,
+      "result_date": true
+     },
+     "hosted_answer": {
+      "permit_number": "22-0147",
+      "result": "final_on_file",
+      "result_date": "2022-12-16"
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr02": {
+   "kind": "no_record",
+   "variant": "search_none",
+   "damage": null,
+   "file": "tr02.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "23-0388",
+      "result": "no_record",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr03": {
+   "kind": "unclear",
+   "variant": "scheduled",
+   "damage": "fax",
+   "file": "tr03.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": 0.6
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "21-0912",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": 0.6
+    }
+   ]
+  },
+  "tr04": {
+   "kind": "final_on_file",
+   "variant": "final_passed",
+   "damage": null,
+   "file": "tr04.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true,
+      "result_date": true
+     },
+     "hosted_answer": {
+      "permit_number": "21-0290",
+      "result": "final_on_file",
+      "result_date": "2021-06-05"
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr05": {
+   "kind": "unclear",
+   "variant": "partial",
+   "damage": null,
+   "file": "tr05.pdf",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "19-0301",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr06": {
+   "kind": "no_record",
+   "variant": "open_no_final",
+   "damage": "photo",
+   "file": "tr06.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": 0.6
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "24-0648",
+      "result": "no_record",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": 0.6
+    }
+   ]
+  },
+  "tr07": {
+   "kind": "final_on_file",
+   "variant": "table",
+   "damage": null,
+   "file": "tr07.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true,
+      "result_date": true
+     },
+     "hosted_answer": {
+      "permit_number": "24-0342",
+      "result": "final_on_file",
+      "result_date": "2024-10-31"
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr08": {
+   "kind": "no_record",
+   "variant": "no_responsive",
+   "damage": null,
+   "file": "tr08.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "19-0369",
+      "result": "no_record",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr09": {
+   "kind": "unclear",
+   "variant": "missing_date",
+   "damage": "photocopy",
+   "file": "tr09.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": 0.6
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "22-1211",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": 0.6
+    }
+   ]
+  },
+  "tr10": {
+   "kind": "final_on_file",
+   "variant": "ca_issued",
+   "damage": null,
+   "file": "tr10.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true,
+      "result_date": true
+     },
+     "hosted_answer": {
+      "permit_number": "25-0461",
+      "result": "final_on_file",
+      "result_date": "2026-06-15"
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr11": {
+   "kind": "final_on_file",
+   "variant": "final_passed",
+   "damage": null,
+   "file": "tr11.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true,
+      "result_date": true
+     },
+     "hosted_answer": {
+      "permit_number": "24-0145",
+      "result": "final_on_file",
+      "result_date": "2025-01-13"
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr12": {
+   "kind": "final_on_file",
+   "variant": "table",
+   "damage": "fax",
+   "file": "tr12.jpg",
+   "outcome": "softened",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 1,
+    "strength": 0.42
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": false
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": false,
+      "result_date": false
+     },
+     "hosted_answer": {
+      "permit_number": "24-0345",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": false,
+     "level": 0,
+     "strength": 0.6
+    },
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true,
+      "result_date": true
+     },
+     "hosted_answer": {
+      "permit_number": "24-0345",
+      "result": "final_on_file",
+      "result_date": "2025-01-13"
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 1,
+     "strength": 0.42
+    }
+   ]
+  },
+  "tr13": {
+   "kind": "no_record",
+   "variant": "search_none",
+   "damage": null,
+   "file": "tr13.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "21-0429",
+      "result": "no_record",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr14": {
+   "kind": "final_on_file",
+   "variant": "ca_issued",
+   "damage": null,
+   "file": "tr14.pdf",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true,
+      "result_date": true
+     },
+     "hosted_answer": {
+      "permit_number": "20-0982",
+      "result": "final_on_file",
+      "result_date": "2021-08-09"
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr15": {
+   "kind": "final_on_file",
+   "variant": "co_issued",
+   "damage": "photo",
+   "file": "tr15.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": 0.6
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true,
+      "result_date": true
+     },
+     "hosted_answer": {
+      "permit_number": "19-0617",
+      "result": "final_on_file",
+      "result_date": "2020-10-14"
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": 0.6
+    }
+   ]
+  },
+  "tr16": {
+   "kind": "no_record",
+   "variant": "open_no_final",
+   "damage": null,
+   "file": "tr16.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "21-1217",
+      "result": "no_record",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr17": {
+   "kind": "no_record",
+   "variant": "no_responsive",
+   "damage": null,
+   "file": "tr17.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "20-0807",
+      "result": "no_record",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr18": {
+   "kind": "unclear",
+   "variant": "other_permit",
+   "damage": "photocopy",
+   "file": "tr18.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": 0.6
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "24-0518",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": 0.6
+    }
+   ]
+  },
+  "tr19": {
+   "kind": "unclear",
+   "variant": "more_info",
+   "damage": null,
+   "file": "tr19.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "22-0408",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr20": {
+   "kind": "no_record",
+   "variant": "search_none",
+   "damage": null,
+   "file": "tr20.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "19-0291",
+      "result": "no_record",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr21": {
+   "kind": "unclear",
+   "variant": "interim",
+   "damage": "fax",
+   "file": "tr21.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": 0.6
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "25-0078",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": 0.6
+    }
+   ]
+  },
+  "tr22": {
+   "kind": "unclear",
+   "variant": "scheduled",
+   "damage": null,
+   "file": "tr22.pdf",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "22-0767",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr23": {
+   "kind": "unclear",
+   "variant": "other_permit",
+   "damage": null,
+   "file": "tr23.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "23-1210",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr24": {
+   "kind": "no_record",
+   "variant": "open_no_final",
+   "damage": "photo",
+   "file": "tr24.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": 0.6
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "19-1242",
+      "result": "no_record",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": 0.6
+    }
+   ]
+  },
+  "tr25": {
+   "kind": "unclear",
+   "variant": "partial",
+   "damage": null,
+   "file": "tr25.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "19-0467",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr26": {
+   "kind": "no_record",
+   "variant": "no_responsive",
+   "damage": null,
+   "file": "tr26.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "21-0283",
+      "result": "no_record",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr27": {
+   "kind": "final_on_file",
+   "variant": "final_passed",
+   "damage": "photocopy",
+   "file": "tr27.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": 0.6
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true,
+      "result_date": true
+     },
+     "hosted_answer": {
+      "permit_number": "23-1089",
+      "result": "final_on_file",
+      "result_date": "2024-08-20"
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": 0.6
+    }
+   ]
+  },
+  "tr28": {
+   "kind": "no_record",
+   "variant": "search_none",
+   "damage": null,
+   "file": "tr28.pdf",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "20-0352",
+      "result": "no_record",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr29": {
+   "kind": "unclear",
+   "variant": "more_info",
+   "damage": null,
+   "file": "tr29.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": null
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true
+     },
+     "hosted_answer": {
+      "permit_number": "25-0349",
+      "result": "unclear",
+      "result_date": null
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": null
+    }
+   ]
+  },
+  "tr30": {
+   "kind": "final_on_file",
+   "variant": "table",
+   "damage": "fax",
+   "file": "tr30.jpg",
+   "outcome": "passed_first_try",
+   "hosted_result_agrees": true,
+   "final": {
+    "level": 0,
+    "strength": 0.6
+   },
+   "attempts": [
+    {
+     "tesseract": {
+      "permit_number": true,
+      "result_date": true
+     },
+     "hosted": {
+      "permit_number": true,
+      "result": true,
+      "result_date": true
+     },
+     "hosted_answer": {
+      "permit_number": "19-0101",
+      "result": "final_on_file",
+      "result_date": "2020-02-05"
+     },
+     "hosted_error": null,
+     "pass": true,
+     "level": 0,
+     "strength": 0.6
+    }
+   ]
+  }
+ }
+}

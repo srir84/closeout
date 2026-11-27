@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Import{% endblock %}
+{% block head %}{% if batch.status != 'done' %}<meta http-equiv="refresh" content="2">{% endif %}{% endblock %}
+{% block content %}
+<h1>Import from {{ batch.created_at.strftime('%d %b %Y %H:%M') }}</h1>
+<p>Status: <strong id="batch-status">{{ batch.status }}</strong>{% if batch.counts %} · {{ batch.counts.get('jobs', 0) }} jobs made, {{ batch.counts.get('rejected', 0) }} rows refused{% endif %}</p>
+{% if bad_files %}<h2>Files refused</h2><ul>{% for name, why in bad_files.items() %}<li>{{ name }}: {{ why }}</li>{% endfor %}</ul>{% endif %}
+{% if batch.rejected %}<h2>Rows refused</h2><ul id="rejected">{% for r in batch.rejected %}<li>Line {{ r.line }}{% if r.job_ref %} ({{ r.job_ref }}){% endif %}: {{ csv_messages.get(r.reason, r.reason) }}</li>{% endfor %}</ul>{% endif %}
+<table id="batch-jobs">
+  <tr><th>Job</th><th>Status</th><th>Why</th></tr>
+  {% for j in jobs %}
+  <tr><td><a href="/c/jobs/{{ j.id }}">{{ j.job_ref }}</a></td><td><span class="state {{ j.status }}">{{ j.status | replace('_', ' ') }}</span></td>
+      <td>{{ reasons.get(j.needs_reason, '') if j.status == 'needs_a_look' else '' }}</td></tr>
+  {% endfor %}
+</table>
+<p><a href="/c/jobs">All jobs</a></p>
+{% endblock %}

@@ -13,7 +13,7 @@
 {% endif %}
 <header class="top">
   <a class="brand" href="/">Closeout <span class="tag">demo</span></a>
-  <nav>{% block nav %}{% endblock %}</nav>
+  <nav>{% block nav %}{% if account and account.kind == 'contractor' %}<a href="/c/jobs">Jobs</a><a href="/c/import">Import</a><a href="/runs">Runs</a>{% elif account and account.kind == 'homeowner' %}<a href="/h/home">My home</a><a href="/h/report">Sale report</a>{% elif account and account.kind == 'ops' %}<a href="/ops">Ops</a><a href="/ops/outbox">Outbox</a><a href="/ops/privacy">Privacy</a><a href="/runs">Runs</a>{% endif %}<a href="/data">Data</a>{% endblock %}</nav>
   {% if account %}
   <form method="post" action="/signout" class="who">
     <span>{{ account.display_name }} <small>({{ account.kind }})</small></span>
@@ -22,7 +22,7 @@
   </form>
   {% endif %}
 </header>
-{% block sample %}{% endblock %}
+{% block sample %}{% if sample %}<div class="banner sample">Sample town (Sampleton) — made up. Every person, home and company here is made up.</div>{% endif %}{% endblock %}
 <main>
 {% block content %}{% endblock %}
 </main>

@@ -163,4 +163,35 @@ def decide_facts(inp: FactsIn) -> FactsOut:
         a = reads.get("A", {}).get("output") if reads.get("A", {}).get("valid") else None
         b = reads.get("B", {}).get("output") if reads.get("B", {}).get("valid") else None
         decisions = decide_reads(a, b, today, light=light)
-        return store_facts(c, inp.job_id, decisions, light)
+        out = store_facts(c, inp.job_id, decisions, light)
+        registry_contacts(c, inp.job_id)
+        return out
+
+
+def registry_contacts(conn: Any, job_id: UUID) -> None:
+    """R-IMP-4: for a contractor's own import, the contractor's name, license and email come from our list.
+
+    The reads stay in value_a / value_b as evidence for the same-contractor check.
+    """
+    row = db.one(
+        conn,
+        """SELECT k.name, k.license, p.email FROM jobs j JOIN contractors k ON k.id = j.contractor_id
+                          JOIN recipients r ON r.id = k.recipient_id JOIN people p ON p.id = r.person_id
+                          WHERE j.id = :j AND j.origin = 'contractor'""",
+        j=job_id,
+    )
+    if row is None:
+        return
+    for field, value in (
+        ("contractor_name", row["name"]),
+        ("contractor_license", row["license"]),
+        ("contractor_email", row["email"]),
+    ):
+        db.run(
+            conn,
+            """UPDATE facts SET value = :v, source = 'registry', status = 'kept', reason = 'registry',
+                        updated_at = now() WHERE job_id = :j AND field = :f""",
+            v=value,
+            j=job_id,
+            f=field,
+        )

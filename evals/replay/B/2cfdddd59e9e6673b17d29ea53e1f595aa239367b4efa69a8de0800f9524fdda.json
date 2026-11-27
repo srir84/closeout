@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 20285,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"HIC Reg # 13VH01234567\",\n  \"contractor_email\": \"office@harbormine.example\",\n  \"customer_name\": \"Priya Raman\",\n  \"job_address\": \"110 Tidewater Rd\",\n  \"work_type\": \"kitchen\",\n  \"completion_date\": \"2024-08-08\",\n  \"total_amount\": 28367,\n  \"warranty_years\": 2\n}",
+ "tokens_in": 4269,
+ "tokens_out": 128
+}

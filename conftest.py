@@ -2,13 +2,19 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import shutil
 import uuid
-from collections.abc import Iterator
+from collections.abc import AsyncIterator, Iterator
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
+import pytest_asyncio
+from temporalio.client import Client
+from temporalio.testing import WorkflowEnvironment
+from temporalio.worker import Worker
 
 ROOT = Path(__file__).parent
 PG_IMAGE = "postgres:16.16"
@@ -40,19 +46,22 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]):  
     outcome = yield
     rep = outcome.get_result()
     if rep.when == "call" or (rep.when == "setup" and rep.outcome != "passed"):
-        _RESULTS.append({
-            "test": item.nodeid,
-            "reqs": sorted({m.args[0] for m in item.iter_markers("req")}),
-            "slices": sorted({m.args[0] for m in item.iter_markers("slice")}),
-            "outcome": rep.outcome,
-        })
+        _RESULTS.append(
+            {
+                "test": item.nodeid,
+                "reqs": sorted({m.args[0] for m in item.iter_markers("req")}),
+                "slices": sorted({m.args[0] for m in item.iter_markers("slice")}),
+                "outcome": rep.outcome,
+            }
+        )
 
 
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     import json
 
-    out = os.environ.get("CLOSEOUT_TRACE_RESULTS",
-                         str(ROOT / "build" / "trace" / f"session-{uuid.uuid4().hex[:12]}.jsonl"))
+    out = os.environ.get(
+        "CLOSEOUT_TRACE_RESULTS", str(ROOT / "build" / "trace" / f"session-{uuid.uuid4().hex[:12]}.jsonl")
+    )
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     with open(out, "w") as f:
         for r in _RESULTS:
@@ -90,8 +99,9 @@ def pg_server() -> Iterator[str]:
         pytest.skip("docker not available")
     from testcontainers.postgres import PostgresContainer
 
-    with PostgresContainer(PG_IMAGE, username="closeout", password="closeout", dbname="postgres",
-                           driver="psycopg") as pg:
+    with PostgresContainer(
+        PG_IMAGE, username="closeout", password="closeout", dbname="postgres", driver="psycopg"
+    ) as pg:
         host = pg.get_container_host_ip()
         port = pg.get_exposed_port(5432)
         yield f"postgresql+psycopg://closeout:closeout@{host}:{port}"
@@ -197,8 +207,11 @@ def mailpit() -> Iterator[dict[str, object]]:
     with c:
         wait_for_logs(c, "accessible via", timeout=30)
         host = c.get_container_host_ip()
-        yield {"host": host, "smtp_port": int(c.get_exposed_port(1025)),
-               "api": f"http://{host}:{c.get_exposed_port(8025)}"}
+        yield {
+            "host": host,
+            "smtp_port": int(c.get_exposed_port(1025)),
+            "api": f"http://{host}:{c.get_exposed_port(8025)}",
+        }
 
 
 # --- Temporal ---------------------------------------------------------------------------
@@ -206,3 +219,37 @@ def mailpit() -> Iterator[dict[str, object]]:
 
 def temporal_cli_path() -> str | None:
     return shutil.which("temporal")
+
+
+from closeout.temporal import DATA_CONVERTER
+
+
+@pytest_asyncio.fixture(scope="session")
+async def dev_env() -> AsyncIterator[WorkflowEnvironment]:
+    """A real Temporal dev server (for updates, Schedules, restarts)."""
+    kwargs = {}
+    if temporal_cli_path():
+        kwargs["dev_server_existing_path"] = temporal_cli_path()
+    env = await WorkflowEnvironment.start_local(
+        data_converter=DATA_CONVERTER, dev_server_extra_args=["--log-level", "error"], **kwargs
+    )
+    yield env
+    await env.shutdown()
+
+
+@pytest_asyncio.fixture(scope="module")
+async def ts_env() -> AsyncIterator[WorkflowEnvironment]:
+    """Temporal's time-skipping test server."""
+    env = await WorkflowEnvironment.start_time_skipping(data_converter=DATA_CONVERTER)
+    yield env
+    await env.shutdown()
+
+
+@contextlib.asynccontextmanager
+async def running_worker(client: Client, workflows: list, activities: list, task_queue: str | None = None):
+    tq = task_queue or f"tq-{uuid.uuid4()}"
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        async with Worker(
+            client, task_queue=tq, workflows=workflows, activities=activities, activity_executor=pool
+        ):
+            yield tq

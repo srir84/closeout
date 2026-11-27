@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Jobs{% endblock %}
+{% block content %}
+<h1>Your jobs</h1>
+<p><a class="button" href="/c/import" id="import-link">Import past jobs</a></p>
+{% if batches %}<p class="muted">Recent imports: {% for b in batches %}<a href="/c/batches/{{ b.id }}">{{ b.created_at.strftime('%d %b %H:%M') }} ({{ b.status }})</a>{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+<table id="jobs">
+  <tr><th>Job</th><th>Work</th><th>Address</th><th>Status</th><th>Permit</th></tr>
+  {% for j in jobs %}
+  <tr><td><a href="/c/jobs/{{ j.id }}">{{ j.job_ref }}</a></td><td>{{ j.work_type }}</td><td>{{ j.address_raw }}</td>
+      <td><span class="state {{ j.status }}">{{ j.status | replace('_', ' ') }}</span></td>
+      <td>{{ j.permit_result | replace('_', ' ') if j.permit_result else '' }}</td></tr>
+  {% else %}
+  <tr><td colspan="5">No jobs yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

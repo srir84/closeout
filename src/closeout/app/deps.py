@@ -15,6 +15,7 @@ from closeout import clockdb, db
 from closeout.app.security import COOKIE, account_from_cookie, csrf_ok, csrf_token
 
 HERE = Path(__file__).parent
+HOMES: dict[str, str] = {}  # role -> start page, filled in by each slice
 templates = Jinja2Templates(directory=str(HERE / "templates"))  # autoescape is on for .html
 
 _client: Client | None = None

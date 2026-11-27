@@ -142,10 +142,7 @@ def create_app() -> FastAPI:
 
 
 def home_for(acct: dict[str, Any]) -> str:
-    return HOMES.get(acct["kind"], "/skeleton")
+    return deps.HOMES.get(acct["kind"], "/skeleton")
 
 
 app = create_app()
-
-
-HOMES: dict[str, str] = {}  # filled in by later slices: role -> start page

@@ -124,7 +124,10 @@ def test_light_mode_keeps_nothing_without_a_person(replay_env, monkeypatch: pyte
     out = reading.decide_facts(reading.FactsIn(job_id=job, document_id=docid))
     assert (out.kept, out.unconfirmed) == (0, 9)
     with db.tx() as c:
-        assert db.scalar(c, "SELECT count(*) FROM facts WHERE job_id=:j AND status='kept'", j=job) == 0
+        # Nothing a model read is kept. The contractor's details come from our list, not the read.
+        assert db.scalar(c, "SELECT count(*) FROM facts WHERE job_id=:j AND status='kept' AND source<>'registry'",
+                         j=job) == 0
+        assert db.scalar(c, "SELECT count(*) FROM facts WHERE job_id=:j AND status='unconfirmed'", j=job) == 6
 
 
 def test_a_replay_miss_is_not_retried(replay_env, tmp_path: Path) -> None:

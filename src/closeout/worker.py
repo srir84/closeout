@@ -40,7 +40,7 @@ async def main() -> None:
             client,
             task_queue=s.task_queue,
             workflows=workflows(),
-            activities=activities(),
+            activities=activities(client),
             activity_executor=pool,
             max_concurrent_activities=32,
         )
