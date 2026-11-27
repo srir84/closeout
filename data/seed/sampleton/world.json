@@ -1,0 +1,659 @@
+{
+ "accounts": [
+  {
+   "contractor": "harbor",
+   "key": "mike",
+   "kind": "contractor",
+   "order": 1,
+   "person": "contractor:harbor"
+  },
+  {
+   "key": "dana",
+   "kind": "homeowner",
+   "order": 2,
+   "person": "homeowner:H1"
+  },
+  {
+   "key": "priya",
+   "kind": "ops",
+   "order": 3,
+   "person": "ops:priya"
+  },
+  {
+   "contractor": "inlet",
+   "key": "pat",
+   "kind": "contractor",
+   "order": 4,
+   "person": "contractor:inlet"
+  },
+  {
+   "key": "marcus",
+   "kind": "homeowner",
+   "order": 5,
+   "person": "homeowner:H2"
+  }
+ ],
+ "contractors": [
+  {
+   "key": "harbor",
+   "license": "13VH01234567",
+   "name": "Harbor & Pine Builders",
+   "person": "contractor:harbor",
+   "trades": [
+    "building",
+    "plumbing",
+    "electrical"
+   ]
+  },
+  {
+   "key": "inlet",
+   "license": "13VH00077302",
+   "name": "Inlet Roofing Co.",
+   "person": "contractor:inlet",
+   "trades": [
+    "building"
+   ]
+  },
+  {
+   "key": "bayside",
+   "license": "13VH00551920",
+   "name": "Bayside Plumbing & Heating",
+   "person": "contractor:bayside",
+   "trades": [
+    "plumbing",
+    "fire"
+   ]
+  },
+  {
+   "key": "tidewater",
+   "license": "13VH00938114",
+   "name": "Tidewater Electric LLC",
+   "person": "contractor:tidewater",
+   "trades": [
+    "electrical"
+   ]
+  },
+  {
+   "key": "dunegrass",
+   "license": "13VH00410267",
+   "name": "Dune Grass Decks",
+   "person": "contractor:dunegrass",
+   "trades": [
+    "building"
+   ]
+  }
+ ],
+ "grants": [
+  {
+   "account": "mike",
+   "actions": [
+    "send_email"
+   ],
+   "daily_limit": 200
+  },
+  {
+   "account": "pat",
+   "actions": [
+    "send_email"
+   ],
+   "daily_limit": 200
+  },
+  {
+   "account": "dana",
+   "actions": [
+    "send_email",
+    "share_report"
+   ],
+   "daily_limit": 50
+  },
+  {
+   "account": "marcus",
+   "actions": [
+    "send_email",
+    "share_report"
+   ],
+   "daily_limit": 50
+  }
+ ],
+ "homes": [
+  {
+   "owner": "dana",
+   "pin": "9999_101_8"
+  },
+  {
+   "owner": "marcus",
+   "pin": "9999_102_38"
+  },
+  {
+   "claim_code": "SAMPLE-4721",
+   "owner": null,
+   "pin": "9999_104_12"
+  },
+  {
+   "claim_code": "SAMPLE-5832",
+   "owner": null,
+   "pin": "9999_105_32"
+  }
+ ],
+ "jobs": [
+  {
+   "address": "14 OSPREY LN",
+   "code": "H1",
+   "contractor": "harbor",
+   "email": "dana.whitfield@sampleton.example",
+   "emails": 1,
+   "ends": "recorded",
+   "finish": "2025-03-28",
+   "marks": 3,
+   "name": "Dana Whitfield",
+   "permit_pk": "999900000001",
+   "pin": "9999_101_8",
+   "reviews": 0,
+   "total": "48250.00",
+   "warranty": 5,
+   "work": "kitchen"
+  },
+  {
+   "address": "22 OSPREY LN",
+   "code": "H2",
+   "contractor": "harbor",
+   "contractor_bot": "accept",
+   "correct": {
+    "finish_date": "2025-05-19"
+   },
+   "email": "marcus.ortega@sampleton.example",
+   "emails": 1,
+   "ends": "recorded",
+   "finish": "2025-05-16",
+   "marks": 3,
+   "name": "Marcus Ortega",
+   "permit_pk": "999900000002",
+   "pin": "9999_102_38",
+   "reviews": 0,
+   "total": "21400.00",
+   "warranty": 2,
+   "work": "bathroom"
+  },
+  {
+   "address": "7 HERON WAY",
+   "code": "H3",
+   "contractor": "harbor",
+   "contractor_bot": "reject",
+   "correct": {
+    "total": "17900.00"
+   },
+   "email": "grace.liu@sampleton.example",
+   "emails": 1,
+   "ends": "needs_a_look",
+   "finish": "2025-06-20",
+   "marks": 0,
+   "name": "Grace Liu",
+   "permit_pk": "999900000003",
+   "pin": "9999_103_39",
+   "reviews": 1,
+   "total": "18900.00",
+   "warranty": 3,
+   "work": "deck"
+  },
+  {
+   "address": "31 HERON WAY",
+   "answer_after": "reminder_1",
+   "code": "H4",
+   "contractor": "harbor",
+   "email": "rosa.delgado@sampleton.example",
+   "emails": 2,
+   "ends": "recorded",
+   "finish": "2025-04-11",
+   "marks": 3,
+   "name": "Rosa Delgado",
+   "permit_pk": "999900000004",
+   "pin": "9999_104_12",
+   "reviews": 0,
+   "total": "12600.00",
+   "warranty": 10,
+   "work": "windows"
+  },
+  {
+   "address": "126 TIDEWATER RD",
+   "answer_after": "reminder_2",
+   "code": "H5",
+   "contractor": "harbor",
+   "email": "samuel.okafor@sampleton.example",
+   "emails": 3,
+   "ends": "recorded",
+   "finish": "2025-07-25",
+   "marks": 3,
+   "name": "Samuel Okafor",
+   "permit_pk": "999900000005",
+   "pin": "9999_105_32",
+   "reviews": 0,
+   "total": "23800.00",
+   "warranty": 10,
+   "work": "roof"
+  },
+  {
+   "address": "128 TIDEWATER RD",
+   "answer_after": "day_20",
+   "code": "H6",
+   "contractor": "harbor",
+   "email": "helen.park@sampleton.example",
+   "emails": 3,
+   "ends": "recorded",
+   "finish": "2025-02-14",
+   "marks": 3,
+   "name": "Helen Park",
+   "permit_pk": "999900000006",
+   "pin": "9999_106_37",
+   "reviews": 0,
+   "total": "15350.00",
+   "warranty": 5,
+   "work": "hvac"
+  },
+  {
+   "address": "5 SANDBAR CT",
+   "answer": "decline",
+   "code": "H7",
+   "contractor": "harbor",
+   "email": "victor.hale@sampleton.example",
+   "emails": 1,
+   "ends": "stopped",
+   "finish": "2025-09-12",
+   "marks": 0,
+   "name": "Victor Hale",
+   "permit_pk": "999900000007",
+   "pin": "9999_107_2",
+   "reviews": 0,
+   "total": "96500.00",
+   "warranty": 5,
+   "work": "addition"
+  },
+  {
+   "address": "9 SANDBAR CT",
+   "answer": "not_mine",
+   "code": "H8",
+   "contractor": "harbor",
+   "email": "nina.petrova@sampleton.example",
+   "emails": 1,
+   "ends": "stopped",
+   "finish": "2025-08-08",
+   "marks": 0,
+   "name": "Nina Petrova",
+   "permit_pk": "999900000008",
+   "pin": "9999_108_12",
+   "reviews": 1,
+   "total": "4200.00",
+   "warranty": 1,
+   "work": "plumbing"
+  },
+  {
+   "address": "40 BEACON AVE",
+   "answer": "unsubscribe",
+   "code": "H9",
+   "contractor": "harbor",
+   "email": "owen.fitzgerald@sampleton.example",
+   "emails": 1,
+   "ends": "no_answer",
+   "finish": "2025-10-03",
+   "marks": 0,
+   "name": "Owen Fitzgerald",
+   "permit_pk": "999900000009",
+   "pin": "9999_109_40",
+   "reviews": 0,
+   "total": "6800.00",
+   "warranty": 2,
+   "work": "electrical"
+  },
+  {
+   "address": "44 BEACON AVE",
+   "answer": "never",
+   "code": "H10",
+   "contractor": "harbor",
+   "email": "leah.cohen@sampleton.example",
+   "emails": 3,
+   "ends": "no_answer",
+   "finish": "2025-11-07",
+   "marks": 0,
+   "name": "Leah Cohen",
+   "permit_pk": "999900000010",
+   "pin": "9999_110_13",
+   "reviews": 0,
+   "total": "52900.00",
+   "warranty": 5,
+   "work": "kitchen"
+  },
+  {
+   "address": "3 LANTERN PL",
+   "code": "H11",
+   "contractor": "harbor",
+   "email": "ivan.morales@sampleton.example",
+   "emails": 1,
+   "ends": "recorded",
+   "finish": "2025-06-06",
+   "marks": 2,
+   "name": "Ivan Morales",
+   "permit_pk": "999900000011",
+   "pin": "9999_111_5",
+   "reviews": 0,
+   "total": "19750.00",
+   "warranty": 2,
+   "work": "bathroom"
+  },
+  {
+   "address": "12 LANTERN PL",
+   "code": "H12",
+   "contractor": "harbor",
+   "email": "ruth.adams@sampleton.example",
+   "emails": 2,
+   "ends": "recorded",
+   "finish": "2025-05-30",
+   "marks": 3,
+   "name": "Ruth Adams",
+   "permit_pk": "999900000012",
+   "pin": "9999_112_31",
+   "reviews": 0,
+   "total": "14300.00",
+   "undo": true,
+   "warranty": 3,
+   "work": "deck"
+  }
+ ],
+ "k1": {
+  "code": "K1",
+  "contractor": "bayside",
+  "emails": 1,
+  "ends": "recorded",
+  "finish": "2024-02-20",
+  "homeowner": "dana",
+  "marks": 3,
+  "permit_pk": "999900000016",
+  "pin": "9999_101_8",
+  "total": "3150.00",
+  "warranty": 1,
+  "work": "plumbing"
+ },
+ "match_cases": [
+  {
+   "address": "2 DRIFTWOOD TER",
+   "expected": "possible",
+   "finish": "2025-04-04",
+   "permit_pks": [
+    "999900000017",
+    "999900000018"
+   ],
+   "pin": "9999_113_16",
+   "stated_detached_1_2_family": null,
+   "stated_like_for_like": null,
+   "work_type": "kitchen"
+  },
+  {
+   "address": "4 DRIFTWOOD TER",
+   "expected": "none_in_window_trade",
+   "finish": "2025-05-05",
+   "permit_pks": [
+    "999900000019"
+   ],
+   "pin": "9999_114_28",
+   "stated_detached_1_2_family": null,
+   "stated_like_for_like": null,
+   "work_type": "plumbing"
+  },
+  {
+   "address": "6 DRIFTWOOD TER",
+   "expected": "none",
+   "finish": "2025-03-03",
+   "permit_pks": [],
+   "pin": "9999_115_12",
+   "stated_detached_1_2_family": null,
+   "stated_like_for_like": null,
+   "work_type": "deck"
+  },
+  {
+   "address": "16 GULL ROCK RD",
+   "expected": "none",
+   "finish": "2025-06-01",
+   "permit_pks": [],
+   "pin": "9999_116_34",
+   "stated_detached_1_2_family": true,
+   "stated_like_for_like": true,
+   "work_type": "roof"
+  },
+  {
+   "address": "18 GULL ROCK RD",
+   "expected": "none",
+   "finish": "2025-06-01",
+   "permit_pks": [],
+   "pin": "9999_117_34",
+   "stated_detached_1_2_family": false,
+   "stated_like_for_like": true,
+   "work_type": "windows"
+  },
+  {
+   "address": "20 GULL ROCK RD",
+   "expected": "none",
+   "finish": "2025-06-01",
+   "permit_pks": [
+    "999900000020"
+   ],
+   "pin": "9999_118_2",
+   "stated_detached_1_2_family": true,
+   "stated_like_for_like": false,
+   "work_type": "roof"
+  },
+  {
+   "address": "22 GULL ROCK RD",
+   "expected": "on_file",
+   "finish": "2025-07-07",
+   "permit_pks": [
+    "999900000021"
+   ],
+   "pin": "9999_119_13",
+   "stated_detached_1_2_family": null,
+   "stated_like_for_like": null,
+   "work_type": "bathroom"
+  },
+  {
+   "address": "24 GULL ROCK RD",
+   "expected": "none",
+   "finish": "2025-07-07",
+   "permit_pks": [
+    "999900000022"
+   ],
+   "pin": "9999_120_40",
+   "stated_detached_1_2_family": null,
+   "stated_like_for_like": null,
+   "work_type": "bathroom"
+  },
+  {
+   "address": "30 SALTMEADOW DR",
+   "expected": "no_details",
+   "finish": "2025-02-02",
+   "permit_pks": [
+    "999900000023"
+   ],
+   "pin": "9999_121_23",
+   "stated_detached_1_2_family": null,
+   "stated_like_for_like": null,
+   "work_type": "electrical"
+  },
+  {
+   "address": "32 SALTMEADOW DR",
+   "expected": "on_file",
+   "finish": "2025-09-09",
+   "permit_pks": [
+    "999900000024"
+   ],
+   "pin": "9999_122_23",
+   "stated_detached_1_2_family": null,
+   "stated_like_for_like": null,
+   "work_type": "addition"
+  },
+  {
+   "address": "34 SALTMEADOW DR",
+   "expected": "no_check",
+   "finish": "2025-09-09",
+   "permit_pks": [
+    "999900000025"
+   ],
+   "pin": "9999_123_1",
+   "stated_detached_1_2_family": null,
+   "stated_like_for_like": null,
+   "work_type": "other"
+  }
+ ],
+ "people": [
+  {
+   "email": "office@harborpine.example",
+   "key": "contractor:harbor",
+   "name": "Mike Brennan"
+  },
+  {
+   "email": "estimates@inletroof.example",
+   "key": "contractor:inlet",
+   "name": "Pat Kim"
+  },
+  {
+   "email": "service@baysideph.example",
+   "key": "contractor:bayside",
+   "name": "Luis Romero"
+  },
+  {
+   "email": "jobs@tidewater-elec.example",
+   "key": "contractor:tidewater",
+   "name": "Ann Okoye"
+  },
+  {
+   "email": "build@dunegrassdecks.example",
+   "key": "contractor:dunegrass",
+   "name": "Eli Novak"
+  },
+  {
+   "email": "dana.whitfield@sampleton.example",
+   "key": "homeowner:H1",
+   "name": "Dana Whitfield"
+  },
+  {
+   "email": "marcus.ortega@sampleton.example",
+   "key": "homeowner:H2",
+   "name": "Marcus Ortega"
+  },
+  {
+   "email": "grace.liu@sampleton.example",
+   "key": "homeowner:H3",
+   "name": "Grace Liu"
+  },
+  {
+   "email": "rosa.delgado@sampleton.example",
+   "key": "homeowner:H4",
+   "name": "Rosa Delgado"
+  },
+  {
+   "email": "samuel.okafor@sampleton.example",
+   "key": "homeowner:H5",
+   "name": "Samuel Okafor"
+  },
+  {
+   "email": "helen.park@sampleton.example",
+   "key": "homeowner:H6",
+   "name": "Helen Park"
+  },
+  {
+   "email": "victor.hale@sampleton.example",
+   "key": "homeowner:H7",
+   "name": "Victor Hale"
+  },
+  {
+   "email": "nina.petrova@sampleton.example",
+   "key": "homeowner:H8",
+   "name": "Nina Petrova"
+  },
+  {
+   "email": "owen.fitzgerald@sampleton.example",
+   "key": "homeowner:H9",
+   "name": "Owen Fitzgerald"
+  },
+  {
+   "email": "leah.cohen@sampleton.example",
+   "key": "homeowner:H10",
+   "name": "Leah Cohen"
+  },
+  {
+   "email": "ivan.morales@sampleton.example",
+   "key": "homeowner:H11",
+   "name": "Ivan Morales"
+  },
+  {
+   "email": "ruth.adams@sampleton.example",
+   "key": "homeowner:H12",
+   "name": "Ruth Adams"
+  },
+  {
+   "email": "clerk@sampleton.test",
+   "key": "clerk",
+   "name": "Sampleton Borough Clerk"
+  },
+  {
+   "email": "priya@closeout.test",
+   "key": "ops:priya",
+   "name": "Priya Natarajan"
+  },
+  {
+   "email": "tom.reyes@harborrealty.example",
+   "key": "agent:tom",
+   "name": "Tom Reyes"
+  }
+ ],
+ "town": {
+  "clerk": "clerk",
+  "code": "9999",
+  "name": "Sampleton"
+ },
+ "town_requests": [
+  {
+   "clerk": "final_on_file",
+   "code": "T1",
+   "emails": 1,
+   "ends": "replied",
+   "issued": "2022-05-09",
+   "permit_no": "22-0147",
+   "permit_pk": "999900000013",
+   "pin": "9999_101_8",
+   "reply_bday": 4,
+   "result": "final_on_file",
+   "trades": [
+    "building"
+   ],
+   "type": "Alteration"
+  },
+  {
+   "clerk": "no_record",
+   "code": "T2",
+   "emails": 2,
+   "ends": "replied",
+   "issued": "2023-08-14",
+   "permit_no": "23-0388",
+   "permit_pk": "999900000014",
+   "pin": "9999_101_8",
+   "reply_bday": "after_reminder",
+   "result": "no_record",
+   "trades": [
+    "plumbing"
+   ],
+   "type": "Alteration"
+  },
+  {
+   "clerk": "never",
+   "code": "T3",
+   "emails": 2,
+   "ends": "no_reply",
+   "issued": "2021-10-04",
+   "permit_no": "21-0912",
+   "permit_pk": "999900000015",
+   "pin": "9999_101_8",
+   "result": null,
+   "trades": [
+    "electrical"
+   ],
+   "type": "Alteration"
+  }
+ ]
+}

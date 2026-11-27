@@ -55,6 +55,18 @@ def require_account(request: Request, kind: str | None = None) -> dict[str, Any]
     return acct
 
 
+def save_command(**kw: Any) -> Any:
+    """Save a click. A form re-sent with the same command ID gets the first command back."""
+    from closeout import commands
+
+    try:
+        return commands.save(**kw)
+    except commands.CommandConflict:
+        raise HTTPException(
+            status_code=409, detail="This form was already used for something else."
+        ) from None
+
+
 def check_csrf(request: Request, token: str | None) -> None:
     scope = request.cookies.get(COOKIE) or ""
     if not csrf_ok(scope, token):

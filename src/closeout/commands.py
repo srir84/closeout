@@ -30,6 +30,10 @@ from closeout.workflows.payloads import CommandRef, CommandResult
 log = logging.getLogger("closeout.commands")
 
 
+class CommandConflict(Exception):
+    """The same command ID was sent again for a different request."""
+
+
 @dataclass
 class Outcome:
     status: str  # done | rejected | saved
@@ -65,7 +69,20 @@ def save(
             payload=json.dumps(payload or {}, default=str),
         )
         if row is None:
-            row = db.one(c, "SELECT saved_at FROM commands WHERE command_id = :id", id=cid)
+            # A re-sent click: use what was saved the first time, and refuse a different request under its ID.
+            old = db.one(
+                c,
+                """SELECT kind, saved_at, account_id, link_id, refs, target_workflow FROM commands
+                   WHERE command_id = :id""",
+                id=cid,
+            )
+            assert old is not None
+            first = (old["kind"], old["account_id"], old["link_id"], old["target_workflow"])
+            if first != (kind, account_id, link_id, target_workflow):
+                raise CommandConflict(str(cid))
+            return ref_from_row(
+                cid, old["kind"], old["saved_at"], old["account_id"], old["link_id"], old["refs"]
+            )
     assert row is not None
     return ref_from_row(cid, kind, row["saved_at"], account_id, link_id, refs)
 

@@ -32,6 +32,9 @@ def test_down_and_up_keeps_a_waiting_workflow_and_mail() -> None:
     r = c.post("/skeleton/start", data={"csrf": csrf, "wait_seconds": str(wait_virtual)})
     ping = re.search(r'id="ping-id">([^<]+)<', r.text).group(1)
     wf = f"ping-{ping}"
+    before = [e.get("eventType", "") for e in stack.workflow_events(wf)]
+    assert any("TIMER_STARTED" in k for k in before), "the timer must be waiting before the restart"
+    assert not any("TIMER_FIRED" in k for k in before)
 
     stack.make("down")
     stack.make("up")
@@ -71,3 +74,21 @@ def test_reset_wipes_temporal_mailpit_uploads_and_keys() -> None:
     assert (stack.ROOT / ".secrets" / "session.key").read_text() != old_key
     c, _ = stack.signed_in()
     assert c.get("/clock").json()["scale"] > 0
+
+
+@pytest.mark.req("R-RUN-6")
+def test_a_re_sent_form_runs_once() -> None:
+    c, csrf = stack.signed_in()
+    r = c.get("/skeleton")
+    r = c.post(
+        "/skeleton/start",
+        data={"csrf": csrf, "wait_seconds": str(60 * float(c.get("/clock").json()["scale"]))},
+    )
+    ping = re.search(r'id="ping-id">([^<]+)<', r.text).group(1)
+    cmd = re.search(r'name="command_id" value="([^"]+)"', r.text).group(1)
+    first = c.post("/skeleton/press", data={"csrf": csrf, "ping": ping, "command_id": cmd})
+    second = c.post("/skeleton/press", data={"csrf": csrf, "ping": ping, "command_id": cmd})
+    assert re.search(r'id="msg">([^<]+)<', first.text).group(1) == "Done"
+    assert re.search(r'id="msg">([^<]+)<', second.text).group(1) == "Done"
+    events = [e.get("eventType", "") for e in stack.workflow_events(f"ping-{ping}")]
+    assert sum("UPDATE_ACCEPTED" in k for k in events) == 1

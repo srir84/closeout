@@ -86,3 +86,13 @@ async def test_sweep_marks_commands_for_closed_workflows(dev_env, seeded) -> Non
         await commands.sweep(client, older_than_seconds=0)
         row = commands.read_result(ref.command_id)
         assert row["state"] == "rejected" and row["result"]["code"] == "workflow_closed"
+
+
+async def test_a_reused_command_id_for_another_request_is_refused(dev_env, seeded) -> None:
+    ref = commands.save(target_workflow="ping-x", kind="press")
+    again = commands.save(target_workflow="ping-x", kind="press", command_id=ref.command_id)
+    assert again == ref
+    with pytest.raises(commands.CommandConflict):
+        commands.save(target_workflow="ping-x", kind="other", command_id=ref.command_id)
+    with pytest.raises(commands.CommandConflict):
+        commands.save(target_workflow="ping-y", kind="press", command_id=ref.command_id)

@@ -156,3 +156,20 @@ def test_command_codes_refuse_typed_text() -> None:
         command_id=uuid.uuid4(), kind="answer", saved_at=datetime.now(UTC), codes={"answer": "confirm"}
     )
     assert ok.codes == {"answer": "confirm"}
+
+
+def test_id_names_and_kinds_refuse_personal_text() -> None:
+    import uuid
+    from datetime import UTC, datetime
+
+    from closeout.workflows.payloads import CommandRef
+
+    with pytest.raises(ValueError):
+        CommandRef(
+            command_id=uuid.uuid4(),
+            kind="press",
+            saved_at=datetime.now(UTC),
+            ids={"alice@example.com": uuid.uuid4()},
+        )  # publish-check: allow
+    with pytest.raises(ValueError):
+        CommandRef(command_id=uuid.uuid4(), kind="Dana Whitfield", saved_at=datetime.now(UTC))

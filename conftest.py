@@ -51,9 +51,10 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]):  
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     import json
 
-    out = os.environ.get("CLOSEOUT_TRACE_RESULTS", str(ROOT / "build" / "trace" / "trace.jsonl"))
+    out = os.environ.get("CLOSEOUT_TRACE_RESULTS",
+                         str(ROOT / "build" / "trace" / f"session-{uuid.uuid4().hex[:12]}.jsonl"))
     Path(out).parent.mkdir(parents=True, exist_ok=True)
-    with open(out, "a") as f:
+    with open(out, "w") as f:
         for r in _RESULTS:
             f.write(json.dumps(r) + "\n")
 
@@ -114,9 +115,7 @@ def pg_template(pg_server: str) -> str:
     return "closeout_template"
 
 
-@pytest.fixture
-def database(pg_server: str, pg_template: str, monkeypatch: pytest.MonkeyPatch) -> Iterator[str]:
-    """A fresh database for this test, copied from the template. Sets DATABASE_URL."""
+def _copy_db(pg_server: str, template: str, monkeypatch: pytest.MonkeyPatch) -> Iterator[str]:
     from sqlalchemy import create_engine, text
 
     from closeout import db
@@ -125,7 +124,7 @@ def database(pg_server: str, pg_template: str, monkeypatch: pytest.MonkeyPatch) 
     name = "t_" + uuid.uuid4().hex[:12]
     admin = create_engine(f"{pg_server}/postgres", isolation_level="AUTOCOMMIT")
     with admin.connect() as c:
-        c.execute(text(f'CREATE DATABASE "{name}" TEMPLATE {pg_template}'))
+        c.execute(text(f'CREATE DATABASE "{name}" TEMPLATE {template}'))
     url = f"{pg_server}/{name}"
     monkeypatch.setenv("DATABASE_URL", url)
     get_settings.cache_clear()
@@ -142,12 +141,46 @@ def database(pg_server: str, pg_template: str, monkeypatch: pytest.MonkeyPatch) 
 
 
 @pytest.fixture
-def seeded(database: str) -> str:
-    """A fresh database with the demo seed and a clock at scale 1."""
-    from closeout import cli
+def database(pg_server: str, pg_template: str, monkeypatch: pytest.MonkeyPatch) -> Iterator[str]:
+    """A fresh, empty (migrated) database for this test. Sets DATABASE_URL."""
+    yield from _copy_db(pg_server, pg_template, monkeypatch)
 
-    cli.reset_data(scale=1.0)
-    return database
+
+@pytest.fixture(scope="session")
+def pg_seeded_template(pg_server: str, pg_template: str) -> str:
+    """A template with the full seed loaded once (clock at scale 1)."""
+    from sqlalchemy import create_engine, text
+
+    from closeout import cli, db
+    from closeout.settings import get_settings
+
+    admin = create_engine(f"{pg_server}/postgres", isolation_level="AUTOCOMMIT")
+    with admin.connect() as c:
+        c.execute(text("DROP DATABASE IF EXISTS closeout_seeded"))
+        c.execute(text(f"CREATE DATABASE closeout_seeded TEMPLATE {pg_template}"))
+    url = f"{pg_server}/closeout_seeded"
+    old = os.environ.get("DATABASE_URL")
+    os.environ["DATABASE_URL"] = url
+    get_settings.cache_clear()
+    db._engine_for.cache_clear()
+    try:
+        cli.reset_data(scale=1.0)
+    finally:
+        db.engine(url).dispose()
+        db._engine_for.cache_clear()
+        if old is None:
+            os.environ.pop("DATABASE_URL", None)
+        else:
+            os.environ["DATABASE_URL"] = old
+        get_settings.cache_clear()
+        admin.dispose()
+    return "closeout_seeded"
+
+
+@pytest.fixture
+def seeded(pg_server: str, pg_seeded_template: str, monkeypatch: pytest.MonkeyPatch) -> Iterator[str]:
+    """A fresh database with the full demo seed and a clock at scale 1."""
+    yield from _copy_db(pg_server, pg_seeded_template, monkeypatch)
 
 
 # --- Mailpit ----------------------------------------------------------------------------

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Real public data{% endblock %}
+{% block nav %}<a href="/data" class="on">Data</a><a href="/data/feed">Permit feed</a>{% endblock %}
+{% block sample %}<div class="banner real">Real public data · Manasquan, NJ (code 1329) · no people</div>{% endblock %}
+{% block content %}
+<h1>Manasquan permit data</h1>
+<p class="lead">Every number on this page is counted from the real public records loaded into this demo. There are no people here: owner names, mailing addresses and sale prices are never kept.</p>
+<div class="cards">
+  <div class="card"><h3 id="n-parcels">{{ "{:,}".format(n.parcels) }}</h3><p class="muted">parcels</p></div>
+  <div class="card"><h3 id="n-parcels-address">{{ "{:,}".format(n.parcels_with_address) }}</h3><p class="muted">parcels with a street address</p></div>
+  <div class="card"><h3 id="n-permits">{{ "{:,}".format(n.permits) }}</h3><p class="muted">construction permits</p></div>
+  <div class="card"><h3 id="n-one-address">{{ "{:,}".format(n.one_address) }}</h3><p class="muted">permits with exactly one street address</p></div>
+</div>
+<h2>Matching permits to parcels</h2>
+<p>Each permit is matched to a parcel by block and lot. A match counts only when exactly one parcel fits.</p>
+<table>
+  <tr><th>Result</th><th>Permits</th></tr>
+  <tr><td>Linked to one parcel</td><td id="n-linked">{{ "{:,}".format(n.linked) }}</td></tr>
+  <tr><td>Several parcels fit (not linked)</td><td id="n-several">{{ "{:,}".format(n.several) }}</td></tr>
+  <tr><td>No parcel fits (not linked)</td><td id="n-none">{{ "{:,}".format(n.none) }}</td></tr>
+</table>
+<h2>What the permits say</h2>
+<table>
+  <tr><th>Permit type</th><th>Permits</th></tr>
+  {% for t in n.types %}<tr><td>{{ t.permit_type or "(blank)" }}</td><td>{{ "{:,}".format(t.n) }}</td></tr>{% endfor %}
+  <tr><td>No work details (no trade fees in state data)</td><td id="n-no-trades">{{ "{:,}".format(n.permits_no_trades) }}</td></tr>
+  <tr><td>Final approval in state data</td><td>{{ "{:,}".format(n.permits_final) }}</td></tr>
+  <tr><td>No longer in the state feed (kept)</td><td>{{ "{:,}".format(n.permits_missing) }}</td></tr>
+</table>
+<p class="muted">{% if n.last_sync %}Last feed check: {{ n.last_sync.finished_at.strftime('%d %b %Y %H:%M') }} UTC — {{ n.last_sync.rows_seen }} rows seen, {{ n.last_sync.rows_new }} new, {{ n.last_sync.rows_changed }} changed.{% else %}Loaded from the saved snapshot. The daily feed check hasn't run yet.{% endif %}</p>
+<h2 id="credits">Where this comes from</h2>
+<ul>
+  <li><strong>Construction permits:</strong> New Jersey Department of Community Affairs, published on data.nj.gov (dataset <code>w9se-dmra</code>). Public domain.</li>
+  <li><strong>Parcels and the tax list (street address, property class, year built):</strong> New Jersey Office of Information Technology, Office of GIS (NJOGIS), parcels for Monmouth County.</li>
+</ul>
+{% endblock %}

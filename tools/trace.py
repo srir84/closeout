@@ -4,7 +4,8 @@ Reads the spec's Slice column and the plan's status table. For every slice marke
 (or passed with --assume-done / --upto), every requirement listing that slice must have at
 least one test tagged with that (req, slice) pair that ran and passed in this run.
 
-Test results come from build/trace/trace.jsonl (written by conftest.py).
+Test results come from build/trace/*.jsonl: one file per pytest session (written by conftest.py).
+`make verify` and CI clear the folder first, so only this run's results count.
 """
 
 from __future__ import annotations
@@ -18,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).parents[1]
 SPEC = ROOT / "docs" / "01-SPEC.md"
 PLAN = ROOT / "docs" / "06-IMPLEMENTATION-PLAN.md"
-RESULTS = ROOT / "build" / "trace" / "trace.jsonl"
+RESULTS = ROOT / "build" / "trace"
 ORDER = ["S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S7b", "S8", "S9", "S10", "S11", "S12", "S13", "S14"]
 
 
@@ -44,11 +45,11 @@ def done_slices(text: str) -> list[str]:
     return done
 
 
-def passing_pairs(results_file: Path) -> tuple[set[tuple[str, str]], set[tuple[str, str]]]:
+def passing_pairs(results: Path) -> tuple[set[tuple[str, str]], set[tuple[str, str]]]:
     passed, failed = set(), set()
-    if not results_file.exists():
-        return passed, failed
-    for line in results_file.read_text().splitlines():
+    files = sorted(results.glob("*.jsonl")) if results.is_dir() else ([results] if results.exists() else [])
+    lines = [ln for f in files for ln in f.read_text().splitlines() if ln.strip()]
+    for line in lines:
         r = json.loads(line)
         for req in r["reqs"]:
             for s in r["slices"]:

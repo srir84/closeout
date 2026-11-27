@@ -49,20 +49,38 @@ def tracked_files() -> list[Path]:
     return [ROOT / p for p in out.splitlines() if p and (ROOT / p).is_file()]
 
 
+def history_hits(names: list[str]) -> list[str]:
+    """Names anywhere in git history: every commit's added lines, file names and messages."""
+    if not names:
+        return []
+    log = subprocess.run(
+        ["git", "log", "--all", "-p", "--format=%H %an %ae%n%B", "--name-status", "--text"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        errors="ignore",
+        check=True,
+    ).stdout.lower()
+    return [f"git history: private name ({len(n)} chars)" for n in names if n in log]
+
+
 def scan(files: list[Path], names: list[str]) -> list[str]:
     hits = []
     for p in files:
         rel = p.relative_to(ROOT).as_posix()
-        if rel.startswith(("tools/publish_check.py",)) or rel.endswith(SKIP_SUFFIX):
+        if rel == "tools/publish_check.py":
             continue
         try:
-            text = p.read_text(errors="ignore")
+            raw = p.read_bytes()
         except OSError:
             continue
-        low = text.lower()
+        low = raw.decode("latin-1").lower()
         for n in names:
             if n in low or n in rel.lower():
                 hits.append(f"{rel}: private name ({len(n)} chars)")
+        if rel.endswith(SKIP_SUFFIX):
+            continue
+        text = raw.decode("utf-8", errors="ignore")
         for m in HOME_PATH.finditer(text):
             hits.append(f"{rel}: home-folder path {m.group(0)}")
         for m in EMAIL.finditer(text):
@@ -83,6 +101,8 @@ def main() -> int:
         print("publish check: CLOSEOUT_PRIVATE_NAMES is not set in CI")
         return 1
     hits = scan(tracked_files(), names)
+    if "--history" in sys.argv:
+        hits += history_hits(names)
     for h in hits:
         print("  " + h)
     print(f"publish check: {len(names)} private names, {len(hits)} hits")

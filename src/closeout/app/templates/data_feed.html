@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Permit feed{% endblock %}
+{% block nav %}<a href="/data">Data</a><a href="/data/feed" class="on">Permit feed</a>{% endblock %}
+{% block sample %}<div class="banner real">Real public data · Manasquan, NJ (code 1329) · no people</div>{% endblock %}
+{% block content %}
+<h1>Permit feed</h1>
+<table>
+  <tr><th>Permit</th><th>Type</th><th>Work</th><th>Issued</th><th>Final approval</th><th>Address</th></tr>
+  {% for r in rows %}
+  <tr><td>{{ r.permit_no or "—" }}</td><td>{{ r.permit_type or "—" }}</td>
+      <td>{{ r.trades | join(", ") if r.trades else "No work details in state data" }}</td>
+      <td>{{ r.issued_on or "—" }}</td>
+      <td>{{ r.final_on if r.final_on else "Final approval not in state data" }}</td>
+      <td>{{ r.address or ("Not linked: " ~ r.link if r.link != 'linked' else "No street address") }}</td></tr>
+  {% endfor %}
+</table>
+<p>{% if page > 1 %}<a href="/data/feed?page={{ page - 1 }}">Newer</a> · {% endif %}<a href="/data/feed?page={{ page + 1 }}">Older</a></p>
+{% endblock %}

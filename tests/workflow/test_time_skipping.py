@@ -38,9 +38,11 @@ async def test_seven_day_timer_under_five_seconds(ts_env) -> None:
     )
     async with running_worker(ts_env.client, [Ping], [_fake_finish()]) as tq:
         t0 = time.monotonic()
+        start = await ts_env.get_current_time()
         out = await ts_env.client.execute_workflow(Ping.run, inp, id=f"ping-{inp.ping_id}", task_queue=tq)
         assert out.finished_state == "finished"
         assert time.monotonic() - t0 < 5
+        assert (await ts_env.get_current_time() - start).total_seconds() >= 7 * 86400
 
 
 async def test_updates_work_in_the_time_skipping_kit(ts_env) -> None:

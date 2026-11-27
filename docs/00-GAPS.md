@@ -16,7 +16,7 @@ Both rounds are fixed in these docs. "What the reviews changed" lists what moved
 
 | Gap | Status | What we found or decided | Where |
 |---|---|---|---|
-| Street addresses | **Closed** | The county tax list joins the parcel map on the parcel ID for 3,362 of 3,374 tax rows. **2,707 of 2,914 permits (92.9%) get exactly one street address.** Owner names are blank in all 3,374 rows. | Design 3.18 |
+| Street addresses | **Closed** | The county tax list joins the parcel map on the parcel ID for 3,362 of 3,374 tax rows. **2,706 of 2,914 permits (92.9%) get exactly one street address** on the S1 snapshot of 27 Nov 2026 (the research check counted 2,707 on an earlier download). Owner names are blank in all 3,374 rows. | Design 3.18 |
 | Permit-to-parcel link | **Closed** | By block and lot: 2,712 permits link to one parcel, 82 to several, 120 to none. These are now fixed expected numbers. | Spec R-DATA-3 |
 | Permit row identity | **Closed** | Permit numbers repeat (2,827 distinct in 2,914 rows). The source `pk` is unique, so we key on it. | Design 3.1 |
 | Keeping permits up to date | **Decided** | The state publishes in monthly batches, so a date cursor could miss one. Each run fetches the whole town (about 2,914 rows, under 1 MB) and compares row by row. | Spec R-DATA-1. Design 3.8 |

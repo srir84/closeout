@@ -61,8 +61,11 @@ def review(files: list[dict], patterns: list[str]) -> tuple[list[str], list[str]
             protected.append(f"`{name}` ({f['status']})")
         if f["status"] == "removed" and name.startswith(("tests/", "evals/")):
             suspicious.append(f"`{name}`: test or golden file deleted")
-        if name.startswith("src/closeout/core/") and f["status"] in ("removed", "renamed"):
-            suspicious.append(f"`{name}`: code moved out of core/")
+        prev = f.get("previous_filename", "")
+        if (f["status"] == "removed" and name.startswith("src/closeout/core/")) or (
+            prev.startswith("src/closeout/core/") and not name.startswith("src/closeout/core/")
+        ):
+            suspicious.append(f"`{prev or name}`: code moved out of core/")
         for line in (f.get("patch") or "").splitlines():
             if line.startswith("+") and not line.startswith("+++"):
                 for rx, label in SUSPICIOUS_ADDED:
@@ -73,6 +76,16 @@ def review(files: list[dict], patterns: list[str]) -> tuple[list[str], list[str]
                     if re.search(rx, line[1:]):
                         suspicious.append(f"`{name}`: {label}: `{line[1:].strip()[:100]}`")
     return protected, suspicious
+
+
+def private_name_hits(files: list[dict], names: list[str]) -> list[str]:
+    """Scan the diff as data for private names (fork pull requests run no other secret-bearing check)."""
+    hits = []
+    for f in files:
+        blob = (f["filename"] + "\n" + (f.get("patch") or "")).lower()
+        if any(n in blob for n in names):
+            hits.append(f"`{f['filename']}`: contains a private name")
+    return hits
 
 
 def body(protected: list[str], suspicious: list[str]) -> str:
@@ -120,7 +133,13 @@ def main() -> int:
         page += 1
     patterns = codeowner_patterns((ROOT / ".github" / "CODEOWNERS").read_text())
     protected, suspicious = review(files, patterns)
-    text = body(protected, suspicious)
+    names = [
+        n.strip().lower()
+        for n in os.environ.get("CLOSEOUT_PRIVATE_NAMES", "").splitlines()
+        if n.strip() and not n.startswith("#")
+    ]
+    name_hits = private_name_hits(files, names)
+    text = body(protected, suspicious + name_hits)
     Path(os.environ.get("GITHUB_STEP_SUMMARY", "/dev/null")).write_text(text)
     comments = api(f"{base}/issues/{n}/comments?per_page=100", token)
     assert isinstance(comments, list)
@@ -130,7 +149,7 @@ def main() -> int:
     else:
         api(f"{base}/issues/{n}/comments", token, {"body": text}, method="POST")
     print(text)
-    return 0
+    return 1 if name_hits else 0
 
 
 if __name__ == "__main__":

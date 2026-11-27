@@ -10,5 +10,7 @@ log = logging.getLogger("closeout.startup")
 
 
 async def on_worker_start(client: Client) -> None:
-    """Later slices add: the permit-sync Schedule and the check for jobs with no workflow."""
-    log.info("worker starting")
+    """Create or update the permit-sync Schedule. Later slices add the check for jobs with no workflow."""
+    from closeout import schedules
+
+    log.info("worker starting; permit-sync schedule %s", await schedules.ensure(client))

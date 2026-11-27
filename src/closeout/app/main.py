@@ -93,7 +93,16 @@ def create_app() -> FastAPI:
                 status = desc.status.name if desc.status else "UNKNOWN"
             except Exception:
                 status = "NOT_FOUND"
-        return render(request, "skeleton.html", ping=ping, status=status, msg=msg)
+        scale = deps.clock_info()["scale"]
+        return render(
+            request,
+            "skeleton.html",
+            ping=ping,
+            status=status,
+            msg=msg,
+            default_wait=int(120 * scale),
+            command_id=uuid.uuid4(),
+        )
 
     @app.post("/skeleton/start")
     async def skeleton_start(request: Request, csrf: str = Form(""), wait_seconds: float = Form(60)) -> Any:
@@ -112,10 +121,14 @@ def create_app() -> FastAPI:
         return RedirectResponse(f"/skeleton?ping={ping_id}", status_code=303)
 
     @app.post("/skeleton/press")
-    async def skeleton_press(request: Request, ping: uuid.UUID = Form(...), csrf: str = Form("")) -> Any:
+    async def skeleton_press(
+        request: Request, ping: uuid.UUID = Form(...), csrf: str = Form(""), command_id: uuid.UUID = Form(...)
+    ) -> Any:
         acct = deps.require_account(request)
         deps.check_csrf(request, csrf)
-        ref = commands.save(target_workflow=f"ping-{ping}", kind="press", account_id=acct["id"])
+        ref = deps.save_command(
+            target_workflow=f"ping-{ping}", kind="press", account_id=acct["id"], command_id=command_id
+        )
         out = await commands.send(await deps.temporal(), f"ping-{ping}", ref)
         msg = {"done": "Done", "rejected": f"Refused: {out.code}"}.get(
             out.status, "Saved — we'll process it shortly"

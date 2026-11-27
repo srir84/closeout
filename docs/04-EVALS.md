@@ -76,7 +76,7 @@ Attacks include:
 | Eval | Target | Source of the expected number |
 |---|---|---|
 | Permit-to-parcel links | **Exact** agreement with `tools/join_check.py` on every snapshot row | The independent check |
-| Permits with one street address | 2,707 of 2,914 on the snapshot (exact) | [00-GAPS.md](00-GAPS.md) |
+| Permits with one street address | 2,706 of 2,914 on the snapshot of 27 Nov 2026 (exact). The research check counted 2,707 on an earlier download. | [00-GAPS.md](00-GAPS.md), `tests/integration/test_seed_data.py` |
 | Parcels with a street address | 3,362 of 3,982 (exact) | Same |
 | Bad dates flagged, never stored | 100% of the named bad-row fixtures | Fixture list |
 | **Permit false matches** | **0** marks on 200 made-up jobs placed on parcels whose only permits are for a different trade. Also report the true-match rate on Sampleton, where the answer is known. | `evals/run_permit_match.py` |

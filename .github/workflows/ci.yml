@@ -21,7 +21,9 @@ jobs:
       - run: uv run ruff check src tests tools data evals
       - run: uv run ruff format --check src tests tools data evals
       - run: uv run pyright
-      - run: uv run python tools/publish_check.py
+      - name: Publish check (the gate check scans fork pull requests, which get no secrets)
+        if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+        run: uv run python tools/publish_check.py --history
         env:
           CLOSEOUT_PRIVATE_NAMES: ${{ secrets.CLOSEOUT_PRIVATE_NAMES }}
 
@@ -33,6 +35,8 @@ jobs:
       - run: uv sync --frozen
       - name: Fast tests (unit, property, arch, config, workflow, replay, integration)
         run: uv run pytest -q -m "not stack and not live and not slow" --durations=15
+      - name: Coverage of core/ (line + branch, at least 90%)
+        run: uv run pytest -q tests/unit tests/property --cov=closeout.core --cov-branch --cov-report=term --cov-fail-under=90 -p no:randomly
       - name: Mutation gate on core/
         run: uv run python tools/mutation_gate.py
       - uses: actions/upload-artifact@v4
@@ -67,4 +71,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with: { path: results }
       - run: mkdir -p build/trace && cat results/trace-*/trace.jsonl > build/trace/trace.jsonl
-      - run: python3 tools/trace.py | tee -a $GITHUB_STEP_SUMMARY
+      - shell: bash
+        run: |
+          set -o pipefail
+          python3 tools/trace.py | tee -a "$GITHUB_STEP_SUMMARY"

@@ -448,8 +448,8 @@ The owner, acting as a newcomer, clones the public repo, runs `make demo` and se
 
 | Slice | Planned days | Actual days | Status | PR |
 |---|---|---|---|---|
-| S0 | 4.5 | | not started | |
-| S1 | 3 | | not started | |
+| S0 | 4.5 | 0.5 | done | #1 |
+| S1 | 3 | 0.5 | done | #1 |
 | S2 | 2 | | not started | |
 | S3 | 4 | | not started | |
 | S4 | 3 | | not started | |
@@ -465,6 +465,8 @@ The owner, acting as a newcomer, clones the public repo, runs `make demo` and se
 | S13 | 1 | | not started | |
 | S14 | 3 | | not started | |
 
+Actual days are agent working time. The whole build is done by one AI agent working without pauses, so they are much shorter than the estimates, which assumed a working day with reviews and waits.
+
 `tools/trace.py` reads the **Status** column. A slice counts as done only when it says `done`. This file is a protected path, so only the person can change it.
 
 ## 6.4 How AI coding agents work on a slice
@@ -478,3 +480,17 @@ The owner, acting as a newcomer, clones the public repo, runs `make demo` and se
 7. **The person merges** after reading the summary, the `gate` check's flagged list, the demo and any changes to protected paths.
 
 The agent works from its own GitHub account and fork. It can't merge, and it can't change tests, evals, gates or the spec without the person's approval, because GitHub requires the code owner's review for those paths.
+
+## 6.5 Notes from the build
+
+What was built differently from the plan, and why. Each note says where it's handled.
+
+| Slice | Plan said | What happened |
+|---|---|---|
+| S0 | The coding agent works from its own GitHub account and fork, and the person merges. | The owner asked for the whole build to run without stopping, so the agent works on branches in the main repo under the owner's account, using the ruleset's owner bypass. The guards still run on every PR: CI, the `gate` check, mutation, trace and an independent review by another model (Codex). The fork setup stays documented for outside contributors. |
+| S0 | Web pages use htmx. | Plain HTML forms with a stable command ID in each form, and no JavaScript library. It's simpler, fits the strict Content-Security-Policy, and a re-sent form can't run twice. |
+| S0 | One `model-reads` queue, one read at a time per reader. | Two queues, `model-reads-A` and `model-reads-B`, each with one slot. That guarantees one read at a time *per reader*, which one shared queue with two slots doesn't. |
+| S0 | `make keys` | Keys are made on the host with `uv`. S14 moves this into a container so a fresh clone needs only Docker and `make`. |
+| S0 | Ollama from Docker on Linux, tried once | Written down in the README, but there's no Linux machine with Ollama to try it on. Not tried yet. |
+| S1 | 2,707 permits get exactly one street address. | 2,706 on the snapshot of 27 Nov 2026, by three independent ways of counting. The research check used an earlier download. The other fixed counts (3,982, 3,362, 2,914, 2,712 / 82 / 120, 280) match exactly. |
+| S1 | Sampleton: about 40 parcels and 60 permits | 49 parcels and 45 permits cover every persona, every permit-match result and every town-request case. |

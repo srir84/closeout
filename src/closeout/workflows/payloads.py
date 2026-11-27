@@ -42,6 +42,21 @@ class CommandRef(BaseModel):
                 raise ValueError("codes must be short lower-case identifiers, never typed text")
         return v
 
+    @field_validator("ids")
+    @classmethod
+    def _id_names_only(cls, v: dict[str, UUID]) -> dict[str, UUID]:
+        for k in v:
+            if not CODE.match(k):
+                raise ValueError("id names must be short lower-case identifiers")
+        return v
+
+    @field_validator("kind")
+    @classmethod
+    def _kind_is_code(cls, v: str) -> str:
+        if not CODE.match(v):
+            raise ValueError("kind must be a code")
+        return v
+
 
 class CommandResult(BaseModel):
     command_id: UUID

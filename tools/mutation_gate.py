@@ -39,6 +39,8 @@ def gate(
         return False, 0.0, ["empty mutation run: no mutants were tested"]
     if stats.get("check_was_interrupted_by_user") or stats.get("segfault"):
         return False, 0.0, ["mutation run was interrupted or crashed"]
+    if results and len(results) != total:
+        return False, 0.0, [f"incomplete results: {len(results)} listed for {total} mutants"]
     counted = {name: st for name, st in results.items() if name not in excluded} if results else None
     if counted is not None:
         caught = sum(1 for st in counted.values() if st in ("killed", "timeout"))
@@ -72,10 +74,16 @@ def read_results(mutants_dir: Path) -> dict[str, str]:
 
 def run_mutmut(cwd: Path) -> tuple[dict[str, int], dict[str, str]]:
     shutil.rmtree(cwd / "mutants", ignore_errors=True)
-    subprocess.run(["uv", "run", "mutmut", "run"], cwd=cwd, capture_output=True, text=True)
+    run = subprocess.run(["uv", "run", "mutmut", "run"], cwd=cwd, capture_output=True, text=True)
+    if run.returncode not in (0, 1):
+        print(f"mutmut run exited {run.returncode}")
+        return {}, {}
     subprocess.run(["uv", "run", "mutmut", "export-cicd-stats"], cwd=cwd, capture_output=True, text=True)
     stats_file = cwd / "mutants" / "mutmut-cicd-stats.json"
     stats = json.loads(stats_file.read_text()) if stats_file.exists() else {}
+    if not stats.get("killed") and not stats.get("survived"):
+        print("mutmut checked nothing. Its output ends:")
+        print("\n".join((run.stdout + run.stderr).splitlines()[-30:]))
     copied = cwd / "mutants" / "src" / "closeout" / "core"
     if not copied.exists() or "mutmut" not in "".join(p.read_text() for p in copied.glob("*.py")):
         print("FAIL: mutants were not applied to the copied code the tests import")
@@ -105,9 +113,16 @@ def prove_weak() -> int:
         (t / "tests" / "unit" / "test_weak.py").write_text(WEAK_TEST)
         stats, results = run_mutmut(t)
         ok, score, notes = gate(stats, results, set())
-        print(f"weak suite: {stats.get('total', 0)} mutants; first notes: {notes[:2]}")
-        print(f"weak suite: score {score:.1f}% -> gate {'passed (BAD)' if ok else 'failed (good)'}")
-        return 1 if ok else 0
+        survived = sum(1 for st in results.values() if st == "survived")
+        print(f"weak suite: {stats.get('total', 0)} mutants, {survived} survived, score {score:.1f}%")
+        proved = not ok and int(stats.get("total", 0)) > 0 and survived > 0
+        print(
+            "weak-suite proof:",
+            "PASS (the gate failed a weak suite with surviving mutants)"
+            if proved
+            else "FAIL (the run proved nothing)",
+        )
+        return 0 if proved else 1
 
 
 def main() -> int:

@@ -18,10 +18,10 @@ def test_postgres_from_testcontainers(database: str) -> None:
         assert "closeout" not in database or database.split("/")[-1].startswith("t_")
 
 
-def test_seed_loads_three_people(seeded: str) -> None:
+def test_seed_loads_demo_accounts(seeded: str) -> None:
     with db.tx() as c:
         kinds = sorted(r["kind"] for r in db.all_rows(c, "SELECT kind FROM accounts"))
-        assert kinds == ["contractor", "homeowner", "ops"]
+        assert kinds == ["contractor", "contractor", "homeowner", "homeowner", "ops"]
         assert db.scalar(c, "SELECT scale FROM clock") == 1.0
 
 

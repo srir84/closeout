@@ -75,3 +75,7 @@ def scalar(conn: Connection, sql: str, **params: Any) -> Any:
 
 def run(conn: Connection, sql: str, **params: Any) -> int:
     return conn.execute(text(sql), params).rowcount
+
+
+def run_many(conn: Connection, sql: str, rows: list[dict[str, Any]]) -> None:
+    conn.execute(text(sql), rows)

@@ -20,6 +20,16 @@ make reset   # wipe everything and load the seed again
 
 The Docker services use about 310 MB together when idle (measured on a Mac: app 79 MB, Temporal 84 MB, worker 71 MB, sender 30 MB, Postgres 27 MB, Mailpit 18 MB). Replay mode needs nothing more. Light mode adds about 4.5 GB for one local model, and full mode about 11 GB for two.
 
+## Local models on Linux
+
+On a Mac, Docker reaches Ollama at `host.docker.internal`. On Linux, compose maps that name to the host (`host-gateway`), but Ollama listens only on 127.0.0.1 by default, which containers can't reach. Start it on the Docker bridge address instead, which is still not reachable from other machines:
+
+```sh
+OLLAMA_HOST=172.17.0.1:11434 ollama serve
+```
+
+Don't use `0.0.0.0`: that opens Ollama to your whole network. (This Linux setup is written down but has not been tried yet. Replay mode needs no models at all.)
+
 ## Runs on your computer only
 
 Every service listens on 127.0.0.1, so nothing is reachable from other machines. Emails go only to the local Mailpit mailbox, and only to made-up `.example` and `.test` addresses.
