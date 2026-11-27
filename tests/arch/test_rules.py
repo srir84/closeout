@@ -173,3 +173,33 @@ def test_id_names_and_kinds_refuse_personal_text() -> None:
         )  # publish-check: allow
     with pytest.raises(ValueError):
         CommandRef(command_id=uuid.uuid4(), kind="Dana Whitfield", saved_at=datetime.now(UTC))
+
+
+def event_models() -> list[type[BaseModel]]:
+    from closeout.core.events import kinds
+
+    return sorted(set(kinds().values()), key=lambda m: m.__name__)
+
+
+@pytest.mark.slice("S2")
+@pytest.mark.req("R-REC-1")
+@pytest.mark.parametrize("model", event_models(), ids=lambda m: m.__name__)
+def test_event_payloads_carry_no_person_fields(model: type[BaseModel]) -> None:
+    for name, field in model.model_fields.items():
+        assert not any(w in name.lower() for w in PERSON_WORDS), f"{model.__name__}.{name} looks personal"
+        ann = str(field.annotation)
+        if "str" in ann:
+            assert name in {
+                "reason",
+                "field",
+                "step",
+                "pk",
+                "pin",
+                "via",
+                "origin",
+                "answer",
+                "state",
+                "result",
+                "permit_pk",
+            }, f"{model.__name__}.{name} is free text"
+    assert model.model_config.get("extra") == "forbid"

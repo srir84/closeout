@@ -74,8 +74,7 @@ def apply_sync(conn: Connection, town: str, rows: list[dict[str, Any]], today: d
         r["pk"]: r
         for r in db.all_rows(
             conn,
-            """SELECT pk, row_hash, missing_from_source_since
-                                                        FROM permits WHERE town = :t""",
+            "SELECT pk, row_hash, missing_from_source_since, final_on FROM permits WHERE town = :t",
             t=town,
         )
     }
@@ -124,7 +123,9 @@ def apply_sync(conn: Connection, town: str, rows: list[dict[str, Any]], today: d
     )
     from closeout import sync_hooks
 
-    sync_hooks.after_sync(conn, out, {str(r["pk"]): r for r in new + changed})
+    sync_hooks.after_sync(
+        conn, out, {str(r["pk"]): r for r in new + changed}, {pk: e["final_on"] for pk, e in existing.items()}
+    )
     return out
 
 

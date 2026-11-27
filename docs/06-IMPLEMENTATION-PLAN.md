@@ -450,7 +450,7 @@ The owner, acting as a newcomer, clones the public repo, runs `make demo` and se
 |---|---|---|---|---|
 | S0 | 4.5 | 0.5 | done | #1 |
 | S1 | 3 | 0.5 | done | #1 |
-| S2 | 2 | | not started | |
+| S2 | 2 | 0.3 | done | #1 |
 | S3 | 4 | | not started | |
 | S4 | 3 | | not started | |
 | S5 | 1.5 | | not started | |

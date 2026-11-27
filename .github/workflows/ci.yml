@@ -15,7 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+        with:
+          fetch-depth: 0
+          # The pull request's own commits, not GitHub's test merge commit (which carries the
+          # account's email address and never reaches main: merges are rebase-only).
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --frozen
       - run: uv run ruff check src tests tools data evals
@@ -70,7 +74,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with: { path: results }
-      - run: mkdir -p build/trace && cat results/trace-*/trace.jsonl > build/trace/trace.jsonl
+      - run: mkdir -p build/trace && cp results/trace-*/*.jsonl build/trace/
       - shell: bash
         run: |
           set -o pipefail
