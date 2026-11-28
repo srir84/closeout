@@ -6,6 +6,7 @@ import hashlib
 import hmac
 import uuid
 from typing import Any
+from urllib.parse import urlsplit
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -63,12 +64,20 @@ class HostAndHeaders(BaseHTTPMiddleware):
         host = request.headers.get("host", "").lower()
         if host not in self.allowed:
             return PlainTextResponse("Unknown host", status_code=400)
-        # Uploads are refused by size before anything is read or spooled to disk.
-        if request.method == "POST" and "multipart/" in request.headers.get("content-type", ""):
+        if request.method == "POST":
+            # Another website can't make the browser post here (sign-in included). Browsers say where a request
+            # comes from in Sec-Fetch-Site. Origin is checked only when it names a site: with no-referrer,
+            # browsers send "null" even for our own forms. Mail clients' one-click unsubscribe sends neither.
+            origin = request.headers.get("origin", "")
+            if request.headers.get("sec-fetch-site", "").lower() == "cross-site" or (
+                origin not in ("", "null") and urlsplit(origin).netloc.lower() not in self.allowed
+            ):
+                return PlainTextResponse("Forms can only be sent from this site.", status_code=403)
+            # Every body is refused by size before anything is read or spooled to disk, whatever its type says.
             length = request.headers.get("content-length")
-            if length is None:
+            if length is None and request.headers.get("transfer-encoding"):
                 return PlainTextResponse("Uploads need a Content-Length.", status_code=411)
-            if not length.isdigit() or int(length) > MAX_UPLOAD_BYTES:
+            if length is not None and (not length.isdigit() or int(length) > MAX_UPLOAD_BYTES):
                 return PlainTextResponse("The upload is too big (at most 100 MB in one go).", status_code=413)
         response: Response = await call_next(request)
         response.headers["Content-Security-Policy"] = CSP
