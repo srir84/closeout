@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 18065,
+ "prompt_version": "amount_marks_v1",
+ "text": "{\n  \"amount_crossed_out\": false,\n  \"amount_handwritten\": false\n}",
+ "tokens_in": 4015,
+ "tokens_out": 20
+}

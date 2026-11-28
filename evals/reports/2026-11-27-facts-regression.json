@@ -1,0 +1,98 @@
+{
+ "set": "regression",
+ "mode": "replay",
+ "light": false,
+ "documents": 30,
+ "missing": [],
+ "e1_documents_with_wrong_kept_fact": 0,
+ "e1_wrong_kept_facts": 0,
+ "e1_upper_bound_95": 0.09503385285530419,
+ "kept_facts": 255,
+ "asked_facts": 15,
+ "e2_asked_per_job": 0.5,
+ "share_kept": 0.9444444444444444,
+ "reader_a_field_accuracy": 0.9777777777777777,
+ "reader_a_by_field": {
+  "contractor_name": 1.0,
+  "contractor_license": 0.9333333333333333,
+  "contractor_email": 0.9333333333333333,
+  "customer_name": 1.0,
+  "job_address": 1.0,
+  "work_type": 1.0,
+  "completion_date": 0.9666666666666667,
+  "total_amount": 1.0,
+  "warranty_years": 0.9666666666666667
+ },
+ "reader_b_field_accuracy": 0.9703703703703703,
+ "worst": [
+  {
+   "id": "inv26",
+   "wrong_kept": [],
+   "asked": [
+    "contractor_license",
+    "contractor_email",
+    "completion_date",
+    "warranty_years"
+   ],
+   "kept": 5,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 4417,
+   "ms_b": 7287
+  },
+  {
+   "id": "inv29",
+   "wrong_kept": [],
+   "asked": [
+    "contractor_email",
+    "job_address"
+   ],
+   "kept": 7,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 4069,
+   "ms_b": 6680
+  },
+  {
+   "id": "inv02",
+   "wrong_kept": [],
+   "asked": [
+    "warranty_years"
+   ],
+   "kept": 8,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 4373,
+   "ms_b": 7532
+  },
+  {
+   "id": "inv11",
+   "wrong_kept": [],
+   "asked": [
+    "contractor_email"
+   ],
+   "kept": 8,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 4862,
+   "ms_b": 8093
+  },
+  {
+   "id": "inv12",
+   "wrong_kept": [],
+   "asked": [
+    "contractor_email"
+   ],
+   "kept": 8,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 4042,
+   "ms_b": 6636
+  }
+ ]
+}

@@ -5,7 +5,14 @@ from decimal import Decimal
 
 import pytest
 
-from closeout.core.compare import decide_reads, name_key, other_contractor, same_contractor, same_value
+from closeout.core.compare import (
+    FactDecision,
+    decide_reads,
+    name_key,
+    other_contractor,
+    same_contractor,
+    same_value,
+)
 
 pytestmark = [pytest.mark.slice("S3"), pytest.mark.req("R-IMP-3")]
 TODAY = date(2026, 11, 27)
@@ -138,3 +145,15 @@ def test_a_total_changed_by_hand_is_asked_even_when_both_reads_agree() -> None:
     assert clean["total_amount"].status == "kept"  # handwriting alone (carbon copies) isn't a change
     failed = {x.field: x for x in apply_amount_marks(d, None)}
     assert failed["total_amount"].status == "asked"  # no answer from the look: ask
+
+
+def test_a_warranty_over_10_years_is_asked() -> None:
+    from closeout.core.compare import ask_unusual
+
+    def w(v: int) -> FactDecision:
+        return FactDecision(
+            field="warranty_years", status="kept", value=v, value_a=v, value_b=v, reason="agree"
+        )
+
+    assert [d.status for d in ask_unusual([w(10), w(11), w(25)])] == ["kept", "asked", "asked"]
+    assert ask_unusual([w(25)])[0].reason == "unusual_warranty"

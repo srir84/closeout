@@ -4,10 +4,10 @@ Run 2026-11-27. Counted per document (n = 30) and per fact (270 facts).
 
 | Measure | Result |
 |---|---|
-| E1 documents with a wrong kept fact | 5 of 30 (95% upper bound 31.7%) |
-| E1 wrong kept facts | 5 of 259 kept |
-| E2 asked facts per job | 0.37 |
-| Share of facts kept without asking | 95.9% |
+| E1 documents with a wrong kept fact | 0 of 30 (95% upper bound 9.5%) |
+| E1 wrong kept facts | 0 of 250 kept |
+| E2 asked facts per job | 0.67 |
+| Share of facts kept without asking | 92.6% |
 | Reader A facts right | 95.9% |
 | Reader B facts right | 95.9% |
 | Missing cases | 0 |
@@ -28,8 +28,8 @@ Reader A by field:
 
 Worst 5:
 
-- messy11: wrong kept ['total_amount'], asked ['completion_date']
-- messy29: wrong kept ['total_amount'], asked ['contractor_email']
-- messy05: wrong kept ['total_amount'], asked none
-- messy17: wrong kept ['total_amount'], asked none
-- messy23: wrong kept ['total_amount'], asked none
+- messy10: wrong kept none, asked ['contractor_email', 'completion_date']
+- messy11: wrong kept none, asked ['completion_date', 'total_amount']
+- messy19: wrong kept none, asked ['contractor_email', 'warranty_years']
+- messy28: wrong kept none, asked ['job_address', 'completion_date']
+- messy29: wrong kept none, asked ['contractor_email', 'total_amount']

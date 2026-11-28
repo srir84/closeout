@@ -9,6 +9,7 @@
   <dt>Address</dt><dd id="a-address">{{ facts.get('job_address') or job.address_raw }}</dd>
   <dt>Finished</dt><dd id="a-date">{{ facts.get('completion_date', 'not stated') }}</dd>
   <dt>Total</dt><dd id="a-total">{{ '${:,.2f}'.format(facts['total_amount']|float) if facts.get('total_amount') else 'not stated' }}</dd>
+  <dt>Warranty</dt><dd id="a-warranty">{% if facts.get('warranty_years') and facts.get('warranty_years') != '0' %}{{ facts['warranty_years'] }} years{% else %}none stated{% endif %}</dd>
 </dl>
 <form method="post" action="/a/{{ token }}" class="big">
   <input type="hidden" name="csrf" value="{{ link_csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}">

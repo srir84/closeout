@@ -136,6 +136,7 @@ def test_the_contractor_link_page_offers_confirm_and_not_ours(seeded) -> None:
     )
     page = c.get(f"/k/{token}").text
     assert "Did you do this job?" in page and 'value="not_mine"' in page and 'value="correct"' not in page
+    assert '<dd id="k-warranty">5 years</dd>' in page  # every fact the report will show is in front of them
     assert c.get(f"/a/{token}").status_code == 404  # a contractor link isn't an answer link
     csrf = re.search(r'name="csrf" value="([^"]+)"', page).group(1)
     r = c.post(f"/k/{token}", data={"csrf": csrf, "command_id": str(uuid.uuid4()), "answer": "correct"})

@@ -4,13 +4,13 @@
  "light": false,
  "documents": 30,
  "missing": [],
- "e1_documents_with_wrong_kept_fact": 5,
- "e1_wrong_kept_facts": 5,
- "e1_upper_bound_95": 0.31669444155152854,
- "kept_facts": 259,
- "asked_facts": 11,
- "e2_asked_per_job": 0.36666666666666664,
- "share_kept": 0.9592592592592593,
+ "e1_documents_with_wrong_kept_fact": 0,
+ "e1_wrong_kept_facts": 0,
+ "e1_upper_bound_95": 0.09503385285530419,
+ "kept_facts": 250,
+ "asked_facts": 20,
+ "e2_asked_per_job": 0.6666666666666666,
+ "share_kept": 0.9259259259259259,
  "reader_a_field_accuracy": 0.9592592592592593,
  "reader_a_by_field": {
   "contractor_name": 1.0,
@@ -26,14 +26,27 @@
  "reader_b_field_accuracy": 0.9592592592592593,
  "worst": [
   {
-   "id": "messy11",
-   "wrong_kept": [
-    "total_amount"
-   ],
+   "id": "messy10",
+   "wrong_kept": [],
    "asked": [
+    "contractor_email",
     "completion_date"
    ],
-   "kept": 8,
+   "kept": 7,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 7251,
+   "ms_b": 11822
+  },
+  {
+   "id": "messy11",
+   "wrong_kept": [],
+   "asked": [
+    "completion_date",
+    "total_amount"
+   ],
+   "kept": 7,
    "fields": 9,
    "valid_a": true,
    "valid_b": true,
@@ -41,58 +54,46 @@
    "ms_b": 13244
   },
   {
+   "id": "messy19",
+   "wrong_kept": [],
+   "asked": [
+    "contractor_email",
+    "warranty_years"
+   ],
+   "kept": 7,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 12836,
+   "ms_b": 20373
+  },
+  {
+   "id": "messy28",
+   "wrong_kept": [],
+   "asked": [
+    "job_address",
+    "completion_date"
+   ],
+   "kept": 7,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 7302,
+   "ms_b": 11712
+  },
+  {
    "id": "messy29",
-   "wrong_kept": [
+   "wrong_kept": [],
+   "asked": [
+    "contractor_email",
     "total_amount"
    ],
-   "asked": [
-    "contractor_email"
-   ],
-   "kept": 8,
+   "kept": 7,
    "fields": 9,
    "valid_a": true,
    "valid_b": true,
    "ms_a": 8186,
    "ms_b": 13413
-  },
-  {
-   "id": "messy05",
-   "wrong_kept": [
-    "total_amount"
-   ],
-   "asked": [],
-   "kept": 9,
-   "fields": 9,
-   "valid_a": true,
-   "valid_b": true,
-   "ms_a": 12457,
-   "ms_b": 20933
-  },
-  {
-   "id": "messy17",
-   "wrong_kept": [
-    "total_amount"
-   ],
-   "asked": [],
-   "kept": 9,
-   "fields": 9,
-   "valid_a": true,
-   "valid_b": true,
-   "ms_a": 8351,
-   "ms_b": 14196
-  },
-  {
-   "id": "messy23",
-   "wrong_kept": [
-    "total_amount"
-   ],
-   "asked": [],
-   "kept": 9,
-   "fields": 9,
-   "valid_a": true,
-   "valid_b": true,
-   "ms_a": 8338,
-   "ms_b": 13966
   }
  ]
 }
