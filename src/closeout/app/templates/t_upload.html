@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Reply to a records request{% endblock %}
+{% block content %}
+<div class="phone">
+<h1>Reply about permit {{ t.permit_no }}</h1>
+<p>{{ t.address }}. Upload your letter or a copy of the record: one file, PNG, JPG or PDF (up to 3 pages, 10 MB).</p>
+<form method="post" action="/t/{{ token }}" enctype="multipart/form-data"><input type="hidden" name="csrf" value="{{ link_csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}">
+<p><input type="file" name="reply" accept=".png,.jpg,.jpeg,.pdf" required></p><button id="upload-reply">Send the reply</button></form>
+</div>
+{% endblock %}

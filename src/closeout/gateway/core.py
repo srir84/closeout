@@ -25,7 +25,7 @@ from closeout.settings import Settings, get_settings
 
 PROMPTS = Path(__file__).parent / "prompts"
 # amount_marks: a separate yes/no look for amounts changed by hand (both readers can misread those the same way).
-PROMPT_VERSION = {"invoice": "invoice_v1", "town_reply": "town_reply_v2", "amount_marks": "amount_marks_v1"}
+PROMPT_VERSION = {"invoice": "invoice_v1", "town_reply": "town_reply_v3", "amount_marks": "amount_marks_v1"}
 PREPROCESSING_VERSION = "pp1"  # images: the uploaded bytes as-is; PDFs: up to 3 pages at 150 dpi as PNG
 SETTINGS = {"temperature": 0, "num_ctx": 8192}
 THINK = False

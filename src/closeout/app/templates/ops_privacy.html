@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Privacy requests{% endblock %}
+{% block content %}
+<h1>Privacy requests</h1>
+{% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
+<p>Removes a person's name and contact details from every place they're stored, adds them to the do-not-contact list, and stops anything still running from writing them again. The log keeps no details.</p>
+<form method="post" action="/ops/privacy" class="card"><input type="hidden" name="csrf" value="{{ csrf }}">
+<label>Their email address <input name="email" id="privacy-email" size="40"></label> <button id="start-privacy">Remove their details</button></form>
+<table id="privacy-requests"><tr><th>Started</th><th>Status</th><th>Finished</th></tr>
+{% for r in reqs %}<tr><td>{{ r.created_at.strftime('%d %b %H:%M:%S') }}</td><td>{{ r.status }}</td><td>{{ r.finished_at.strftime('%d %b %H:%M:%S') if r.finished_at else '' }}</td></tr>{% else %}<tr><td colspan="3">None yet.</td></tr>{% endfor %}</table>
+{% endblock %}

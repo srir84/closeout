@@ -122,6 +122,15 @@ class Sender:
                 if job is None or job["round"] != row["round"] or job["status"] not in WAITING_STATES:
                     self._cancel(c, oid, "job_not_waiting")
                     return None
+            if row["town_request_id"] is not None:
+                tr = db.one(
+                    c,
+                    "SELECT status, round FROM town_requests WHERE id = :t FOR SHARE",
+                    t=row["town_request_id"],
+                )
+                if tr is None or tr["round"] != row["round"] or tr["status"] not in ("approved", "sent"):
+                    self._cancel(c, oid, "request_not_waiting")
+                    return None
             if row["grant_id"] is not None:
                 g = db.one(
                     c,

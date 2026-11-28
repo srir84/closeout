@@ -65,6 +65,11 @@ def document_bytes(path: str) -> bytes:
 
 
 def store_read(conn: Any, document_id: UUID, res: Any) -> UUID:
+    from closeout.privacy import erased_job
+
+    job_id = db.scalar(conn, "SELECT job_id FROM documents WHERE id = :d", d=document_id)
+    if erased_job(conn, job_id):  # a late answer for an erased person stores blanks (design 3.17)
+        res = res.model_copy(update={"output": None, "text": "", "valid": False, "errors": ["erased"]})
     rid = db.scalar(
         conn,
         """INSERT INTO reads (document_id, reader, purpose, model, model_digest, prompt_version, output, valid,

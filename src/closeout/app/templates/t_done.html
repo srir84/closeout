@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Thank you{% endblock %}
+{% block content %}
+<div class="phone">{% if ok %}<h1 id="reply-done">Thank you</h1><p>We received your reply.</p>{% else %}<h1 id="reply-done">That file was refused</h1><p>{{ why }}</p>{% endif %}</div>
+{% endblock %}

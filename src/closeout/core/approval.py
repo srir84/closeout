@@ -54,8 +54,8 @@ def b64d(s: str) -> bytes:
     return base64.urlsafe_b64decode(s + "=" * (-len(s) % 4))
 
 
-def canonical(claims: Claims | dict[str, Any]) -> bytes:
-    data = claims.model_dump() if isinstance(claims, Claims) else claims
+def canonical(claims: BaseModel | dict[str, Any]) -> bytes:
+    data = claims.model_dump() if isinstance(claims, BaseModel) else claims
     return json.dumps(data, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("ascii")
 
 
@@ -63,7 +63,7 @@ def sha256_hex(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
 
 
-def sign(claims: Claims, key: Ed25519PrivateKey) -> str:
+def sign(claims: BaseModel, key: Ed25519PrivateKey) -> str:
     body = canonical(claims)
     return b64e(body) + "." + b64e(key.sign(body))
 
@@ -97,28 +97,89 @@ def reason_for(field: str) -> str:
     }[field]
 
 
+class ShareClaims(BaseModel):
+    """Claims for one share link (design 3.6): the role, the fields shown, the link (by hash) and its expiry."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    v: int = 1
+    action: str
+    account_id: str
+    target: str
+    role: str
+    fields_sha256: str
+    link_hash: str
+    link_expires: str
+    grant_id: str
+    grant_version: int
+    exp: str
+    nonce: str
+
+
+def share_refusal_order() -> tuple[str, ...]:
+    return ("action", "target", "account_id", "role", "fields_sha256", "link_hash", "link_expires")
+
+
+def share_reason_for(field: str) -> str:
+    return {
+        "action": "wrong_action",
+        "target": "wrong_target",
+        "account_id": "wrong_account",
+        "role": "wrong_role",
+        "fields_sha256": "fields_changed",
+        "link_hash": "wrong_link",
+        "link_expires": "expiry_changed",
+    }[field]
+
+
 def check_signature(token: str, expected: dict[str, Any], public_key: Ed25519PublicKey) -> Ok | Refused:
     """Ok(claims) when the token is well formed, signed by our key, and matches what is being done now."""
+    return _check(token, expected, public_key, Claims, refusal_order(), reason_for)
+
+
+def check_share_signature(
+    token: str, expected: dict[str, Any], public_key: Ed25519PublicKey
+) -> ShareOk | Refused:
+    got = _check(token, expected, public_key, ShareClaims, share_refusal_order(), share_reason_for)
+    return got if isinstance(got, Refused) else ShareOk(claims=got.claims)  # type: ignore[arg-type]
+
+
+class ShareOk(BaseModel):
+    claims: ShareClaims
+
+
+def _check(
+    token: str,
+    expected: dict[str, Any],
+    public_key: Ed25519PublicKey,
+    model: type[BaseModel],
+    order: tuple[str, ...],
+    reason: Any,
+) -> Any:
     parts = token.split(".")
     if len(parts) != 2:
         return Refused(reason="malformed")
     try:
         body, sig = b64d(parts[0]), b64d(parts[1])
         data = json.loads(body.decode("ascii"))
-        claims = Claims.model_validate(data)
+        claims = model.model_validate(data)
     except (ValueError, UnicodeDecodeError):
         return Refused(reason="malformed")
-    if b64e(canonical(claims)) + "." + b64e(sig) != token or canonical(claims) != body:
+    canon = json.dumps(claims.model_dump(), sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
+        "ascii"
+    )
+    if b64e(canon) + "." + b64e(sig) != token or canon != body:
         return Refused(reason="malformed")
     try:
         public_key.verify(sig, body)
     except InvalidSignature:
         return Refused(reason="bad_signature")
     have = claims.model_dump()
-    for field in refusal_order():
+    for field in order:
         if field not in expected:
             continue
         a, b = str(have[field]), str(expected[field])
         if not hmac.compare_digest(a.encode(), b.encode()):
-            return Refused(reason=reason_for(field))
-    return Ok(claims=claims)
+            return Refused(reason=reason(field))
+    if model is Claims:
+        return Ok(claims=claims)  # type: ignore[arg-type]
+    return ShareOk(claims=claims)  # type: ignore[arg-type]

@@ -84,6 +84,9 @@ class Persona:
     done: set[str] = field(default_factory=set)
 
 
+TOWN: list[TownPersona] = []
+
+
 def personas() -> list[Persona]:
     world = json.loads((DATA / "seed" / "sampleton" / "world.json").read_text())
     return [
@@ -168,13 +171,16 @@ def run_story(ps: list[Persona]) -> None:
     approve_all = [p for p in ps]
     for p in approve_all:
         approve(mike, p)
+    ask_the_town(TOWN)
     first_at: dict[str, datetime] = {}
     deadline = time.monotonic() + TIMEOUT
     while time.monotonic() < deadline:
         busy = False
         for p in ps:
             busy |= step(mike, p, first_at)
-        if not busy and all_settled(mike, ps):
+        for t in TOWN:
+            busy |= clerk_step(t, mike)
+        if not busy and all_settled(mike, ps) and town_settled(TOWN):
             return
         time.sleep(0.5)
     raise TimeoutError("the simulation did not settle")
@@ -259,6 +265,128 @@ def all_settled(mike: Web, ps: list[Persona]) -> bool:
     return True
 
 
+# --- the town clerk (T1-T3) ----------------------------------------------------------------------------
+
+CLERK = "clerk@sampleton.test"
+
+
+@dataclass
+class TownPersona:
+    code: str
+    permit_no: str
+    behaviour: str  # final_on_file | no_record | never
+    want: dict[str, Any]
+    request_id: str = ""
+    done: bool = False
+
+
+def town_personas() -> list[TownPersona]:
+    world = json.loads((DATA / "seed" / "sampleton" / "world.json").read_text())
+    return [
+        TownPersona(
+            code=t["code"],
+            permit_no=t["permit_no"],
+            behaviour=t["clerk"],
+            want={"status": t["ends"], "result": t["result"], "emails": t["emails"]},
+        )
+        for t in world["town_requests"]
+    ]
+
+
+def reply_file(permit_no: str, result: str) -> Path:
+    """A clerk letter from the town-reply set for this permit and result."""
+    d = Path(os.environ.get("CLOSEOUT_EVALS_DIR", DATA.parent / "evals")) / "sets" / "town_replies"
+    for c in json.loads((d / "truth.json").read_text()):
+        e = c["expected"]
+        if e["permit_number"] == permit_no and e["result"] == result:
+            return d / c["file"]
+    raise FileNotFoundError(f"no reply letter for {permit_no} {result}")
+
+
+def ask_the_town(ts: list[TownPersona]) -> None:
+    dana = Web("Dana Whitfield")
+    page = dana.get("/h/town")
+    for t in ts:
+        m = re.search(
+            rf'action="(/h/town/ask/[^"]+)"><input type="hidden" name="csrf" value="[^"]+"><button '
+            rf'class="ask" data-permit="{re.escape(t.permit_no)}"',
+            page,
+        )
+        assert m, f"permit {t.permit_no} not offered"
+        r = dana.post(m.group(1), {"csrf": dana.csrf})
+        t.request_id = r.url.path.rsplit("/", 1)[1]
+        req = dana.get(f"/h/town/{t.request_id}")
+        dana.post(
+            f"/h/town/{t.request_id}/approve",
+            {
+                "csrf": dana.csrf,
+                "command_id": form_value(req, "command_id"),
+                "preview": form_value(req, "preview"),
+            },
+        )
+        page = dana.get("/h/town")
+
+
+def clerk_step(t: TownPersona, web: Web) -> bool:
+    if t.done or t.behaviour == "never":
+        return False
+    msgs = [m for m in emails_to(CLERK) if t.permit_no in m.get("Subject", "")]
+    if not msgs:
+        return True
+    if t.behaviour == "final_on_file":
+        from closeout.core.dates import add_business_days
+
+        start = t.__dict__.setdefault("first_seen", virtual_now(web))  # when the request arrived (virtual)
+        if virtual_now(web).date() < add_business_days(start.date(), 4):
+            return True
+    elif len(msgs) < 2:  # T2 replies only after the reminder
+        return True
+    link = link_in(msgs[-1], "t")
+    page = Web().get(link)
+    f = reply_file(t.permit_no, t.behaviour)
+    w = Web()
+    r = w.post(
+        link,
+        {"csrf": form_value(page, "csrf"), "command_id": form_value(page, "command_id")},
+        files=[("reply", (f.name, f.read_bytes(), "image/png" if f.suffix == ".png" else "image/jpeg"))],
+    )
+    t.done = 'id="reply-done"' in r.text
+    return True
+
+
+def town_settled(ts: list[TownPersona]) -> bool:
+    with db.tx() as c:
+        for t in ts:
+            st = db.scalar(c, "SELECT status FROM town_requests WHERE id = :i", i=t.request_id)
+            if st != t.want["status"]:
+                return False
+    return True
+
+
+def check_town(ts: list[TownPersona]) -> list[tuple[str, bool, str]]:
+    out = []
+    with db.tx() as c:
+        for t in ts:
+            r = db.one(c, "SELECT status, result FROM town_requests WHERE id = :i", i=t.request_id) or {}
+            n = len([m for m in MAIL.search(f"to:{CLERK}") if t.permit_no in m.get("Subject", "")])
+            n_rev = db.scalar(
+                c,
+                "SELECT count(*) FROM review_items WHERE ref = :r AND resolved_at IS NULL",
+                r=f"town-{t.request_id}",
+            )
+            got = {"status": r.get("status"), "result": r.get("result"), "emails": n, "reviews": n_rev}
+            want = {**t.want, "reviews": 0}
+            ok = got == want
+            out.append(
+                (
+                    f"{t.code} ends {t.want['status']}, {t.want['result'] or 'no result'}, {t.want['emails']} emails",
+                    ok,
+                    "" if ok else f"got {got}",
+                )
+            )
+    return out
+
+
 def check(ps: list[Persona]) -> list[tuple[str, bool, str]]:
     results: list[tuple[str, bool, str]] = []
     with db.tx() as c:
@@ -332,13 +460,14 @@ def summary(ps: list[Persona]) -> list[dict[str, Any]]:
 
 def main() -> int:
     ps = personas()
+    TOWN.extend(town_personas())
     t0 = time.monotonic()
     try:
         run_story(ps)
         error = ""
     except Exception as e:  # report what was reached
         error = f"{type(e).__name__}: {e}"
-    results = check(ps)
+    results = check(ps) + check_town(TOWN)
     print(
         f"\nSimulation finished in {time.monotonic() - t0:.0f} s{' with an error: ' + error if error else ''}\n"
     )

@@ -32,6 +32,11 @@ def one_read(read: dict[str, object] | None, permit_no: str, today: date) -> Tow
         return None
     if read.get("asks_for_more_information") is True:
         return TownResult(result="unclear", result_date=None, reason="more_info")
+    answer_about = read.get("result_permit_number")
+    if answer_about not in (None, "") and permit_key(answer_about) != permit_key(permit_no):
+        return TownResult(
+            result="unclear", result_date=None, reason="wrong_permit"
+        )  # an answer about another permit
     if permit_key(read.get("permit_number")) != permit_key(permit_no):
         return TownResult(result="unclear", result_date=None, reason="wrong_permit")
     if read["result"] == "final_on_file":

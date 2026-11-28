@@ -46,6 +46,10 @@ def apply_answer(inp: CommandIn) -> AnswerOut:
     with db.tx() as c:
         cmd = db.one(c, "SELECT payload FROM commands WHERE command_id = :id", id=inp.command_id)
         p = (cmd or {}).get("payload") or {}
+        from closeout.privacy import erased_job
+
+        if erased_job(c, inp.job_id):  # nothing typed is stored for an erased person
+            p = {"answer": p.get("answer")}
         today = virtual_today(c)
         pv = p.get("price_visible")
         price_visible = None if pv in (None, "") else str(pv).lower() in ("yes", "true", "1")

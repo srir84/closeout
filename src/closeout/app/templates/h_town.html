@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Ask the town{% endblock %}
+{% block content %}
+<h1>Ask the town about a permit</h1>
+{% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
+<p class="lead">State data doesn't show a final approval for these permits on {{ home.address }}, and they are more than a year old. Closeout can ask the town clerk for the record, with a public records request.</p>
+<table id="eligible"><tr><th>Permit</th><th>Type</th><th>Issued</th><th></th></tr>
+{% for p in eligible %}<tr><td>{{ p.permit_no }}</td><td>{{ p.permit_type }}</td><td>{{ p.issued_on }}</td><td><form method="post" action="/h/town/ask/{{ p.pk }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="ask" data-permit="{{ p.permit_no }}">Ask the town</button></form></td></tr>
+{% else %}<tr><td colspan="4">Nothing to ask about right now.</td></tr>{% endfor %}</table>
+<h2>Requests</h2>
+<table id="requests"><tr><th>Permit</th><th>Status</th><th>Result</th></tr>
+{% for r in reqs %}<tr><td><a href="/h/town/{{ r.id }}">{{ r.permit_no }}</a></td><td>{{ r.status | replace('_', ' ') }}</td><td>{{ words.get(r.result, '') }}{% if r.result_date %} ({{ r.result_date }}){% endif %}</td></tr>
+{% else %}<tr><td colspan="3">None yet.</td></tr>{% endfor %}</table>
+{% endblock %}

@@ -87,3 +87,49 @@ def fill(body_template: str, answer_url: str, unsub_url: str) -> str:
     if body_template.count(ANSWER_SLOT) != 1 or body_template.count(UNSUB_SLOT) != 1:
         raise ValueError("template must have exactly one of each link slot")
     return body_template.replace(ANSWER_SLOT, answer_url).replace(UNSUB_SLOT, unsub_url)
+
+
+TOWN_STEPS = ("request", "reminder")
+
+
+class TownMessageFacts(BaseModel):
+    town_name: str
+    permit_no: str
+    address: str
+    issued_on: date | None
+
+
+def town_message(step: str, f: TownMessageFacts) -> Draft:
+    """A public records request to the town clerk, and its one reminder (R-TOWN-2). The clerk replies by upload."""
+    if step not in TOWN_STEPS:
+        raise ValueError(f"unknown step {step}")
+    subject = {
+        "request": f"Records request: final approval for permit {f.permit_no}, {f.address}",
+        "reminder": f"Reminder: records request for permit {f.permit_no}, {f.address}",
+    }[step]
+    opening = {
+        "request": "We are asking, on behalf of the home's owner, for a copy of any record of the final inspection "
+        "or final approval of this construction permit:",
+        "reminder": "We wrote about a week ago asking for the record below. We haven't received a reply yet.",
+    }[step]
+    issued = f.issued_on.strftime("%-d %B %Y") if f.issued_on else "date not stated"
+    body = "\n".join(
+        [
+            f"Dear {f.town_name} Clerk,",
+            "",
+            opening,
+            "",
+            f"  Permit number: {f.permit_no}",
+            f"  Property: {f.address}, {f.town_name}",
+            f"  Issued: {issued}",
+            "",
+            "Please upload your reply (a letter or a copy of the record) with this link. One file, PNG, JPG or PDF:",
+            ANSWER_SLOT,
+            "",
+            "If there is no record of a final approval, a short note saying so is a complete answer.",
+            "",
+            "This request was sent through Closeout (a demo with made-up people). Stop these emails: "
+            + UNSUB_SLOT,
+        ]
+    )
+    return Draft(step=step, subject=subject, body_template=body)

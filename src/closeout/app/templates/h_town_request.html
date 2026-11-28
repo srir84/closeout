@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Request for permit {{ t.permit_no }}{% endblock %}
+{% block content %}
+<h1>Request for permit {{ t.permit_no }}</h1>
+{% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
+<p>Status: <strong id="town-status">{{ t.status | replace('_', ' ') }}</strong>{% if t.result %} · <span id="town-result">{{ words[t.result] }}</span>{% if t.result_date %} ({{ t.result_date }}){% endif %}{% endif %}</p>
+{% if t.status == 'drafted' %}
+<p class="lead">Nothing is sent until you approve. These are the exact messages: the request, and one reminder if the clerk hasn't replied after 7 business days. The clerk replies by uploading a letter through the link.</p>
+{% for m in msgs %}<section class="card message"><h3>{{ {'request': 'The request', 'reminder': 'The reminder'}[m.step] }}</h3>
+<dl class="kv"><dt>To</dt><dd>{{ m.to_address }}</dd><dt>Subject</dt><dd>{{ m.subject }}</dd></dl><pre class="email">{{ shown(m.body_template) }}</pre></section>{% endfor %}
+<form method="post" action="/h/town/{{ t.id }}/approve"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}"><input type="hidden" name="preview" value="{{ preview }}"><button id="approve-town">Approve and send</button></form>
+{% endif %}
+<p><a href="/h/town">All requests</a></p>
+{% endblock %}

@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 74728,
+ "prompt_version": "invoice_v1",
+ "text": "{\n    \"contractor_name\": \"INLET ROOFING CO.\",\n    \"contractor_license\": \"NJ HIC REG 13VH00077302\",\n    \"contractor_email\": \"estimates@inletroof.example\",\n    \"customer_name\": \"Delphine Pellington\",\n    \"job_address\": \"138 Gull Rock Rd\",\n    \"work_type\": \"roof\",\n    \"completion_date\": \"2026-06-09\",\n    \"total_amount\": 5169.12,\n    \"warranty_years\": 10\n}",
+ "tokens_in": 3894,
+ "tokens_out": 133
+}

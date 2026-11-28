@@ -11,7 +11,15 @@ from pydantic import BaseModel
 from sqlalchemy import Connection
 
 from closeout import db
-from closeout.core.emails import JOB_STEPS, Draft, JobMessageFacts, job_message
+from closeout.core.emails import (
+    JOB_STEPS,
+    TOWN_STEPS,
+    Draft,
+    JobMessageFacts,
+    TownMessageFacts,
+    job_message,
+    town_message,
+)
 
 
 class Message(BaseModel):
@@ -75,3 +83,37 @@ def job_messages(conn: Connection, job_id: UUID, steps: tuple[str, ...] = JOB_ST
             )
         )
     return out
+
+
+def town_messages(conn: Connection, request_id: UUID, steps: tuple[str, ...] = TOWN_STEPS) -> list[Message]:
+    """The request and its reminder to the town's clerk. The clerk's address comes only from the town settings."""
+    t = db.one(
+        conn,
+        """SELECT t.*, p.permit_no, p.issued_on, pa.address, tw.name AS town_name, tw.clerk_recipient_id,
+                               pe.email AS clerk_email
+                        FROM town_requests t JOIN permits p ON p.pk = t.permit_pk JOIN parcels pa ON pa.pin = t.home_pin
+                        JOIN towns tw ON tw.code = pa.town JOIN recipients r ON r.id = tw.clerk_recipient_id
+                        JOIN people pe ON pe.id = r.person_id WHERE t.id = :id""",
+        id=request_id,
+    )
+    if t is None or not t["clerk_email"]:
+        return []
+    facts = TownMessageFacts(
+        town_name=t["town_name"],
+        permit_no=t["permit_no"] or t["permit_pk"],
+        address=t["address"],
+        issued_on=t["issued_on"],
+    )
+    return [
+        Message(
+            target=f"town-{request_id}",
+            round=t["round"],
+            step=s,
+            content_rev=t["content_rev"],
+            recipient_id=t["clerk_recipient_id"],
+            to_address=t["clerk_email"],
+            subject=(d := town_message(s, facts)).subject,
+            body_template=d.body_template,
+        )
+        for s in steps
+    ]

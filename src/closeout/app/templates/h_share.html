@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Share the report{% endblock %}
+{% block content %}
+<h1>Share the report for {{ home.address }}</h1>
+{% if created %}
+<div class="card notice" id="created"><p>Here is the link for the {{ created.role | lower }}. It works for {{ created.days }} days and you can revoke it any time. Prices are {{ 'shown' if created.prices else 'hidden' }}.</p>
+<p><input id="share-url" value="{{ created.url }}" size="70" readonly></p><p class="muted">Copy it now: we only keep a fingerprint of it, so it can't be shown again.</p></div>
+{% endif %}
+<form method="post" action="/h/share" class="card"><input type="hidden" name="csrf" value="{{ csrf }}">
+<p><label>Who is it for? <select name="role" id="role">{% for k, v in roles.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></label></p>
+<p><label><input type="checkbox" name="show_prices" value="yes" id="show-prices"> Show prices (only for jobs where the homeowner allowed it)</label></p>
+<p><label>Expires after <input name="days" value="14" size="3"> days (at most 14)</label></p>
+<button id="make-link">Make a link</button></form>
+<p class="muted">Original invoices and town letters are never shared.</p>
+<p><a href="/h/home">Back to my home</a></p>
+{% endblock %}

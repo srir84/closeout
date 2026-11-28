@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Data health{% endblock %}
+{% block content %}
+<h1>Data health</h1>
+<div class="cards">
+  <div class="card"><h3>{{ "{:,}".format(n.permits) }}</h3><p class="muted">Manasquan permits</p></div>
+  <div class="card"><h3>{{ "{:,}".format(n.linked) }}</h3><p class="muted">linked to one parcel</p></div>
+  <div class="card"><h3>{{ "{:,}".format(n.permits_missing) }}</h3><p class="muted">no longer in the state feed</p></div>
+  <div class="card"><h3>{{ calls.n }} / {{ calls.failed }}</h3><p class="muted">model calls / failed</p></div>
+</div>
+<h2>Feed runs</h2>
+<table><tr><th>Finished</th><th>Town</th><th>Seen</th><th>New</th><th>Changed</th><th>Missing</th></tr>
+{% for r in runs %}<tr><td>{{ r.finished_at.strftime('%d %b %Y %H:%M') if r.finished_at }}</td><td>{{ r.town }}</td><td>{{ r.rows_seen }}</td><td>{{ r.rows_new }}</td><td>{{ r.rows_changed }}</td><td>{{ r.rows_missing }}</td></tr>{% else %}<tr><td colspan="6">No feed runs yet.</td></tr>{% endfor %}</table>
+<h2>Flagged source values</h2>
+<table><tr><th>Field</th><th>Permits</th></tr>{% for b in bad %}<tr><td>{{ b.field }}</td><td>{{ b.n }}</td></tr>{% else %}<tr><td colspan="2">None.</td></tr>{% endfor %}</table>
+{% endblock %}

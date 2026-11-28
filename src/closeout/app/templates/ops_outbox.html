@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Outbox{% endblock %}
+{% block content %}
+<h1>Outbox</h1>
+{% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
+<h2>Emails with an unknown result</h2>
+<p class="muted">The sender couldn't tell whether these were delivered. They are never re-sent automatically.</p>
+<table id="unknown"><tr><th>For</th><th>Message</th><th>Round</th><th>Tries</th><th>Last code</th><th></th></tr>
+{% for o in unknown %}<tr><td>{{ o.what }}</td><td>{{ o.step }}</td><td>{{ o.round }}</td><td>{{ o.attempts }}</td><td>{{ o.last_error_code }}</td>
+<td><form method="post" action="/ops/outbox/{{ o.id }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button name="outcome" value="sent" class="secondary">It arrived</button> <button name="outcome" value="cancelled" class="secondary">Close it</button></form></td></tr>
+{% else %}<tr><td colspan="6">None.</td></tr>{% endfor %}</table>
+<h2>Jobs on hold</h2>
+<table id="held"><tr><th>Job</th><th>Why</th><th></th></tr>
+{% for j in held %}<tr><td><a href="/runs/{{ j.id }}">{{ j.job_ref }}</a></td><td>{{ (j.needs_reason or 'a send was refused or failed') | replace('_', ' ') }}</td>
+<td><form method="post" action="/ops/jobs/{{ j.id }}/stop"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}"><button class="danger">Stop this job</button></form></td></tr>
+{% else %}<tr><td colspan="3">None.</td></tr>{% endfor %}</table>
+{% endblock %}

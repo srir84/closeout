@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Ops{% endblock %}
+{% block content %}
+<h1>Ops</h1>
+{% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
+<div class="cards">
+  <div class="card"><h3 id="n-review">{{ n.review }}</h3><p class="muted">need a look</p></div>
+  <div class="card"><h3><a href="/ops/outbox">{{ n.unknown }}</a></h3><p class="muted">emails with an unknown result</p></div>
+  <div class="card"><h3><a href="/ops/outbox">{{ n.on_hold }}</a></h3><p class="muted">jobs on hold</p></div>
+  <div class="card"><h3><a href="/ops/privacy">{{ n.privacy }}</a></h3><p class="muted">privacy requests running</p></div>
+</div>
+<h2>Needs a look</h2>
+<p class="muted">Everything the system won't guess, with the reason and what backs it up.</p>
+<table id="review"><tr><th>When</th><th>What</th><th>Why</th><th>Proof</th><th></th></tr>
+{% for i in items %}<tr><td>{{ i.created_at.strftime('%d %b %H:%M') }}</td><td>{{ i.kind | replace('_', ' ') }}</td><td>{{ reasons.get(i.reason, i.reason | replace('_', ' ')) }}</td>
+<td>{% if i.ref.startswith('job-') %}<a href="/runs/{{ i.ref[4:] }}">the job's run</a>{% else %}{{ i.ref }}{% endif %}</td>
+<td><form method="post" action="/ops/review/{{ i.id }}/resolve"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="secondary">Resolved</button></form></td></tr>
+{% else %}<tr><td colspan="5">Nothing needs a look.</td></tr>{% endfor %}</table>
+<p><a href="/ops/data">Data health</a></p>
+{% endblock %}

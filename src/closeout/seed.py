@@ -22,6 +22,8 @@ SEED_DIR = Path(__file__).parents[2] / "data" / "seed"
 
 # Tables wiped by a reset (TRUNCATE ... CASCADE). Later slices add theirs.
 TABLES = [
+    "privacy_requests",
+    "town_requests",
     "audit_log",
     "links",
     "outbox",

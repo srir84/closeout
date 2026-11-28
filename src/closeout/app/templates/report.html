@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Home report{% endblock %}
+{% block content %}
+<h1 id="report-title">Home report: {{ r.address }}</h1>
+<p class="muted">Viewing as: <strong id="viewer">{{ viewer }}</strong>. Every job here was confirmed by the homeowner. Marks show what backs it up.</p>
+<h2>Verified work</h2>
+<table id="report-jobs"><tr><th>Work</th><th>Finished</th><th>Contractor</th><th>License</th><th>Marks</th><th>Warranty</th><th>Price</th></tr>
+{% for j in r.jobs %}<tr><td>{{ j.work_type }}</td><td>{{ j.finished or '' }}</td><td>{{ j.contractor_name }}</td><td>{{ j.contractor_license }}</td>
+<td>{% for m in j.marks %}<span class="mark">{{ marks[m] }}</span>{% endfor %}</td><td>{{ (j.warranty_years ~ ' years') if j.warranty_years else '' }}</td>
+<td class="price">{{ '${:,.2f}'.format(j.price) if j.price is not none else 'Not shared' }}</td></tr>
+{% else %}<tr><td colspan="7">No verified work yet.</td></tr>{% endfor %}</table>
+{% if r.permits is not none %}
+<h2>Permit history</h2>
+<table id="report-permits"><tr><th>Permit</th><th>Type</th><th>Work</th><th>Issued</th><th>Final approval</th></tr>
+{% for p in r.permits %}<tr><td>{{ p.permit_no }}</td><td>{{ p.permit_type }}</td><td>{{ p.trades | join(', ') or 'No work details' }}</td><td>{{ p.issued_on }}</td>
+<td>{{ p.final_on or 'Final approval not in state data' }}{% if p.town_result %}<br><small>Asked the town: {{ {'final_on_file': 'final approval on file' ~ (' (' ~ p.town_result_date ~ ')' if p.town_result_date else ''), 'no_record': 'no record found', 'unclear': 'unclear, a person is checking', 'no_reply': 'no reply'}[p.town_result] }} (source: Borough of Sampleton)</small>{% endif %}</td></tr>{% endfor %}</table>
+{% endif %}
+<p class="muted">Sources: homeowner and contractor confirmations through Closeout; permits from NJ Department of Community Affairs (state data). Original invoices and town letters are never shared.</p>
+{% endblock %}

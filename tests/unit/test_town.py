@@ -46,3 +46,10 @@ def test_a_request_for_more_information_is_always_unclear() -> None:
     assert decide(more, N, "22-0147", TODAY).reason == "more_info"
     assert decide(N, more, "22-0147", TODAY).result == "unclear"
     assert decide(dict(F, asks_for_more_information=False), F, "22-0147", TODAY).result == "final_on_file"
+
+
+def test_an_answer_about_a_different_permit_is_unclear() -> None:
+    other = dict(N, result_permit_number="22-0174")
+    assert decide(other, N, "22-0147", TODAY).reason == "wrong_permit"
+    same = dict(F, result_permit_number="22-0147")
+    assert decide(same, same, "22-0147", TODAY).result == "final_on_file"

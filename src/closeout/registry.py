@@ -13,13 +13,25 @@ def workflows() -> list[type]:
     from closeout.workflows.job import Job
     from closeout.workflows.permit_sync import PermitSync
     from closeout.workflows.ping import Ping
+    from closeout.workflows.privacy_request import PrivacyRequest
     from closeout.workflows.retract import Retract
+    from closeout.workflows.town_request import TownRequest
 
-    return [Ping, PermitSync, ImportBatch, Job, Retract]
+    return [Ping, PermitSync, ImportBatch, Job, Retract, TownRequest, PrivacyRequest]
 
 
 def activities(client: Client | None = None) -> list[Callable[..., Any]]:
-    from closeout.activities import answers, common, jobs, outbox, permit_match, permits, reading
+    from closeout.activities import (
+        answers,
+        common,
+        jobs,
+        outbox,
+        permit_match,
+        permits,
+        privacy_acts,
+        reading,
+        town,
+    )
 
     out: list[Callable[..., Any]] = [
         common.finish_command,
@@ -42,6 +54,15 @@ def activities(client: Client | None = None) -> list[Callable[..., Any]]:
         answers.saved_undo,
         answers.start_round,
         answers.mark_closed,
+        town.town_status,
+        town.reply_document,
+        town.decide_reply,
+        town.stop_town_sending,
+        town.town_hold,
+        privacy_acts.privacy_mark,
+        privacy_acts.privacy_stop,
+        privacy_acts.privacy_busy,
+        privacy_acts.privacy_redact,
     ]
     if client is not None:
         out.append(jobs.Starter(client).start_jobs)
