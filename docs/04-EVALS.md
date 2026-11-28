@@ -127,10 +127,11 @@ At each milestone we read the reports together and decide: continue, fix first, 
 
 ## 4.8 Results so far (replay of local-model runs, 27-28 Nov 2026)
 
-The sealed set (200 invoices, owner's Mac only) has not been run yet; it is the clean check for every number below.
+The sealed set (200 invoices, owner's Mac only) was run live on 28 Nov 2026 with the release prompts and models: **0 of 200 documents had a wrong kept fact** (under 1.5% at 95%). Only that count was read; no agent saw a document or the full log. It checks the invoice reading only; town replies have no sealed set.
 
 | Eval | n | Result | Target | Report |
 |---|---|---|---|---|
+| Reading: **sealed** (live) | 200 invoices | E1 0 of 200 | E1 = 0 | count only, kept outside the repo |
 | Reading: regression | 30 invoices | E1 0 of 30. Reader A agrees with the truth on 97.8% of facts. | E1 = 0 | `evals/reports/*-facts-regression.md` |
 | Reading: development | 100 invoices (842 facts) | E1 0 of 100. Reader A 99.7%. | E1 = 0 | `evals/reports/*-facts-development.md` |
 | Reading: messy | 30 invoices | E1 0 of 30. Before the amount-marks look it was 5 of 30: all five were totals crossed out and rewritten by hand, which both readers read the same wrong way. The look sends such totals to a person. Reader A 95.9%. | E1 = 0 | `evals/reports/*-facts-messy.md` |
@@ -139,4 +140,4 @@ The sealed set (200 invoices, owner's Mac only) has not been run yet; it is the 
 | Town replies, held out | 30 new letters | 0 wrong results shown. 19 shown, 11 sent to ops. | 0 | `evals/reports/*-town-replies-heldout.md` |
 | Permit match | 200 pairs | 0 false matches | 0 | `evals/reports/*-permit-match.md` |
 
-**How the town-reply prompt got here, honestly.** Version 1 showed 2 wrong results on the first set. Versions 2 to 4 each added one yes/no question (does the letter ask for more information, which permit is its answer about, is any work still outstanding), each chosen from failures on the first set only. The held-out set was written after version 2 and first run on version 4. One later rule change (outstanding work matters only for a "final approval" answer) was made after its results were seen, so the held-out set is no longer fully unseen; the sealed set at the next milestone is the clean check.
+**How the town-reply prompt got here, honestly.** Version 1 showed 2 wrong results on the first set. Versions 2 to 4 each added one yes/no question (does the letter ask for more information, which permit is its answer about, is any work still outstanding), each chosen from failures on the first set only. The held-out set was written after version 2 and first run on version 4. One later rule change (outstanding work matters only for a "final approval" answer) was made after its results were seen, so the held-out set is no longer fully unseen. The sealed set holds invoices only, so the clean check for town replies is a new set of letters written and run once, with no changes after.
