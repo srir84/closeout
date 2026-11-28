@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 21279,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Inlet Roofing Co.\",\n  \"contractor_license\": \"13VH00077302\",\n  \"contractor_email\": \"estimates@inletroof.example\",\n  \"customer_name\": \"Raj Ellery\",\n  \"job_address\": \"16 Sandbar Court\",\n  \"work_type\": \"roof\",\n  \"completion_date\": \"2025-01-31\",\n  \"total_amount\": 20225.0,\n  \"warranty_years\": 15\n}",
+ "tokens_in": 3565,
+ "tokens_out": 123
+}

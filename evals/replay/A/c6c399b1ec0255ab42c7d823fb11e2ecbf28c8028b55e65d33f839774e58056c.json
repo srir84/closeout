@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 64427,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"HARBOR & PINE BUILDERS\",\n  \"contractor_license\": \"13VH01238569\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Bram Halvorsen\",\n  \"job_address\": \"157 Sandbar Ct\",\n  \"work_type\": \"windows\",\n  \"completion_date\": \"2026-05-06\",\n  \"total_amount\": 1239.03,\n  \"warranty_years\": 10\n}",
+ "tokens_in": 3894,
+ "tokens_out": 128
+}

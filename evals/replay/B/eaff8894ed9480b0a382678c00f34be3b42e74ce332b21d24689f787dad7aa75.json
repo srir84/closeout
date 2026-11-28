@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 36521,
+ "prompt_version": "invoice_v1",
+ "text": "{\n    \"contractor_name\": \"TIDEWATER ELECTRIC LLC\",\n    \"contractor_license\": \"NJ HIC REG 13VH00938114\",\n    \"contractor_email\": \"jobs@tidewater-elec.example\",\n    \"customer_name\": \"Thaddeus Merriweather\",\n    \"job_address\": \"23 Gull Rock Rd\",\n    \"work_type\": \"electrical\",\n    \"completion_date\": \"2026-03-08\",\n    \"total_amount\": 5106.52,\n    \"warranty_years\": 1\n}",
+ "tokens_in": 3894,
+ "tokens_out": 134
+}

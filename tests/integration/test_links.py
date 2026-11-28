@@ -9,7 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from closeout import db
-from closeout.app.outreach_pages import unsubscribe_recipient
+from closeout.app.outreach_pages import unsubscribe_address
 from tests.helpers.jobs import approve, make_job, row
 
 pytestmark = [pytest.mark.slice("S7")]
@@ -125,21 +125,32 @@ def test_unsubscribe_cancels_every_queued_message_to_that_address(seeded) -> Non
         claimed = claimed or o.outbox_id
     with db.tx() as c:  # one message is already being handed to the mail server
         db.run(c, "UPDATE outbox SET state = 'sending' WHERE id = :id", id=claimed)
-    rec = row("SELECT homeowner_recipient_id AS r FROM jobs WHERE id = :j", j=job)["r"]
-    jobs = unsubscribe_recipient(rec)
+    jobs = unsubscribe_address("pat@sampleton.example")
     assert set(jobs) == {job, other}
     states = sorted(
         r["state"] for r in [row("SELECT state FROM outbox WHERE job_id=:j", j=j) for j in (job, other)]
     )
     assert states == ["cancelled", "sending"]  # the only possible extra message is the one already claimed
     assert row("SELECT count(*) AS n FROM suppression")["n"] == 1
-    assert unsubscribe_recipient(rec) == jobs  # pressing again is harmless
+    assert unsubscribe_address("Pat@Sampleton.example ") == jobs  # pressing again is harmless
 
 
 @pytest.mark.req("R-OUT-5")
 def test_one_click_unsubscribe_post_needs_no_csrf(client: TestClient, monkeypatch) -> None:
+    from closeout.act import PerformIn, perform
+
     job = make_job(email="click@sampleton.example")
+    a = approve(job)
+    with db.tx() as c:
+        o = perform(
+            c,
+            PerformIn(
+                approval_id=a["first"], action="send_email", target=f"job-{job}", round=1, step="first"
+            ),
+        )
     tok = link(job, "unsubscribe")
+    with db.tx() as c:
+        db.run(c, "UPDATE links SET outbox_id = :o WHERE purpose = 'unsubscribe'", o=o.outbox_id)
 
     async def no_temporal():
         class C:
@@ -161,3 +172,26 @@ async def _fake_send(client, wf, ref, wait_seconds=5.0):
     from closeout.commands import Outcome
 
     return Outcome("saved", "saved")
+
+
+@pytest.mark.req("R-SAFE-3")
+def test_expired_or_revoked_unsubscribe_links_do_nothing(client: TestClient) -> None:
+    job = make_job()
+    old = link(job, "unsubscribe", expires="now() - interval '1 second'")
+    assert client.get(f"/u/{old}").status_code == 404
+    assert client.post(f"/u/{old}").status_code == 404
+    rev = link(job, "unsubscribe")
+    with db.tx() as c:
+        db.run(c, "UPDATE links SET revoked_at = now() WHERE purpose = 'unsubscribe'")
+    assert client.post(f"/u/{rev}").status_code == 404
+    assert row("SELECT count(*) AS n FROM suppression")["n"] == 0
+
+
+@pytest.mark.req("R-SAFE-3")
+def test_a_closed_job_link_says_closed(client: TestClient) -> None:
+    job = make_job(status="no_answer")
+    tok = link(job, "answer")
+    assert "Was this your job?" in client.get(f"/a/{tok}").text
+    with db.tx() as c:
+        db.run(c, "UPDATE jobs SET closed_at = now() WHERE id = :j", j=job)
+    assert "has closed" in client.get(f"/a/{tok}").text

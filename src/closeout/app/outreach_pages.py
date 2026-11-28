@@ -12,6 +12,7 @@ from typing import Any
 
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
+from temporalio.common import WorkflowIDConflictPolicy
 
 from closeout import commands, db
 from closeout.act import new_approval
@@ -35,7 +36,7 @@ def find_link(token: str, purpose: str) -> dict[str, Any] | None:
     with db.tx() as c:
         return db.one(
             c,
-            """SELECT l.*, now() > l.expires_at AS expired FROM links l
+            """SELECT l.*, now() >= l.expires_at AS expired FROM links l
                             WHERE l.token_hash = :h AND l.purpose = :p""",
             h=token_hash(token),
             p=purpose,
@@ -49,12 +50,21 @@ def link_job(link: dict[str, Any]) -> dict[str, Any] | None:
     with db.tx() as c:
         return db.one(
             c,
-            """SELECT j.id, j.status, j.round, j.work_type, j.price_visible, k.name AS contractor_name,
+            """SELECT j.id, j.status, j.round, j.work_type, j.price_visible, j.closed_at, k.name AS contractor_name,
                                    pa.address AS parcel_address, j.address_raw
                             FROM jobs j JOIN contractors k ON k.id = j.contractor_id
                             LEFT JOIN parcels pa ON pa.pin = j.pin WHERE j.id = :id""",
             id=jid,
         )
+
+
+def preview_hash(msgs: list[Any]) -> str:
+    """A fingerprint of exactly what the approval page shows."""
+    parts = [
+        f"{m.round}|{m.step}|{m.content_rev}|{m.recipient_id}|{m.to_address}|{m.subject}|{m.body_template}"
+        for m in msgs
+    ]
+    return hashlib.sha256("\n\x00".join(parts).encode()).hexdigest()
 
 
 def shown_slots(body: str) -> str:
@@ -76,6 +86,7 @@ def register(app: FastAPI) -> None:
             "c_approve.html",
             job=job,
             msgs=msgs,
+            preview=preview_hash(msgs),
             shown=shown_slots,
             msg=msg,
             sample=True,
@@ -84,7 +95,11 @@ def register(app: FastAPI) -> None:
 
     @app.post("/c/approve/{job_id}")
     async def approve(
-        request: Request, job_id: uuid.UUID, command_id: uuid.UUID = Form(...), csrf: str = Form("")
+        request: Request,
+        job_id: uuid.UUID,
+        command_id: uuid.UUID = Form(...),
+        csrf: str = Form(""),
+        preview: str = Form(""),
     ) -> Any:
         acct = deps.require_account(request, "contractor")
         deps.check_csrf(request, csrf)
@@ -96,6 +111,12 @@ def register(app: FastAPI) -> None:
         existing = commands.read_result(command_id)
         if existing is None:
             with db.tx() as c:
+                # Only what the contractor saw can be approved: same round, revision, recipient and words.
+                if preview_hash(job_messages(c, job_id)) != preview:
+                    return RedirectResponse(
+                        f"/c/approve/{job_id}?msg=The messages changed. Please review them again.",
+                        status_code=303,
+                    )
                 grant = db.one(
                     c, "SELECT * FROM grants WHERE account_id = :a AND revoked_at IS NULL", a=acct["id"]
                 )
@@ -144,6 +165,53 @@ def register(app: FastAPI) -> None:
             f"/c/jobs/{job_id}?msg={'Done' if out.status == 'done' else out.code}", status_code=303
         )
 
+    @app.post("/c/jobs/{job_id}/undo")
+    async def undo(
+        request: Request, job_id: uuid.UUID, command_id: uuid.UUID = Form(...), csrf: str = Form("")
+    ) -> Any:
+        """R-REC-3: undo a confirmation while the window is open. Judged by when the click was saved."""
+        acct = deps.require_account(request, "contractor")
+        deps.check_csrf(request, csrf)
+        from closeout.app.contractor import own_job
+
+        own_job(acct, job_id)
+        ref = deps.save_command(
+            target_workflow=f"job-{job_id}", kind="undo", account_id=acct["id"], command_id=command_id
+        )
+        out = await commands.send(await deps.temporal(), f"job-{job_id}", ref)
+        text = {"done": "Undone. The job is back to ready for a new round."}.get(
+            out.status,
+            "Too late to undo. You can retract the job instead." if out.code == "too_late" else out.code,
+        )
+        return RedirectResponse(f"/c/jobs/{job_id}?msg={text}", status_code=303)
+
+    @app.post("/c/jobs/{job_id}/retract")
+    async def retract(
+        request: Request, job_id: uuid.UUID, command_id: uuid.UUID = Form(...), csrf: str = Form("")
+    ) -> Any:
+        """After the undo window: retract hides the job. Emails already sent can't be unsent."""
+        acct = deps.require_account(request, "contractor")
+        deps.check_csrf(request, csrf)
+        from closeout.app.contractor import own_job
+        from closeout.settings import get_settings
+        from closeout.workflows.retract import RetractIn
+
+        job = own_job(acct, job_id)
+        if job["status"] != "recorded":
+            return RedirectResponse(
+                f"/c/jobs/{job_id}?msg=Only a recorded job can be retracted.", status_code=303
+            )
+        client = await deps.temporal()
+        n = job["round"]
+        await client.execute_workflow(
+            "Retract",
+            RetractIn(job_id=job_id, command_id=command_id, round=n),
+            id=f"retract-{job_id}-{n}",
+            task_queue=get_settings().task_queue,
+            id_conflict_policy=WorkflowIDConflictPolicy.USE_EXISTING,
+        )
+        return RedirectResponse("/c/jobs?msg=Retracted. The job is hidden from every view.", status_code=303)
+
     # --- the homeowner answers one job ------------------------------------------------------------
     @app.get("/a/{token}", response_class=HTMLResponse)
     def answer_page(request: Request, token: str) -> Any:
@@ -155,7 +223,7 @@ def register(app: FastAPI) -> None:
             return render(request, "link_closed.html", status_code=404, why="unknown", account=None)
         if link["round"] != job["round"] or link["revoked_at"] is not None:
             return render(request, "link_closed.html", why="replaced", account=None)
-        if link["expired"] or job["status"] not in ANSWER_OPEN:
+        if link["expired"] or job["status"] not in ANSWER_OPEN or job["closed_at"] is not None:
             return render(request, "link_closed.html", why="closed", account=None)
         with db.tx() as c:
             facts = {
@@ -228,7 +296,7 @@ def register(app: FastAPI) -> None:
     @app.get("/u/{token}", response_class=HTMLResponse)
     def unsubscribe_page(request: Request, token: str) -> Any:
         link = find_link(token, "unsubscribe")
-        if link is None:
+        if link is None or link["revoked_at"] is not None or link["expired"]:
             return render(request, "link_closed.html", status_code=404, why="unknown", account=None)
         return render(request, "u_unsubscribe.html", token=token, done=False, account=None)
 
@@ -236,9 +304,9 @@ def register(app: FastAPI) -> None:
     async def unsubscribe(request: Request, token: str) -> Any:
         """One click, no sign-in, no CSRF token: the link token itself proves the purpose (RFC 8058)."""
         link = find_link(token, "unsubscribe")
-        if link is None:
+        if link is None or link["revoked_at"] is not None or link["expired"]:
             return render(request, "link_closed.html", status_code=404, why="unknown", account=None)
-        job_ids = unsubscribe_recipient(link["recipient_id"])
+        job_ids = unsubscribe_link(link)
         client = await deps.temporal()
         for jid in job_ids:
             ref = commands.save(
@@ -251,18 +319,12 @@ def register(app: FastAPI) -> None:
         return render(request, "u_unsubscribe.html", token=token, done=True, account=None)
 
 
-def unsubscribe_recipient(recipient_id: uuid.UUID) -> list[uuid.UUID]:
-    """R-OUT-5: add to the do-not-contact list and cancel every queued message to that address, in one go."""
+def unsubscribe_address(address: str, link_id: uuid.UUID | None = None) -> list[uuid.UUID]:
+    """R-OUT-5: add the address the email went to (its snapshot) to the do-not-contact list, and cancel every queued
+    message to it, in one transaction under the address lock the sender's claim also takes."""
+    h = email_hmac(address)
     with db.tx() as c:
-        email = db.scalar(
-            c,
-            """SELECT p.email FROM recipients r JOIN people p ON p.id = r.person_id
-                                WHERE r.id = :r""",
-            r=recipient_id,
-        )
-        if not email:
-            return []
-        h = email_hmac(email)
+        db.scalar(c, "SELECT pg_advisory_xact_lock(hashtextextended(:h, 7))", h=h)
         db.run(
             c,
             "INSERT INTO suppression (email_hmac, reason) VALUES (:h, 'unsubscribed') ON CONFLICT DO NOTHING",
@@ -277,17 +339,18 @@ def unsubscribe_recipient(recipient_id: uuid.UUID) -> list[uuid.UUID]:
                          WHERE id = ANY(:ids) AND state = 'pending'""",
                 ids=[r["id"] for r in hit],
             )
-        jobs = db.all_rows(
-            c,
-            """SELECT DISTINCT o.job_id FROM outbox o WHERE o.recipient_id IN
-                                 (SELECT r2.id FROM recipients r2 JOIN people p2 ON p2.id = r2.person_id
-                                  WHERE p2.email_hmac = :h) AND o.job_id IS NOT NULL""",
-            h=h,
-        )
+        sent_to = db.all_rows(c, "SELECT DISTINCT job_id, to_address FROM outbox WHERE job_id IS NOT NULL")
+        jobs = sorted({r["job_id"] for r in sent_to if r["to_address"] and email_hmac(r["to_address"]) == h})
         db.run(
             c,
-            """INSERT INTO audit_log (action, target, details) VALUES ('unsubscribe', :t, CAST(:d AS jsonb))""",
-            t=f"recipient-{recipient_id}",
+            "INSERT INTO audit_log (action, target, details) VALUES ('unsubscribe', :t, CAST(:d AS jsonb))",
+            t=f"link-{link_id}",
             d=f'{{"cancelled": {len(hit)}}}',
         )
-    return [r["job_id"] for r in jobs]
+    return jobs
+
+
+def unsubscribe_link(link: dict[str, Any]) -> list[uuid.UUID]:
+    with db.tx() as c:
+        address = db.scalar(c, "SELECT to_address FROM outbox WHERE id = :o", o=link["outbox_id"])
+    return unsubscribe_address(address, link["id"]) if address else []

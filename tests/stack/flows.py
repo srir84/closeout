@@ -51,7 +51,8 @@ def approve(job_id: str) -> str:
     c, csrf = person("Mike Brennan")
     page = c.get(f"/c/approve/{job_id}").text
     cmd = re.search(r'name="command_id" value="([^"]+)"', page).group(1)
-    r = c.post(f"/c/approve/{job_id}", data={"csrf": csrf, "command_id": cmd})
+    preview = re.search(r'name="preview" value="([^"]+)"', page).group(1)
+    r = c.post(f"/c/approve/{job_id}", data={"csrf": csrf, "command_id": cmd, "preview": preview})
     return re.search(r'id="msg">([^<]+)<', r.text).group(1)
 
 

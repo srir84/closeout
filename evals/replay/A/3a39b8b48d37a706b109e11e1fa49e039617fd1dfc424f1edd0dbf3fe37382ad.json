@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 62029,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"13VH01234967\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Rosalind Sedgewick\",\n  \"job_address\": \"167 Osprey Ln\",\n  \"work_type\": \"windows\",\n  \"completion_date\": \"2026-05-17\",\n  \"total_amount\": 10235.71,\n  \"warranty_years\": null\n}",
+ "tokens_in": 3894,
+ "tokens_out": 125
+}

@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 from closeout.core.clean import invoice_fields
-from closeout.core.compare import decide_reads
+from closeout.core.compare import apply_amount_marks, decide_reads
 from closeout.gateway.core import Gateway, ReplayMiss
 from closeout.settings import Settings
 from evals.scoring import TODAY, read_right, score_case
@@ -53,6 +53,13 @@ def run_set(name: str, gw: Gateway, light: bool = False) -> dict[str, Any]:
             if rb is not None:
                 acc_b[f] += read_right(f, rb.output, c.expected[f])
         decisions = decide_reads(ra.output, rb.output if rb else None, TODAY, light=light)
+        if not light:  # the same rule the product applies: amounts changed by hand are asked
+            try:
+                marks = gw.read(data, c.mime, "B", "amount_marks").output
+            except ReplayMiss as e:
+                missing.append({"id": c.id, "error": "marks: " + str(e)[:150]})
+                continue
+            decisions = apply_amount_marks(decisions, marks)
         s = score_case(decisions, c.expected)
         rows.append(
             {

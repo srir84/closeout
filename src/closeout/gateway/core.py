@@ -24,13 +24,14 @@ from pydantic import BaseModel
 from closeout.settings import Settings, get_settings
 
 PROMPTS = Path(__file__).parent / "prompts"
-PROMPT_VERSION = {"invoice": "invoice_v1", "town_reply": "town_reply_v1"}
+# amount_marks: a separate yes/no look for amounts changed by hand (both readers can misread those the same way).
+PROMPT_VERSION = {"invoice": "invoice_v1", "town_reply": "town_reply_v2", "amount_marks": "amount_marks_v1"}
 PREPROCESSING_VERSION = "pp1"  # images: the uploaded bytes as-is; PDFs: up to 3 pages at 150 dpi as PNG
 SETTINGS = {"temperature": 0, "num_ctx": 8192}
 THINK = False
 MAX_PDF_PAGES = 3
 Reader = Literal["A", "B"]
-Purpose = Literal["invoice", "town_reply"]
+Purpose = Literal["invoice", "town_reply", "amount_marks"]
 
 
 class ReplayMiss(Exception):
@@ -186,6 +187,8 @@ def _is(v: object, t: str) -> bool:
         return isinstance(v, int | float) and not isinstance(v, bool)
     if t == "integer":
         return isinstance(v, int) and not isinstance(v, bool)
+    if t == "boolean":
+        return isinstance(v, bool)
     if t == "null":
         return v is None
     return False

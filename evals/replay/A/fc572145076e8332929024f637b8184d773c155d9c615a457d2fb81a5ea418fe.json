@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 23230,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"HARBOR & PINE BUILDERS\",\n  \"contractor_license\": \"13VH01234567\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Tobiah Merriweather\",\n  \"job_address\": \"190 Sandbar Ct\",\n  \"work_type\": \"other\",\n  \"completion_date\": \"2026-07-07\",\n  \"total_amount\": 7723.86,\n  \"warranty_years\": null\n}",
+ "tokens_in": 3894,
+ "tokens_out": 126
+}

@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 7251,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"HARBOR & PINE BUILDERS\",\n  \"contractor_license\": \"NJ HIC # 13VH 01234567\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Kwame Harrow\",\n  \"job_address\": \"196 Beacon Avenue\",\n  \"work_type\": \"bathroom\",\n  \"completion_date\": \"2026-07-26\",\n  \"total_amount\": 16800,\n  \"warranty_years\": 1\n}",
+ "tokens_in": 2277,
+ "tokens_out": 130
+}

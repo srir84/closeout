@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 18559,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"13VH01234567\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Marisol Tallowmere\",\n  \"job_address\": \"143 Beacon Ave\",\n  \"work_type\": \"bathroom\",\n  \"completion_date\": \"2026-04-13\",\n  \"total_amount\": 10410.34,\n  \"warranty_years\": 2\n}",
+ "tokens_in": 3894,
+ "tokens_out": 124
+}

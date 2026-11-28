@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 23436,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Bayside Plumbing & Heating\",\n  \"contractor_license\": \"13VH00551920\",\n  \"contractor_email\": \"service@baysideph.example\",\n  \"customer_name\": \"Olusegun Halvorsen\",\n  \"job_address\": \"225 Driftwood Ter\",\n  \"work_type\": \"hvac\",\n  \"completion_date\": \"2025-12-21\",\n  \"total_amount\": 15660.00,\n  \"warranty_years\": null\n}",
+ "tokens_in": 3894,
+ "tokens_out": 129
+}

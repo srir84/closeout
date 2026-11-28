@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 9510,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"HARBOR & PINE BUILDERS\",\n  \"contractor_license\": \"NJ HIC REG 13VH01234567\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Ingrid Marchetti\",\n  \"job_address\": \"150 Osprey Ln\",\n  \"work_type\": \"windows\",\n  \"completion_date\": \"2025-12-26\",\n  \"total_amount\": 20500,\n  \"warranty_years\": 20\n}",
+ "tokens_in": 1821,
+ "tokens_out": 131
+}

@@ -1,0 +1,5 @@
+Fields:
+- permit_number: the permit number the letter is about, exactly as printed (for example 22-0147)
+- asks_for_more_information: true if the letter says the office could not find or could not identify the permit as written, or asks for more details (such as a corrected permit number, block and lot, or an owner's name) before it can answer; otherwise false
+- result: final_on_file only if the letter states that a final inspection was passed, or a certificate of approval or occupancy was issued, for that exact permit; no_record only if the letter states the office searched for that exact permit and found no record of a final inspection or approval; unclear for anything else, including a request for more information, a permit the office could not find, an inspection that is only scheduled, approval of only part of the work, a missing date, or a letter about a different permit
+- result_date: the date of the final approval as YYYY-MM-DD when result is final_on_file, otherwise an empty string

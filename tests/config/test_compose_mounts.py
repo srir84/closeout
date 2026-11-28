@@ -15,6 +15,7 @@ ALLOWED_KEYS = {
     "worker": {"approval_ed25519.pub", "hmac.key"},
     "sender": {"approval_ed25519.pub", "hmac.key"},
     "migrate": {"hmac.key"},
+    "sims": {"hmac.key"},
 }
 
 

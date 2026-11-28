@@ -146,8 +146,11 @@ def perform(conn: Connection, inp: PerformIn) -> PerformOut:
     if isinstance(checked, ap.Refused):
         return refuse(conn, inp, cid, checked.reason)
     claims = checked.claims
-    # 4. Real expiry, by the database's clock when this runs.
-    if db.scalar(conn, "SELECT now() > :e", e=a["expires_at"]):
+    # The stored row must be the one that was signed: same nonce, and the signed expiry is the one that counts.
+    if claims.nonce != a["nonce"]:
+        return refuse(conn, inp, cid, "malformed")
+    # 4. Real expiry, by the database's clock when this runs, against the signed expiry.
+    if db.scalar(conn, "SELECT now() >= CAST(:e AS timestamptz)", e=claims.exp):
         return refuse(conn, inp, cid, "expired")
     # 5. Ownership: the approver owns the job, and the recipient is this job's homeowner.
     acct = db.one(conn, "SELECT contractor_id FROM accounts WHERE id = :a", a=a["account_id"])
@@ -169,10 +172,10 @@ def perform(conn: Connection, inp: PerformIn) -> PerformOut:
         return refuse(conn, inp, cid, "grant_expired")
     if virtual_day_count(conn, g["id"]) >= g["daily_limit"]:
         return refuse(conn, inp, cid, "over_limit")
-    # 7. The do-not-contact list.
-    if db.scalar(
-        conn, "SELECT count(*) FROM suppression WHERE email_hmac = :h", h=email_hmac(a["to_address"] or "")
-    ):
+    # 7. The do-not-contact list, under the same lock unsubscribe and the sender take.
+    addr = email_hmac(a["to_address"] or "")
+    db.scalar(conn, "SELECT pg_advisory_xact_lock(hashtextextended(:h, 7))", h=addr)
+    if db.scalar(conn, "SELECT count(*) FROM suppression WHERE email_hmac = :h", h=addr):
         return refuse(conn, inp, cid, "suppressed")
     # 8. Do it: one outbox row, the approval used, an audit row.
     oid = db.scalar(
@@ -189,8 +192,8 @@ def perform(conn: Connection, inp: PerformIn) -> PerformOut:
         rec=a["recipient_id"],
         g=g["id"],
         to=a["to_address"],
-        sub=a["subject"],
-        body=a["body_template"],
+        sub=msg.subject,  # exactly the text whose hashes the signature covers
+        body=msg.body_template,
         fp=fp,
     )
     db.run(

@@ -28,7 +28,15 @@ DAY = timedelta(days=1)
 
 
 class World:
-    def __init__(self, refuse: dict[str, str] | None = None, late_undo: bool = False) -> None:
+    def __init__(
+        self,
+        refuse: dict[str, str] | None = None,
+        late_undo: bool = False,
+        delivery_delay: timedelta = timedelta(0),
+        first_state: str = "sent",
+    ) -> None:
+        self.delivery_delay = delivery_delay
+        self.first_state = first_state
         self.status: str | None = None
         self.events: list[str] = []
         self.sends: list[tuple[str, datetime]] = []
@@ -91,7 +99,11 @@ class World:
         @activity.defn(name="outbox_state")
         async def outbox_state(inp: outbox.OutboxRef) -> Delivered:
             step, at = w.outbox[inp.outbox_id]
-            return Delivered(outbox_id=inp.outbox_id, state="sent", sent_at=at, round=1)
+            now = activity.info().current_attempt_scheduled_time
+            if now < at + w.delivery_delay:
+                return Delivered(outbox_id=inp.outbox_id, state="pending", round=1)
+            state = w.first_state if step == "first" else "sent"
+            return Delivered(outbox_id=inp.outbox_id, state=state, sent_at=at + w.delivery_delay, round=1)
 
         @activity.defn(name="check_approvals")
         async def check_approvals(inp: outbox.ApprovalCheckIn) -> outbox.ApprovalCheckOut:
@@ -120,6 +132,10 @@ class World:
         async def start_round(inp: answers.RoundIn) -> int:
             return 0
 
+        @activity.defn(name="mark_closed")
+        async def mark_closed(inp: acts.JobRef) -> None:
+            w.stops.append("closed")
+
         return [
             record,
             prepare_job,
@@ -137,6 +153,7 @@ class World:
             correction_rejected,
             saved_undo,
             start_round,
+            mark_closed,
         ]
 
 
@@ -383,3 +400,81 @@ async def test_undo_pressed_in_time_but_delivered_late_still_counts(ts_env) -> N
         await until_state(h, w, "ready", ts_env, step=timedelta(minutes=1))
         await h.terminate("done")
     assert "job.undone" in w.events and "job.recorded" not in w.events
+
+
+@pytest.mark.req("R-OUT-4")
+async def test_reminders_are_timed_from_delivery_not_from_queueing(ts_env) -> None:
+    """The sender reports delivery 2 hours after the message was queued; reminder 1 is 3 days after delivery."""
+    w = World(delivery_delay=timedelta(days=365))  # the backup check keeps seeing 'pending'
+    async with job(ts_env, w) as h:
+        await until_state(h, w, "ready", ts_env)
+        await send(h, "approve")
+        await until_state(h, w, "asking_homeowner", ts_env)
+        while not w.sends:
+            await ts_env.sleep(timedelta(seconds=10))
+        queued = w.sends[0][1]
+        oid = next(iter(w.outbox))
+        await ts_env.sleep(timedelta(hours=2))
+        delivered = queued + timedelta(hours=2)
+        await h.signal("delivered", Delivered(outbox_id=oid, state="sent", sent_at=delivered, round=1))
+        for _ in range(200):
+            if len(w.sends) >= 2:
+                break
+            await ts_env.sleep(timedelta(hours=1))
+        await h.terminate("done")
+    assert w.sends[1][1] - delivered >= 3 * DAY  # reminder 1: 3 days after delivery, not after queueing
+    assert w.sends[1][1] - delivered < 3 * DAY + timedelta(hours=1)
+
+
+async def test_a_first_email_refused_as_suppressed_puts_the_job_on_hold(ts_env) -> None:
+    w = World(refuse={"first": "suppressed"})
+    async with job(ts_env, w) as h:
+        await until_state(h, w, "ready", ts_env)
+        await send(h, "approve")
+        await until_state(h, w, "on_hold", ts_env)
+        await h.terminate("done")
+    assert "on_hold" in w.reviews
+
+
+async def test_a_cancelled_first_email_puts_the_job_on_hold(ts_env) -> None:
+    w = World(first_state="cancelled")
+    async with job(ts_env, w) as h:
+        await until_state(h, w, "ready", ts_env)
+        await send(h, "approve")
+        await until_state(h, w, "on_hold", ts_env)
+        await h.terminate("done")
+
+
+@pytest.mark.req("R-OUT-4")
+async def test_the_day_30_cutoff_holds_on_hold_too(ts_env) -> None:
+    w = World(refuse={"reminder_1": "over_limit"})
+    async with job(ts_env, w) as h:
+        await approved(h, w, ts_env)
+        await until_state(h, w, "on_hold", ts_env, step=timedelta(hours=6))
+        late = cmd(
+            "answer", saved_at=(await ts_env.get_current_time()) + 31 * DAY, answer="confirm", round="1"
+        )
+        with pytest.raises(WorkflowUpdateFailedError):
+            await h.execute_update(Job.command, late, id=str(late.command_id))
+        await h.terminate("done")
+
+
+@pytest.mark.req("R-OUT-3")
+async def test_an_empty_correction_is_refused_and_changes_nothing(ts_env) -> None:
+    w = World()
+    acts_list = w.activities()
+
+    @activity.defn(name="apply_answer")
+    async def refuse_answer(inp: acts.CommandIn) -> answers.AnswerOut:
+        return answers.AnswerOut(ok=False, code="bad_correction", price_visible=None)
+
+    w.activities = lambda: [
+        a if getattr(a, "__name__", "") != "apply_answer" else refuse_answer  # type: ignore[method-assign]
+        for a in acts_list
+    ]
+    async with job(ts_env, w) as h:
+        await approved(h, w, ts_env)
+        r = await send(h, "answer", answer="correct", round="1")
+        assert (r.ok, r.code, r.state) == (False, "bad_correction", "asking_homeowner")
+        await h.terminate("done")
+    assert "job.answered" not in w.events

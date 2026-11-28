@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 23293,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Tidewater Electric LLC\",\n  \"contractor_license\": \"13VH00938114\",\n  \"contractor_email\": \"jobs@tidewater-elec.example\",\n  \"customer_name\": \"Wren Marrowby\",\n  \"job_address\": \"69 Driftwood Ter\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2026-08-24\",\n  \"total_amount\": 5334.99,\n  \"warranty_years\": 1\n}",
+ "tokens_in": 3894,
+ "tokens_out": 125
+}

@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 14196,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Inlet Roofing Co.\",\n  \"contractor_license\": \"13VH 00077302\",\n  \"contractor_email\": \"estimates@inletroof.example\",\n  \"customer_name\": \"Colleen Ostrowski\",\n  \"job_address\": \"17 Osprey Ln\",\n  \"work_type\": \"roof\",\n  \"completion_date\": \"2025-04-08\",\n  \"total_amount\": 24123.91,\n  \"warranty_years\": 10\n}",
+ "tokens_in": 2547,
+ "tokens_out": 127
+}

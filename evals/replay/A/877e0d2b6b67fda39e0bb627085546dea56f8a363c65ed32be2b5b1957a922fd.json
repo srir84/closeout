@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 12457,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Inlet Roofing Co.\",\n  \"contractor_license\": \"13VH00077302\",\n  \"contractor_email\": \"estimates@inletroof.example\",\n  \"customer_name\": \"Silas Abernathy\",\n  \"job_address\": \"142 Heron Way\",\n  \"work_type\": \"roof\",\n  \"completion_date\": \"2025-02-06\",\n  \"total_amount\": 12650,\n  \"warranty_years\": 5\n}",
+ "tokens_in": 4159,
+ "tokens_out": 122
+}

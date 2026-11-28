@@ -25,9 +25,10 @@ def main() -> int:
     ap.add_argument("--live", action="store_true")
     ap.add_argument("--first10", action="store_true")
     ap.add_argument("--no-write", action="store_true")
+    ap.add_argument("--set", default="town_replies")
     a = ap.parse_args()
     gw = Gateway(Settings(closeout_mode="full" if a.live else "replay", ollama_url="http://127.0.0.1:11434"))
-    cs = cases("town_replies")
+    cs = cases(a.set)
     if a.first10:
         cs = [c for c in cs if c.meta.get("first10")]
     rows, missing = [], []
@@ -65,7 +66,7 @@ def main() -> int:
     print(report)
     if not a.no_write:
         REPORTS.mkdir(exist_ok=True)
-        stem = f"{date.today().isoformat()}-town-replies{'-first10' if a.first10 else ''}{'-live' if a.live else ''}"
+        stem = f"{date.today().isoformat()}-{a.set.replace('_', '-')}{'-first10' if a.first10 else ''}{'-live' if a.live else ''}"
         (REPORTS / f"{stem}.md").write_text(report)
         (REPORTS / f"{stem}.json").write_text(
             json.dumps({"n": n, "wrong": len(wrong), "shown": shown, "missing": missing}, indent=1) + "\n"

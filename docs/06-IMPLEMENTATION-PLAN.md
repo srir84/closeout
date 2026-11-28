@@ -493,4 +493,5 @@ What was built differently from the plan, and why. Each note says where it's han
 | S0 | `make keys` | Keys are made on the host with `uv`. S14 moves this into a container so a fresh clone needs only Docker and `make`. |
 | S0 | Ollama from Docker on Linux, tried once | Written down in the README, but there's no Linux machine with Ollama to try it on. Not tried yet. |
 | S1 | 2,707 permits get exactly one street address. | 2,706 on the snapshot of 27 Nov 2026, by three independent ways of counting. The research check used an earlier download. The other fixed counts (3,982, 3,362, 2,914, 2,712 / 82 / 120, 280) match exactly. |
+| S7 | Saved histories replay against new code. | The S6/S7 review fixes changed the Job workflow's steps and the replay check failed, as it should. The Job workflow had not reached `main` or a release, so no running workflow used the old code and the histories were re-recorded. From the first tagged release on, such changes go through `workflow.patched` (design 3.8). |
 | S1 | Sampleton: about 40 parcels and 60 permits | 49 parcels and 45 permits cover every persona, every permit-match result and every town-request case. |

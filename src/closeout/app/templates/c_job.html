@@ -33,6 +33,8 @@
   {% endfor %}
 </table>
 {% if marks %}<h2>Marks</h2><p id="marks">{% for m in marks %}<a class="mark" href="/proof/{{ job.id }}/{{ m.kind }}" data-mark="{{ m.kind }}">{{ mark_names[m.kind] }}</a>{% endfor %}</p>{% endif %}
+{% if job.status == 'confirmed' %}<form method="post" action="/c/jobs/{{ job.id }}/undo"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}"><p class="muted">The homeowner confirmed. You can undo this for a short time (60 seconds in the fast-clock demo, 10 minutes normally). Emails already sent can't be unsent.</p><button class="secondary" id="undo">Undo</button></form>{% endif %}
+{% if job.status == 'recorded' %}<form method="post" action="/c/jobs/{{ job.id }}/retract"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}"><button class="danger" id="retract">Retract this job</button> <span class="muted">Hides it from every view. Emails already sent can't be unsent.</span></form>{% endif %}
 {% if job.status == 'ready' %}<p><a class="button" id="approve-link" href="/c/approve/{{ job.id }}">Review and approve the emails</a></p>{% endif %}
 {% if correction %}
 <div class="card warn" id="correction"><h3>The homeowner corrected this job</h3>

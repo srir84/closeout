@@ -1,0 +1,354 @@
+"""`make sim`: simulated people play every persona row in the spec, then every end state is checked (design 3.13).
+
+The bots use the same pages and links as a person: the contractor bot signs in as Mike, and each homeowner bot
+reads its own Mailpit inbox and clicks the links (rewriting APP_PUBLIC_URL to APP_INTERNAL_URL). Checks come from
+the records: job status, marks from events, emails in Mailpit, open review items, approvals and the audit log.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import sys
+import time
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any
+
+import httpx
+
+from closeout import db
+from closeout.core.jobs import status_from_events
+from closeout.core.record import marks
+from closeout.core.wording import check_text
+from closeout.events import read_stream
+from closeout.mailpit import Mailpit
+
+APP = os.environ.get("APP_INTERNAL_URL", "http://app:8000").rstrip("/")
+PUBLIC = os.environ.get("APP_PUBLIC_URL", "http://127.0.0.1:8000").rstrip("/")
+MAIL = Mailpit(os.environ.get("MAILPIT_API_URL", "http://mailpit:8025"))
+DATA = Path(os.environ.get("CLOSEOUT_DATA_DIR", Path(__file__).parents[3] / "data"))
+TIMEOUT = float(os.environ.get("SIM_TIMEOUT", "900"))
+BANNED: list[str] = []
+
+
+def scan(where: str, text: str) -> str:
+    hits = check_text(text)
+    if hits:
+        BANNED.append(f"{where}: {hits}")
+    return text
+
+
+class Web:
+    def __init__(self, person: str | None = None) -> None:
+        self.c = httpx.Client(base_url=APP, follow_redirects=True, timeout=60, headers={"Host": "app:8000"})
+        self.csrf = ""
+        if person:
+            page = self.get("/")
+            ids = {
+                n.strip(): i
+                for i, n in re.findall(r'name="account_id" value="([^"]+)">\s*<h3>([^<]+)</h3>', page)
+            }
+            self.c.post("/signin", data={"account_id": ids[person]})
+            self.csrf = re.search(r'name="csrf" value="([^"]+)"', self.get("/data")).group(1)  # type: ignore[union-attr]
+
+    def get(self, path: str) -> str:
+        r = self.c.get(path)
+        return scan(path.split("?")[0][:40], r.text)
+
+    def post(self, path: str, data: dict[str, str], files: Any = None) -> httpx.Response:
+        r = self.c.post(path, data=data, files=files)
+        scan(path[:40], r.text)
+        return r
+
+
+def internal(url: str) -> str:
+    return url.replace(PUBLIC, "")
+
+
+def form_value(page: str, name: str) -> str:
+    m = re.search(rf'name="{name}" value="([^"]+)"', page)
+    return m.group(1) if m else ""
+
+
+@dataclass
+class Persona:
+    code: str
+    email: str
+    job_ref: str
+    want: dict[str, Any]
+    spec: dict[str, Any]
+    job_id: str = ""
+    done: set[str] = field(default_factory=set)
+
+
+def personas() -> list[Persona]:
+    world = json.loads((DATA / "seed" / "sampleton" / "world.json").read_text())
+    return [
+        Persona(
+            code=j["code"],
+            email=j["email"],
+            job_ref=f"HP-25-{i:03d}",
+            want={k: j[k] for k in ("ends", "marks", "emails", "reviews")},
+            spec=j,
+        )
+        for i, j in enumerate(world["jobs"], start=1)
+    ]
+
+
+_SEEN: dict[str, dict[str, Any]] = {}
+
+
+def emails_to(addr: str) -> list[dict[str, Any]]:
+    """This person's inbox, oldest first. Each message is fetched and scanned once."""
+    msgs = sorted(MAIL.search(f"to:{addr}"), key=lambda m: m["Created"])
+    out = []
+    for m in msgs:
+        if m["ID"] not in _SEEN:
+            full = MAIL.message(m["ID"])
+            scan(f"email to {addr}", full.get("Subject", "") + "\n" + full.get("Text", ""))
+            _SEEN[m["ID"]] = full
+        out.append(_SEEN[m["ID"]])
+    return out
+
+
+def link_in(msg: dict[str, Any], kind: str) -> str:
+    m = re.search(re.escape(PUBLIC) + rf"/{kind}/\S+", msg["Text"])
+    assert m, f"no /{kind}/ link"
+    return internal(m.group(0))
+
+
+def virtual_now(web: Web) -> datetime:
+    return datetime.fromisoformat(web.c.get("/clock").json()["virtual_now"])
+
+
+def answer(link: str, kind: str, **extra: str) -> str:
+    w = Web()
+    page = w.get(link)
+    data = {
+        "csrf": form_value(page, "csrf"),
+        "command_id": form_value(page, "command_id"),
+        "answer": kind,
+        "price_visible": "yes",
+        **extra,
+    }
+    r = w.post(link, data)
+    return "thanks" if 'id="thanks"' in r.text else re.sub(r"\s+", " ", r.text)[:120]
+
+
+def job_page(mike: Web, job_id: str) -> str:
+    return mike.get(f"/c/jobs/{job_id}")
+
+
+def status_of(mike: Web, job_id: str) -> str:
+    m = re.search(r'id="job-status">([^<]+)<', job_page(mike, job_id))
+    return m.group(1).strip().replace(" ", "_") if m else "?"
+
+
+def run_story(ps: list[Persona]) -> None:
+    mike = Web("Mike Brennan")
+    demo = DATA / "demo"
+    files = [("csv_file", ("jobs.csv", (demo / "harbor_pine_jobs.csv").read_bytes(), "text/csv"))]
+    files += [
+        ("invoices", (p.name, p.read_bytes(), "image/png"))
+        for p in sorted((demo / "invoices").glob("HP-*.png"))
+    ]
+    batch = str(mike.post("/c/import", {"csrf": mike.csrf}, files=files).url.path)
+    end = time.monotonic() + 120
+    while time.monotonic() < end:
+        page = mike.get(batch)
+        refs = dict((r, j) for j, r in re.findall(r'href="/c/jobs/([0-9a-f-]+)">(HP-[0-9-]+)<', page))
+        if len(refs) == len(ps) and page.count("state ready") == len(ps):
+            break
+        time.sleep(1)
+    for p in ps:
+        p.job_id = refs[p.job_ref]
+    approve_all = [p for p in ps]
+    for p in approve_all:
+        approve(mike, p)
+    first_at: dict[str, datetime] = {}
+    deadline = time.monotonic() + TIMEOUT
+    while time.monotonic() < deadline:
+        busy = False
+        for p in ps:
+            busy |= step(mike, p, first_at)
+        if not busy and all_settled(mike, ps):
+            return
+        time.sleep(0.5)
+    raise TimeoutError("the simulation did not settle")
+
+
+def approve(mike: Web, p: Persona) -> None:
+    page = mike.get(f"/c/approve/{p.job_id}")
+    mike.post(
+        f"/c/approve/{p.job_id}",
+        {
+            "csrf": mike.csrf,
+            "command_id": form_value(page, "command_id"),
+            "preview": form_value(page, "preview"),
+        },
+    )
+
+
+def step(mike: Web, p: Persona, first_at: dict[str, datetime]) -> bool:
+    """One move for one persona, when its moment has come. Returns True while the persona still has moves."""
+    s = p.spec
+    msgs = emails_to(p.email)
+    if msgs and p.code not in first_at:
+        first_at[p.code] = virtual_now(mike)
+    n = len(msgs)
+    act = s.get("answer", "confirm")
+    after = {"reminder_1": 2, "reminder_2": 3}.get(s.get("answer_after", ""), 1)
+    if act == "never":
+        return False
+    if "answered" not in p.done and n >= after:
+        if s.get("answer_after") == "day_20" and virtual_now(mike) < first_at[p.code] + timedelta(days=20):
+            return True
+        link = link_in(msgs[-1], "a")
+        if act == "unsubscribe":
+            Web().post(link_in(msgs[0], "u"), {})
+        elif "correct" in s:
+            answer(link, "correct", **{k: v for k, v in s["correct"].items()})
+        else:
+            answer(link, act)
+        p.done.add("answered")
+        return True
+    if "answered" in p.done and "correct" in s and "decided" not in p.done:
+        if 'id="correction"' in job_page(mike, p.job_id):
+            page = job_page(mike, p.job_id)
+            decision = "accept" if s.get("contractor_bot") == "accept" else "reject"
+            mike.post(
+                f"/c/jobs/{p.job_id}/correction",
+                {"csrf": mike.csrf, "decision": decision, "command_id": form_value(page, "command_id")},
+            )
+            p.done.add("decided")
+        return True
+    if s.get("undo") and "answered" in p.done and "undone" not in p.done:
+        page = job_page(mike, p.job_id)
+        if 'id="undo"' in page:
+            mike.post(
+                f"/c/jobs/{p.job_id}/undo", {"csrf": mike.csrf, "command_id": form_value(page, "command_id")}
+            )
+            p.done.add("undone")
+        return True
+    if s.get("undo") and "undone" in p.done and "reapproved" not in p.done:
+        if status_of(mike, p.job_id) == "ready":
+            approve(mike, p)
+            p.done.add("reapproved")
+        return True
+    if s.get("undo") and "reapproved" in p.done and "answered2" not in p.done:
+        if n >= 2:
+            answer(link_in(msgs[-1], "a"), "confirm")
+            p.done.add("answered2")
+        return True
+    return False
+
+
+def all_settled(mike: Web, ps: list[Persona]) -> bool:
+    finals = {"recorded", "stopped", "needs_a_look"}
+    for p in ps:
+        st = status_of(mike, p.job_id)
+        if p.want["ends"] == "no_answer":
+            if st != "no_answer":
+                return False
+        elif st not in finals or st != p.want["ends"]:
+            return False
+    # no_answer jobs keep their workflow open until day 30: wait for the window so late moves can't happen.
+    return True
+
+
+def check(ps: list[Persona]) -> list[tuple[str, bool, str]]:
+    results: list[tuple[str, bool, str]] = []
+    with db.tx() as c:
+        for p in ps:
+            evs = read_stream(c, f"job-{p.job_id}")
+            status = db.scalar(c, "SELECT status FROM jobs WHERE id = :j", j=p.job_id)
+            n_marks = len(marks(evs))
+            n_mail = len(MAIL.search(f"to:{p.email}"))
+            n_rev = db.scalar(
+                c,
+                "SELECT count(*) FROM review_items WHERE ref = :r AND resolved_at IS NULL",
+                r=f"job-{p.job_id}",
+            )
+            got = {"ends": status, "marks": n_marks, "emails": n_mail, "reviews": n_rev}
+            ok = got == p.want and status_from_events(evs) == status
+            results.append(
+                (
+                    f"{p.code} ends {p.want['ends']}, {p.want['marks']} marks, {p.want['emails']} emails, "
+                    f"{p.want['reviews']} review items",
+                    ok,
+                    "" if ok else f"got {got}",
+                )
+            )
+        sent = db.all_rows(
+            c,
+            """SELECT o.id, o.approval_id, a.used_at, a.used_by_command = o.command_id AS mine,
+                                 (SELECT count(*) FROM audit_log l WHERE l.approval_id = o.approval_id
+                                  AND l.action = 'send_email') AS audits
+                                 FROM outbox o JOIN approvals a ON a.id = o.approval_id WHERE o.state = 'sent'""",
+        )
+        bad = [r for r in sent if not (r["used_at"] and r["mine"] and r["audits"] == 1)]
+        results.append(
+            (
+                f"every delivered email ({len(sent)}) has a used approval and an audit row",
+                not bad,
+                f"{len(bad)} without",
+            )
+        )
+        supp = db.all_rows(
+            c,
+            """SELECT o.id FROM outbox o JOIN suppression s ON true WHERE o.state = 'sent'
+                                 AND o.created_at > s.added_at AND s.email_hmac = (
+                                 SELECT p.email_hmac FROM recipients r JOIN people p ON p.id = r.person_id
+                                 WHERE r.id = o.recipient_id)""",
+        )
+        results.append(("no email went to a suppressed address", not supp, f"{len(supp)} sent"))
+        mismatch = [
+            j["id"]
+            for j in db.all_rows(c, "SELECT id, status FROM jobs")
+            if status_from_events(read_stream(c, f"job-{j['id']}")) != j["status"]
+        ]
+        results.append(
+            ("every job's status equals what its events say", not mismatch, f"{len(mismatch)} differ")
+        )
+    results.append(("no page or email contains a banned phrase", not BANNED, "; ".join(BANNED[:3])))
+    return results
+
+
+def summary(ps: list[Persona]) -> list[dict[str, Any]]:
+    """The end-state summary: every job's state and marks, with no times or IDs (evals 4.6)."""
+    with db.tx() as c:
+        return [
+            {
+                "persona": p.code,
+                "status": db.scalar(c, "SELECT status FROM jobs WHERE id=:j", j=p.job_id),
+                "marks": [m.kind for m in marks(read_stream(c, f"job-{p.job_id}"))],
+            }
+            for p in ps
+        ]
+
+
+def main() -> int:
+    ps = personas()
+    t0 = time.monotonic()
+    try:
+        run_story(ps)
+        error = ""
+    except Exception as e:  # report what was reached
+        error = f"{type(e).__name__}: {e}"
+    results = check(ps)
+    print(
+        f"\nSimulation finished in {time.monotonic() - t0:.0f} s{' with an error: ' + error if error else ''}\n"
+    )
+    for name, ok, why in results:
+        print(f"  {'PASS' if ok else 'FAIL'}  {name}" + (f"  ({why})" if why else ""))
+    print("\nend-state summary: " + json.dumps(summary(ps), sort_keys=True))
+    failed = [r for r in results if not r[1]]
+    print(f"\n{len(results) - len(failed)} of {len(results)} checks passed.")
+    return 1 if failed or error else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

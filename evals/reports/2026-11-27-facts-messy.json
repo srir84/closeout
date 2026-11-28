@@ -1,0 +1,98 @@
+{
+ "set": "messy",
+ "mode": "replay",
+ "light": false,
+ "documents": 30,
+ "missing": [],
+ "e1_documents_with_wrong_kept_fact": 5,
+ "e1_wrong_kept_facts": 5,
+ "e1_upper_bound_95": 0.31669444155152854,
+ "kept_facts": 259,
+ "asked_facts": 11,
+ "e2_asked_per_job": 0.36666666666666664,
+ "share_kept": 0.9592592592592593,
+ "reader_a_field_accuracy": 0.9592592592592593,
+ "reader_a_by_field": {
+  "contractor_name": 1.0,
+  "contractor_license": 1.0,
+  "contractor_email": 0.9666666666666667,
+  "customer_name": 1.0,
+  "job_address": 0.9666666666666667,
+  "work_type": 1.0,
+  "completion_date": 0.8666666666666667,
+  "total_amount": 0.8333333333333334,
+  "warranty_years": 1.0
+ },
+ "reader_b_field_accuracy": 0.9592592592592593,
+ "worst": [
+  {
+   "id": "messy11",
+   "wrong_kept": [
+    "total_amount"
+   ],
+   "asked": [
+    "completion_date"
+   ],
+   "kept": 8,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 8153,
+   "ms_b": 13244
+  },
+  {
+   "id": "messy29",
+   "wrong_kept": [
+    "total_amount"
+   ],
+   "asked": [
+    "contractor_email"
+   ],
+   "kept": 8,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 8186,
+   "ms_b": 13413
+  },
+  {
+   "id": "messy05",
+   "wrong_kept": [
+    "total_amount"
+   ],
+   "asked": [],
+   "kept": 9,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 12457,
+   "ms_b": 20933
+  },
+  {
+   "id": "messy17",
+   "wrong_kept": [
+    "total_amount"
+   ],
+   "asked": [],
+   "kept": 9,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 8351,
+   "ms_b": 14196
+  },
+  {
+   "id": "messy23",
+   "wrong_kept": [
+    "total_amount"
+   ],
+   "asked": [],
+   "kept": 9,
+   "fields": 9,
+   "valid_a": true,
+   "valid_b": true,
+   "ms_a": 8338,
+   "ms_b": 13966
+  }
+ ]
+}

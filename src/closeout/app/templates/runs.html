@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Agent runs{% endblock %}
+{% block content %}
+<h1>Agent runs</h1>
+<p class="lead">What the system did for each job: its steps, waits and decisions. No email text, addresses or prices are shown here.</p>
+<table id="runs">
+  <tr><th>Job</th><th>Work</th><th>Status</th><th>Round</th><th>Last step</th></tr>
+  {% for j in jobs %}
+  <tr><td><a href="/runs/{{ j.id }}">{{ j.job_ref }}</a></td><td>{{ j.work_type }}</td><td><span class="state {{ j.status }}">{{ j.status | replace('_', ' ') }}</span></td><td>{{ j.round }}</td><td>{{ j.updated_at.strftime('%d %b %H:%M:%S') }}</td></tr>
+  {% else %}<tr><td colspan="5">Nothing to show.</td></tr>{% endfor %}
+</table>
+{% endblock %}

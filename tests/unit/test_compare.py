@@ -120,3 +120,21 @@ def test_non_latin_names_are_compared_not_emptied() -> None:
     assert same_value("customer_name", "王芳", "王芳")
     assert not same_value("customer_name", "LLC", "Inc.")  # both empty after suffixes: never agree
     assert name_key("José Núñez") == "josé núñez"
+
+
+@pytest.mark.req("R-IMP-3")
+def test_a_total_changed_by_hand_is_asked_even_when_both_reads_agree() -> None:
+    from closeout.core.compare import apply_amount_marks
+
+    d = decide_reads(READ, READ, TODAY)
+    asked = {
+        x.field: x for x in apply_amount_marks(d, {"amount_crossed_out": True, "amount_handwritten": True})
+    }
+    assert (asked["total_amount"].status, asked["total_amount"].reason) == ("asked", "changed_by_hand")
+    assert asked["total_amount"].value is None and asked["completion_date"].status == "kept"
+    clean = {
+        x.field: x for x in apply_amount_marks(d, {"amount_crossed_out": False, "amount_handwritten": True})
+    }
+    assert clean["total_amount"].status == "kept"  # handwriting alone (carbon copies) isn't a change
+    failed = {x.field: x for x in apply_amount_marks(d, None)}
+    assert failed["total_amount"].status == "asked"  # no answer from the look: ask

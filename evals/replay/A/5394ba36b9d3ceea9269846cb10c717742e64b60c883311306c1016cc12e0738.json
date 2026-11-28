@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 7270,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"BAYSIDE PLUMBING & HEATING\",\n  \"contractor_license\": \"13VH00551920\",\n  \"contractor_email\": \"service@baysideph.example\",\n  \"customer_name\": \"Priscilla Hollis\",\n  \"job_address\": \"212 Driftwood Terrace\",\n  \"work_type\": \"plumbing\",\n  \"completion_date\": \"2025-01-30\",\n  \"total_amount\": 2612.31,\n  \"warranty_years\": 6\n}",
+ "tokens_in": 2277,
+ "tokens_out": 130
+}

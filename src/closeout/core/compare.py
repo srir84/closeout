@@ -110,6 +110,21 @@ def decide_reads(
     return decide(a, None if light else clean_read(read_b, today))
 
 
+def apply_amount_marks(decisions: list[FactDecision], marks: dict[str, object] | None) -> list[FactDecision]:
+    """An amount crossed out or changed by hand is never kept on the readers' word: the person is asked.
+
+    Both readers can misread a corrected total the same way, so agreement alone isn't enough there.
+    No marks answer at all (a failed look) also means asking about the total.
+    """
+    hand = marks is None or marks.get("amount_crossed_out") is True
+    out = []
+    for d in decisions:
+        if hand and d.field == "total_amount" and d.status == "kept":
+            d = d.model_copy(update={"status": "asked", "value": None, "reason": "changed_by_hand"})
+        out.append(d)
+    return out
+
+
 def same_contractor(read_license: str | None, read_name: str | None, our_license: str, our_name: str) -> bool:
     """R-IMP-4: the invoice is the uploader's if the license is within one character, or the name ratio >= 0.85."""
     if read_license and Levenshtein.distance(read_license.upper(), our_license.upper()) <= 1:

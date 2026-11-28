@@ -119,6 +119,17 @@ services:
       temporal: { condition: service_healthy }
       mailpit: { condition: service_started }
 
+  # The simulators: `make sim` and `make demo` run them. They use the same pages and links as a person.
+  sims:
+    <<: *app
+    restart: "no"
+    profiles: ["tools"]
+    command: ["python", "-m", "closeout.sims.run"]
+    volumes:
+      - ../.secrets/hmac.key:/keys/hmac.key:ro
+    depends_on:
+      app: { condition: service_started }
+
 volumes:
   pgdata:
   temporaldata:

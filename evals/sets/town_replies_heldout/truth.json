@@ -1,0 +1,426 @@
+[
+ {
+  "id": "tr01",
+  "file": "tr01.jpg",
+  "expected": {
+   "permit_number": "22-0147",
+   "result": "final_on_file",
+   "result_date": "2022-08-27"
+  },
+  "first10": true,
+  "variant": "ca_issued",
+  "damage": null,
+  "pages": 1,
+  "address": "212 Heron Way"
+ },
+ {
+  "id": "tr02",
+  "file": "tr02.jpg",
+  "expected": {
+   "permit_number": "23-0388",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "search_none",
+  "damage": null,
+  "pages": 1,
+  "address": "120 Tidewater Road"
+ },
+ {
+  "id": "tr03",
+  "file": "tr03.jpg",
+  "expected": {
+   "permit_number": "21-0912",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "scheduled",
+  "damage": "fax",
+  "pages": 1,
+  "address": "247 Driftwood Terrace"
+ },
+ {
+  "id": "tr04",
+  "file": "tr04.jpg",
+  "expected": {
+   "permit_number": "19-0086",
+   "result": "final_on_file",
+   "result_date": "2019-12-24"
+  },
+  "first10": true,
+  "variant": "final_passed",
+  "damage": null,
+  "pages": 1,
+  "address": "215 Sandbar Court"
+ },
+ {
+  "id": "tr05",
+  "file": "tr05.pdf",
+  "expected": {
+   "permit_number": "24-1124",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "partial",
+  "damage": null,
+  "pages": 2,
+  "address": "212 Tidewater Road"
+ },
+ {
+  "id": "tr06",
+  "file": "tr06.jpg",
+  "expected": {
+   "permit_number": "25-0476",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "open_no_final",
+  "damage": "photo",
+  "pages": 1,
+  "address": "189 Gull Rock Road"
+ },
+ {
+  "id": "tr07",
+  "file": "tr07.jpg",
+  "expected": {
+   "permit_number": "20-1107",
+   "result": "final_on_file",
+   "result_date": "2021-07-08"
+  },
+  "first10": true,
+  "variant": "table",
+  "damage": null,
+  "pages": 1,
+  "address": "35 Gull Rock Road"
+ },
+ {
+  "id": "tr08",
+  "file": "tr08.jpg",
+  "expected": {
+   "permit_number": "21-0258",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "no_responsive",
+  "damage": null,
+  "pages": 1,
+  "address": "9 Lantern Place"
+ },
+ {
+  "id": "tr09",
+  "file": "tr09.jpg",
+  "expected": {
+   "permit_number": "24-0670",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": true,
+  "variant": "missing_date",
+  "damage": "photocopy",
+  "pages": 1,
+  "address": "54 Lantern Pl"
+ },
+ {
+  "id": "tr10",
+  "file": "tr10.jpg",
+  "expected": {
+   "permit_number": "21-1092",
+   "result": "final_on_file",
+   "result_date": "2022-02-03"
+  },
+  "first10": true,
+  "variant": "ca_issued",
+  "damage": null,
+  "pages": 1,
+  "address": "33 Lantern Place"
+ },
+ {
+  "id": "tr11",
+  "file": "tr11.jpg",
+  "expected": {
+   "permit_number": "21-1259",
+   "result": "final_on_file",
+   "result_date": "2022-04-25"
+  },
+  "first10": false,
+  "variant": "final_passed",
+  "damage": null,
+  "pages": 1,
+  "address": "161 Bayberry Cir"
+ },
+ {
+  "id": "tr12",
+  "file": "tr12.jpg",
+  "expected": {
+   "permit_number": "25-0770",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "other_permit",
+  "damage": "fax",
+  "pages": 1,
+  "address": "235 Lantern Place",
+  "other_permit_in_letter": "25-0771"
+ },
+ {
+  "id": "tr13",
+  "file": "tr13.jpg",
+  "expected": {
+   "permit_number": "25-0329",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "search_none",
+  "damage": null,
+  "pages": 1,
+  "address": "59 Gull Rock Road"
+ },
+ {
+  "id": "tr14",
+  "file": "tr14.pdf",
+  "expected": {
+   "permit_number": "22-0680",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "more_info",
+  "damage": null,
+  "pages": 2,
+  "address": "217 Beacon Avenue",
+  "other_permit_in_letter": "22-0770"
+ },
+ {
+  "id": "tr15",
+  "file": "tr15.jpg",
+  "expected": {
+   "permit_number": "25-1341",
+   "result": "final_on_file",
+   "result_date": "2025-07-03"
+  },
+  "first10": false,
+  "variant": "table",
+  "damage": "photo",
+  "pages": 1,
+  "address": "26 Sandbar Ct"
+ },
+ {
+  "id": "tr16",
+  "file": "tr16.jpg",
+  "expected": {
+   "permit_number": "23-1356",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "open_no_final",
+  "damage": null,
+  "pages": 1,
+  "address": "203 Heron Way"
+ },
+ {
+  "id": "tr17",
+  "file": "tr17.jpg",
+  "expected": {
+   "permit_number": "23-0715",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "no_responsive",
+  "damage": null,
+  "pages": 1,
+  "address": "28 Heron Way"
+ },
+ {
+  "id": "tr18",
+  "file": "tr18.jpg",
+  "expected": {
+   "permit_number": "24-0877",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "search_none",
+  "damage": "photocopy",
+  "pages": 1,
+  "address": "177 Saltmeadow Dr"
+ },
+ {
+  "id": "tr19",
+  "file": "tr19.jpg",
+  "expected": {
+   "permit_number": "22-0053",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "open_no_final",
+  "damage": null,
+  "pages": 1,
+  "address": "133 Bayberry Circle"
+ },
+ {
+  "id": "tr20",
+  "file": "tr20.jpg",
+  "expected": {
+   "permit_number": "21-0444",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "interim",
+  "damage": null,
+  "pages": 1,
+  "address": "62 Beacon Ave"
+ },
+ {
+  "id": "tr21",
+  "file": "tr21.jpg",
+  "expected": {
+   "permit_number": "25-1118",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "scheduled",
+  "damage": "fax",
+  "pages": 1,
+  "address": "198 Saltmeadow Drive"
+ },
+ {
+  "id": "tr22",
+  "file": "tr22.pdf",
+  "expected": {
+   "permit_number": "23-0187",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "no_responsive",
+  "damage": null,
+  "pages": 2,
+  "address": "121 Beacon Ave"
+ },
+ {
+  "id": "tr23",
+  "file": "tr23.jpg",
+  "expected": {
+   "permit_number": "21-0684",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "other_permit",
+  "damage": null,
+  "pages": 1,
+  "address": "122 Bayberry Circle",
+  "other_permit_in_letter": "21-0711"
+ },
+ {
+  "id": "tr24",
+  "file": "tr24.jpg",
+  "expected": {
+   "permit_number": "22-1236",
+   "result": "final_on_file",
+   "result_date": "2023-04-20"
+  },
+  "first10": false,
+  "variant": "ca_issued",
+  "damage": "photo",
+  "pages": 1,
+  "address": "57 Saltmeadow Dr"
+ },
+ {
+  "id": "tr25",
+  "file": "tr25.jpg",
+  "expected": {
+   "permit_number": "25-1376",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "partial",
+  "damage": null,
+  "pages": 1,
+  "address": "84 Saltmeadow Drive"
+ },
+ {
+  "id": "tr26",
+  "file": "tr26.jpg",
+  "expected": {
+   "permit_number": "21-0804",
+   "result": "no_record",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "search_none",
+  "damage": null,
+  "pages": 1,
+  "address": "227 Heron Way"
+ },
+ {
+  "id": "tr27",
+  "file": "tr27.jpg",
+  "expected": {
+   "permit_number": "25-0569",
+   "result": "final_on_file",
+   "result_date": "2026-01-09"
+  },
+  "first10": false,
+  "variant": "co_issued",
+  "damage": "photocopy",
+  "pages": 1,
+  "address": "25 Heron Way"
+ },
+ {
+  "id": "tr28",
+  "file": "tr28.pdf",
+  "expected": {
+   "permit_number": "24-0668",
+   "result": "unclear",
+   "result_date": null
+  },
+  "first10": false,
+  "variant": "more_info",
+  "damage": null,
+  "pages": 2,
+  "address": "177 Beacon Avenue",
+  "other_permit_in_letter": "24-0677"
+ },
+ {
+  "id": "tr29",
+  "file": "tr29.jpg",
+  "expected": {
+   "permit_number": "19-0871",
+   "result": "final_on_file",
+   "result_date": "2019-04-29"
+  },
+  "first10": false,
+  "variant": "final_passed",
+  "damage": null,
+  "pages": 1,
+  "address": "84 Sandbar Court"
+ },
+ {
+  "id": "tr30",
+  "file": "tr30.jpg",
+  "expected": {
+   "permit_number": "22-1230",
+   "result": "final_on_file",
+   "result_date": "2023-06-01"
+  },
+  "first10": false,
+  "variant": "table",
+  "damage": "fax",
+  "pages": 1,
+  "address": "121 Sandbar Ct"
+ }
+]

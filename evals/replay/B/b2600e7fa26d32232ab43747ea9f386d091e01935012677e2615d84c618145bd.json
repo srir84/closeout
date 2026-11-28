@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 13975,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Dune Grass Decks\",\n  \"contractor_license\": \"13VH 00410267\",\n  \"contractor_email\": \"build@dunegrassdecks.example\",\n  \"customer_name\": \"Yesenia Lindqvist\",\n  \"job_address\": \"61 Tidewater Rd\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2026-01-01\",\n  \"total_amount\": 23325.0,\n  \"warranty_years\": 3\n}",
+ "tokens_in": 2613,
+ "tokens_out": 126
+}

@@ -19,7 +19,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
-from closeout.core.compare import decide_reads
+from closeout.core.compare import apply_amount_marks, decide_reads
 from closeout.gateway.core import Gateway, ReplayMiss
 from closeout.settings import Settings
 from evals.scoring import TODAY, fact_right
@@ -60,6 +60,7 @@ def run(gw: Gateway) -> dict[str, Any]:
                 data, mime = path.read_bytes(), "image/png" if path.suffix == ".png" else "image/jpeg"
                 ra, rb = gw.read(data, mime, "A"), gw.read(data, mime, "B")
                 decisions = decide_reads(ra.output, rb.output, TODAY)
+                decisions = apply_amount_marks(decisions, gw.read(data, mime, "B", "amount_marks").output)
                 out[twin] = {x.field: x for x in decisions}
         except ReplayMiss as e:
             missing.append({"id": p["id"], "error": str(e)[:120]})

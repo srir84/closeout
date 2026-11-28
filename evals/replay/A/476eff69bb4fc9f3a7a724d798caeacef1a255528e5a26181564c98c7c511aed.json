@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 6102,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"BAYSIDE PLUMBING & HEATING\",\n  \"contractor_license\": \"NJ HIC REG 13VH 00551920\",\n  \"contractor_email\": \"service@baysideph.example\",\n  \"customer_name\": \"Raj Fairbanks\",\n  \"job_address\": \"245 Sandbar Ct\",\n  \"work_type\": \"plumbing\",\n  \"completion_date\": \"2025-11-27\",\n  \"total_amount\": 3175.0,\n  \"warranty_years\": null\n}",
+ "tokens_in": 1835,
+ "tokens_out": 132
+}

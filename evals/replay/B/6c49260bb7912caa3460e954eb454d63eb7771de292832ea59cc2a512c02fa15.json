@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 26027,
+ "prompt_version": "invoice_v1",
+ "text": "{\n    \"contractor_name\": \"Bayside Plumbing & Heating\",\n    \"contractor_license\": \"NJ HIC Reg. # 13VH00551920\",\n    \"contractor_email\": \"service@baysideph.example\",\n    \"customer_name\": \"Aaliyah Novak\",\n    \"job_address\": \"70 Tidewater Rd\",\n    \"work_type\": \"hvac\",\n    \"completion_date\": \"2026-02-06\",\n    \"total_amount\": 8842.23,\n    \"warranty_years\": 3\n}",
+ "tokens_in": 4269,
+ "tokens_out": 133
+}

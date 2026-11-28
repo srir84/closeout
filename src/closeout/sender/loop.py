@@ -131,11 +131,11 @@ class Sender:
                 if g is None or g["revoked_at"] is not None or g["expired"]:
                     self._cancel(c, oid, "grant_revoked")
                     return None
-            if db.scalar(
-                c,
-                "SELECT count(*) FROM suppression WHERE email_hmac = :h",
-                h=email_hmac(row["to_address"] or ""),
-            ):
+            # The same lock as unsubscribe: either the unsubscribe committed first and we see it, or this claim
+            # commits first and is the one message that may still arrive (R-OUT-5).
+            addr = email_hmac(row["to_address"] or "")
+            db.scalar(c, "SELECT pg_advisory_xact_lock(hashtextextended(:h, 7))", h=addr)
+            if db.scalar(c, "SELECT count(*) FROM suppression WHERE email_hmac = :h", h=addr):
                 self._cancel(c, oid, "suppressed")
                 return None
             attempt = uuid.uuid4()
@@ -286,7 +286,12 @@ class Sender:
             if code == 250:
                 self.fault("after_250")
                 return Outcome("sent", "250")
-            return Outcome("failed" if code >= 500 else "pending", f"final_{code}")
+            # Only a clear refusal is trusted. Anything else after the body may mean it went: unknown, never re-sent.
+            if 400 <= code < 500:
+                return Outcome("pending", f"final_{code}")
+            if 500 <= code < 600:
+                return Outcome("failed", f"final_{code}")
+            return Outcome("unknown", f"final_unclear_{code}")
         finally:
             with contextlib.suppress(Exception):
                 conn.close()

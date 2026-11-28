@@ -25,6 +25,7 @@ def run(job, approvals, step="first", **kw):
 
 @pytest.mark.req("R-OUT-1")
 @pytest.mark.req("R-SAFE-2")
+@pytest.mark.req("R-OPS-3")
 def test_a_good_approval_queues_exactly_one_message(seeded) -> None:
     job = make_job()
     a = approve(job)

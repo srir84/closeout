@@ -66,6 +66,10 @@ class Fakes:
         async def match_permit(inp: permit_match.MatchIn) -> permit_match.MatchPermitOut:
             return permit_match.MatchPermitOut(result=f.permit[0], pks=f.permit[1], already_marked=False)
 
+        @activity.defn(name="mark_closed")
+        async def mark_closed(inp: acts.JobRef) -> None:
+            return None
+
         @activity.defn(name="finish_command")
         async def finish_command(r: CommandResult) -> None:
             f.finished.append(r)
@@ -80,6 +84,7 @@ class Fakes:
             apply_fix,
             finish_command,
             match_permit,
+            mark_closed,
         ]
 
 
@@ -138,7 +143,7 @@ async def test_clean_job_reads_twice_and_becomes_ready(ts_env) -> None:
 
     await run_job(ts_env, f, script=script)
     assert f.recorded == ["job.imported", "job.ready"]
-    assert f.reads == ["A", "B"]
+    assert f.reads == ["A", "B", "B"]  # both invoice reads, then the amount-marks look
 
 
 @pytest.mark.req("R-IMP-3")

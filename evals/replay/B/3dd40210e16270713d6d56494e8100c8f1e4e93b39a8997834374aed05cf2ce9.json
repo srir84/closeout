@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 58159,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Dune Grass Decks\",\n  \"contractor_license\": \"NJ HIC # 13VH00410267\",\n  \"contractor_email\": \"build@dunegrassdecks.example\",\n  \"customer_name\": \"Casimir Quillfeather\",\n  \"job_address\": \"180 Tidewater Rd\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2026-05-22\",\n  \"total_amount\": 18755.35,\n  \"warranty_years\": 5\n}",
+ "tokens_in": 3894,
+ "tokens_out": 133
+}

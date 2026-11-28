@@ -14,7 +14,7 @@ keys:
 	@CLOSEOUT_KEYS_DIR=.secrets $(PY) python -m closeout.keys
 
 up: keys
-	$(COMPOSE) build migrate
+	$(COMPOSE) build migrate || (sleep 3 && $(COMPOSE) build migrate)
 	$(COMPOSE) up -d --wait
 	$(COMPOSE) run --rm -e CLOSEOUT_TIME_SCALE=$(SCALE) migrate python -m closeout.cli seed-if-empty
 	@echo "Closeout is up: http://127.0.0.1:8000  (mail: http://127.0.0.1:8025, workflows: http://127.0.0.1:8233)"
@@ -27,7 +27,7 @@ reset:
 	$(COMPOSE) down -v --remove-orphans
 	rm -rf .secrets
 	CLOSEOUT_KEYS_DIR=.secrets $(PY) python -m closeout.keys
-	$(COMPOSE) build migrate
+	$(COMPOSE) build migrate || (sleep 3 && $(COMPOSE) build migrate)
 	$(COMPOSE) up -d --wait
 	$(COMPOSE) run --rm -e CLOSEOUT_TIME_SCALE=$(SCALE) migrate python -m closeout.cli seed --scale $(SCALE)
 
@@ -73,6 +73,13 @@ publish-check:
 
 mutation:
 	$(PY) python tools/mutation_gate.py
+
+# Every simulated person plays their row of the spec, then every end state is checked (fresh start).
+# The simulation runs at 1 day = 10 s, so the bots answer in time even on a slow or busy computer.
+SIM_SCALE ?= 8640
+sim:
+	$(MAKE) reset SCALE=$(SIM_SCALE)
+	$(COMPOSE) run --rm sims
 
 demo: demo-run demo-open
 

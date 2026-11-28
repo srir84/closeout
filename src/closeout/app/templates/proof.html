@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Proof{% endblock %}
+{% block content %}
+<h1 id="proof-title">{{ {'homeowner_confirmed': 'Homeowner confirmed', 'contractor_confirmed': 'Contractor confirmed', 'permit_on_file': 'Town permit on file'}[mark.kind] }}</h1>
+{% if mark.proof_kind == 'permit' %}
+<p>From the state's construction permit records (NJ Department of Community Affairs).{% if mark.picked_by_contractor %} The contractor picked this permit from more than one possible match.{% endif %}</p>
+<dl class="kv" id="proof"><dt>Permit</dt><dd>{{ detail.permit_no }}</dd><dt>Type</dt><dd>{{ detail.permit_type }}</dd><dt>Work</dt><dd>{{ detail.trades | join(', ') if detail.trades else 'No work details in state data' }}</dd><dt>Issued</dt><dd>{{ detail.issued_on }}</dd><dt>Final approval</dt><dd>{{ detail.final_on ~ ' (' ~ detail.final_type ~ ')' if detail.final_on else 'Final approval not in state data' }}</dd></dl>
+{% elif mark.proof_kind == 'approval' %}
+<p>The contractor approved the emails for this job, which states that they did the work.</p>
+<dl class="kv" id="proof"><dt>Contractor</dt><dd>{{ detail.contractor }}</dd><dt>Approved</dt><dd>{{ detail.approved_at.strftime('%d %b %Y %H:%M') if detail.approved_at }}</dd><dt>Round</dt><dd>{{ detail.round }}</dd></dl>
+{% else %}
+<p>The homeowner answered through the link in their email.</p>
+<dl class="kv" id="proof"><dt>Answered</dt><dd>{{ detail.answered_at.strftime('%d %b %Y %H:%M') if detail.answered_at }}</dd><dt>Round</dt><dd>{{ detail.round }}</dd><dt>Outcome</dt><dd>{{ (detail.outcome or '') | replace('_', ' ') }}</dd></dl>
+{% endif %}
+<p><a href="/runs/{{ job_id }}">See the full run</a></p>
+{% endblock %}

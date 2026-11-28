@@ -15,7 +15,7 @@
 {% endfor %}
 {% if msgs and job.status == 'ready' %}
 <form method="post" action="/c/approve/{{ job.id }}">
-  <input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}">
+  <input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}"><input type="hidden" name="preview" value="{{ preview }}">
   <p class="muted">By approving, you also confirm that you did this job: that is the "contractor confirmed" mark.</p>
   <button id="approve">Approve and send</button>
 </form>

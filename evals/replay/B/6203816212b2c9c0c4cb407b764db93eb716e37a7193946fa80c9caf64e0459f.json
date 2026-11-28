@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 12084,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"DUNE GRASS DECKS\",\n  \"contractor_license\": \"NJ HIC # 13VH00410267\",\n  \"contractor_email\": \"build@dunegrassdecks.example\",\n  \"customer_name\": \"Kwame Harrow\",\n  \"job_address\": \"36 Saltmeadow Drive\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2025-06-23\",\n  \"total_amount\": 25669.97,\n  \"warranty_years\": 5\n}",
+ "tokens_in": 2277,
+ "tokens_out": 133
+}

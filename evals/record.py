@@ -29,7 +29,10 @@ def main(names: list[str]) -> int:
     for name in names:
         for c in cases(name):
             data = c.path.read_bytes()
-            for reader in ("A", "B"):
+            looks = [("A", purpose(name)), ("B", purpose(name))]
+            if purpose(name) == "invoice":
+                looks.append(("B", "amount_marks"))
+            for reader, what in looks:
                 import hashlib
 
                 from closeout.gateway.core import replay_key
@@ -38,17 +41,19 @@ def main(names: list[str]) -> int:
                     reader,
                     lock[reader].model,
                     lock[reader].digest,
-                    purpose(name),  # type: ignore[arg-type]
+                    what,  # type: ignore[arg-type]
                     hashlib.sha256(data).hexdigest(),
                 )
                 if (gw.replay_dir / reader / f"{key}.json").exists():
                     n_have += 1
                     continue
                 t = time.monotonic()
-                res = gw.read(data, c.mime, reader, purpose(name))  # type: ignore[arg-type]
+                res = gw.read(data, c.mime, reader, what)  # type: ignore[arg-type]
                 gw.save_replay(res)
                 n_new += 1
-                print(f"{name} {c.id} {reader} {time.monotonic() - t:.1f}s valid={res.valid}", flush=True)
+                print(
+                    f"{name} {c.id} {reader} {what} {time.monotonic() - t:.1f}s valid={res.valid}", flush=True
+                )
     print(f"recorded {n_new} new answers ({n_have} already saved)")
     return 0
 

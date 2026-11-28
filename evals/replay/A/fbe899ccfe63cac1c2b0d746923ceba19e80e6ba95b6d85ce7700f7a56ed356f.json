@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 6590,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Inlet Roofing Co.\",\n  \"contractor_license\": \"13VH00077302\",\n  \"contractor_email\": \"estimates@inletroof.example\",\n  \"customer_name\": \"Wei Haddad\",\n  \"job_address\": \"11 Gull Rock Rd\",\n  \"work_type\": \"roof\",\n  \"completion_date\": \"2024-03-20\",\n  \"total_amount\": 26635,\n  \"warranty_years\": 2\n}",
+ "tokens_in": 2073,
+ "tokens_out": 121
+}

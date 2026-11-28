@@ -19,7 +19,7 @@ from temporalio.exceptions import ApplicationError
 
 from closeout import db
 from closeout.activities.safety import scrubbed
-from closeout.core.compare import FactDecision, decide_reads
+from closeout.core.compare import FactDecision, apply_amount_marks, decide_reads
 from closeout.gateway.core import Gateway, ModelError, ReplayMiss
 from closeout.settings import get_settings
 
@@ -67,14 +67,15 @@ def document_bytes(path: str) -> bytes:
 def store_read(conn: Any, document_id: UUID, res: Any) -> UUID:
     rid = db.scalar(
         conn,
-        """INSERT INTO reads (document_id, reader, model, model_digest, prompt_version, output, valid, errors)
-                             VALUES (:d, :r, :m, :g, :p, CAST(:o AS jsonb), :v, :e)
-                             ON CONFLICT (document_id, reader) DO UPDATE SET model=excluded.model,
+        """INSERT INTO reads (document_id, reader, purpose, model, model_digest, prompt_version, output, valid,
+                             errors) VALUES (:d, :r, :pu, :m, :g, :p, CAST(:o AS jsonb), :v, :e)
+                             ON CONFLICT (document_id, reader, purpose) DO UPDATE SET model=excluded.model,
                                model_digest=excluded.model_digest, prompt_version=excluded.prompt_version,
                                output=excluded.output, valid=excluded.valid, errors=excluded.errors
                              RETURNING id""",
         d=document_id,
         r=res.reader,
+        pu=res.purpose,
         m=res.model,
         g=res.model_digest,
         p=res.prompt_version,
@@ -184,13 +185,22 @@ def decide_facts(inp: FactsIn) -> FactsOut:
         reads = {
             r["reader"]: r
             for r in db.all_rows(
-                c, "SELECT reader, output, valid FROM reads WHERE document_id=:d", d=inp.document_id
+                c,
+                "SELECT reader, output, valid FROM reads WHERE document_id=:d AND purpose='invoice'",
+                d=inp.document_id,
             )
         }
+        marks = db.one(
+            c,
+            """SELECT output FROM reads WHERE document_id=:d AND purpose='amount_marks' AND valid""",
+            d=inp.document_id,
+        )
         today = db.scalar(c, "SELECT (now() AT TIME ZONE 'UTC')::date")
         a = reads.get("A", {}).get("output") if reads.get("A", {}).get("valid") else None
         b = reads.get("B", {}).get("output") if reads.get("B", {}).get("valid") else None
         decisions = decide_reads(a, b, today, light=light)
+        if not light:
+            decisions = apply_amount_marks(decisions, marks["output"] if marks else None)
         out = store_facts(c, inp.job_id, decisions, light)
         registry_contacts(c, inp.job_id)
         return out

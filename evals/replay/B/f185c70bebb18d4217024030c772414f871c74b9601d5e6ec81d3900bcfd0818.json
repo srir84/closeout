@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 14369,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Bayside Plumbing & Heating\",\n  \"contractor_license\": \"13VH00551920\",\n  \"contractor_email\": \"service@baysideph.example\",\n  \"customer_name\": \"Colleen Rourke\",\n  \"job_address\": \"208 Heron Way\",\n  \"work_type\": \"plumbing\",\n  \"completion_date\": \"2026-05-18\",\n  \"total_amount\": 1946.44,\n  \"warranty_years\": null\n}",
+ "tokens_in": 2613,
+ "tokens_out": 124
+}

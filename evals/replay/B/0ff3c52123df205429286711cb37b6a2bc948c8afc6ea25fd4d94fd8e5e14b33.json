@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 53021,
+ "prompt_version": "invoice_v1",
+ "text": "{\n    \"contractor_name\": \"HARBOR & PINE BUILDERS\",\n    \"contractor_license\": \"13VH01234517\",\n    \"contractor_email\": \"office@harbormine.example\",\n    \"customer_name\": \"Casimir Penhallow\",\n    \"job_address\": \"178 Lantern Pl\",\n    \"work_type\": \"bathroom\",\n    \"completion_date\": \"2026-07-27\",\n    \"total_amount\": 6803.56,\n    \"warranty_years\": 2\n}",
+ "tokens_in": 3894,
+ "tokens_out": 127
+}

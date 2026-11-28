@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 23392,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"TIDWATER ELECTRIC LLC\",\n  \"contractor_license\": \"13VH00938114\",\n  \"contractor_email\": \"jobs@tidewater-elec.example\",\n  \"customer_name\": \"Ezra Lindqvist\",\n  \"job_address\": \"112 Heron Way\",\n  \"work_type\": \"electrical\",\n  \"completion_date\": \"2026-02-28\",\n  \"total_amount\": 5730.74,\n  \"warranty_years\": null\n}",
+ "tokens_in": 3894,
+ "tokens_out": 127
+}

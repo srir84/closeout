@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 20373,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"NJ HIC Reg. # 13VH01234567\",\n  \"contractor_email\": \"office@harbormine.example\",\n  \"customer_name\": \"Teo Brady\",\n  \"job_address\": \"51 Heron Way\",\n  \"work_type\": \"windows\",\n  \"completion_date\": \"2026-05-08\",\n  \"total_amount\": 17966.31,\n  \"warranty_years\": 20\n}",
+ "tokens_in": 4159,
+ "tokens_out": 130
+}

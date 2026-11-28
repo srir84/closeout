@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["amount_crossed_out", "amount_handwritten"],
+  "properties": {
+    "amount_crossed_out": {"type": "boolean"},
+    "amount_handwritten": {"type": "boolean"}
+  }
+}

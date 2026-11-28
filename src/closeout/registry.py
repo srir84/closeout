@@ -13,8 +13,9 @@ def workflows() -> list[type]:
     from closeout.workflows.job import Job
     from closeout.workflows.permit_sync import PermitSync
     from closeout.workflows.ping import Ping
+    from closeout.workflows.retract import Retract
 
-    return [Ping, PermitSync, ImportBatch, Job]
+    return [Ping, PermitSync, ImportBatch, Job, Retract]
 
 
 def activities(client: Client | None = None) -> list[Callable[..., Any]]:
@@ -40,6 +41,7 @@ def activities(client: Client | None = None) -> list[Callable[..., Any]]:
         answers.correction_rejected,
         answers.saved_undo,
         answers.start_round,
+        answers.mark_closed,
     ]
     if client is not None:
         out.append(jobs.Starter(client).start_jobs)

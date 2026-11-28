@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 6058,
+ "prompt_version": "town_reply_v1",
+ "text": "{\n  \"permit_number\": \"19-0101\",\n  \"result\": \"final_on_file\",\n  \"result_date\": \"2020-02-05\"\n}",
+ "tokens_in": 1531,
+ "tokens_out": 43
+}

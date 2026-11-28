@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Run for {{ job.job_ref }}{% endblock %}
+{% block content %}
+<h1>Run for job {{ job.job_ref }} <span class="state {{ job.status }}">{{ job.status | replace('_', ' ') }}</span></h1>
+<p class="muted">Round {{ job.round }}.{% if job.closed_at %} The workflow finished on {{ job.closed_at.strftime('%d %b %Y %H:%M:%S') }}.{% else %} The workflow is still open.{% endif %}</p>
+<h2>Steps</h2>
+<table id="steps"><tr><th>#</th><th>When</th><th>Round</th><th>Step</th><th>Details</th></tr>
+{% for s in steps %}<tr><td>{{ s.seq }}</td><td>{{ s.at.strftime('%d %b %H:%M:%S') }}</td><td>{{ s.round }}</td><td>{{ s.what }}</td><td>{% for k, v in s.codes.items() %}{{ k | replace('_', ' ') }}: {{ v | replace('_', ' ') }} {% endfor %}</td></tr>{% endfor %}
+</table>
+<h2>Reads</h2>
+<table id="reads"><tr><th>Reader</th><th>How</th><th>Model</th><th>Time</th><th>Result</th></tr>
+{% for r in reads %}<tr><td>{{ r.reader }}</td><td>{{ r.provider }}</td><td>{{ r.model }}</td><td>{{ (r.ms / 1000) | round(1) }} s</td><td>{{ r.error or 'read' }}</td></tr>{% else %}<tr><td colspan="5">No reads.</td></tr>{% endfor %}
+</table>
+<h2>Waits and sends</h2>
+<table id="sends"><tr><th>Message</th><th>Round</th><th>State</th><th>Tries</th><th>Queued</th><th>Delivered</th></tr>
+{% for s in sends %}<tr><td>{{ s.step | replace('_', ' ') }}</td><td>{{ s.round }}</td><td>{{ s.state }}{% if s.cancel_reason %} ({{ s.cancel_reason | replace('_', ' ') }}){% endif %}{% if s.last_error_code %} [{{ s.last_error_code }}]{% endif %}</td><td>{{ s.attempts }}</td><td>{{ s.created_at.strftime('%d %b %H:%M:%S') }}</td><td>{{ s.sent_at.strftime('%d %b %H:%M:%S') if s.sent_at else '' }}</td></tr>{% else %}<tr><td colspan="6">Nothing sent.</td></tr>{% endfor %}
+</table>
+<h2>Clicks</h2>
+<table id="commands"><tr><th>When</th><th>What</th><th>State</th><th>Result</th></tr>
+{% for c in commands %}<tr><td>{{ c.saved_at.strftime('%d %b %H:%M:%S') }}</td><td>{{ c.kind | replace('_', ' ') }}</td><td>{{ c.state }}</td><td>{{ (c.code or '') | replace('_', ' ') }}</td></tr>{% else %}<tr><td colspan="4">No clicks yet.</td></tr>{% endfor %}
+</table>
+<p><a href="/runs">All runs</a></p>
+{% endblock %}

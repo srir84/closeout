@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 23391,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"HARBOR & PINE BUILDERS\",\n  \"contractor_license\": \"13VH01234567\",\n  \"contractor_email\": \"office@harborpine.example\",\n  \"customer_name\": \"Yvette Penhallow\",\n  \"job_address\": \"205 Driftwood Ter\",\n  \"work_type\": \"other\",\n  \"completion_date\": \"2026-01-11\",\n  \"total_amount\": 9619.47,\n  \"warranty_years\": null\n}",
+ "tokens_in": 3894,
+ "tokens_out": 126
+}

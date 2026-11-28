@@ -11,12 +11,14 @@ from pydantic import BaseModel
 from temporalio import activity
 
 from closeout import db
-from closeout.activities.jobs import CommandIn, open_review
+from closeout.activities.jobs import CommandIn, JobRef, open_review
 from closeout.activities.safety import scrubbed
 from closeout.core.clean import clean_date, clean_money
 
 
 class AnswerOut(BaseModel):
+    ok: bool = True
+    code: str = "ok"
     price_visible: bool | None
     finish_date: date | None = None
     total: Decimal | None = None
@@ -44,7 +46,7 @@ def apply_answer(inp: CommandIn) -> AnswerOut:
     with db.tx() as c:
         cmd = db.one(c, "SELECT payload FROM commands WHERE command_id = :id", id=inp.command_id)
         p = (cmd or {}).get("payload") or {}
-        today = db.scalar(c, "SELECT (now() AT TIME ZONE 'UTC')::date")
+        today = virtual_today(c)
         pv = p.get("price_visible")
         price_visible = None if pv in (None, "") else str(pv).lower() in ("yes", "true", "1")
         fd = tot = None
@@ -76,7 +78,25 @@ def apply_answer(inp: CommandIn) -> AnswerOut:
                     )
         if price_visible is not None:
             db.run(c, "UPDATE jobs SET price_visible = :v WHERE id = :id", v=price_visible, id=inp.job_id)
+    if p.get("answer") == "correct" and fd is None and tot is None:
+        # A correction must change a date or an amount we can read; otherwise nothing is recorded.
+        return AnswerOut(ok=False, code="bad_correction", price_visible=None)
     return AnswerOut(price_visible=price_visible, finish_date=fd, total=tot)  # type: ignore[arg-type]
+
+
+def virtual_today(c) -> date:  # type: ignore[no-untyped-def]
+    """Dates people type are checked against the demo's date (virtual time, design 3.3)."""
+    from closeout import clockdb
+
+    return clockdb.virtual_now(c).date()
+
+
+@activity.defn
+@scrubbed
+def mark_closed(inp: JobRef) -> None:
+    """The Job workflow has ended: its links now say the request has closed."""
+    with db.tx() as c:
+        db.run(c, "UPDATE jobs SET closed_at = coalesce(closed_at, now()) WHERE id = :id", id=inp.job_id)
 
 
 @activity.defn

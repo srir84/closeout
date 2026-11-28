@@ -27,17 +27,23 @@ def compose(*args: str, check: bool = True, timeout: int = 600) -> subprocess.Co
 
 
 def make(*targets: str, env: dict[str, str] | None = None, timeout: int = 900) -> None:
+    """Run make; one retry for Docker Desktop's occasional build or start hiccup; show the output if it fails."""
     import os
 
-    subprocess.run(
-        ["make", *targets],
-        check=True,
-        cwd=ROOT,
-        timeout=timeout,
-        env={**os.environ, **(env or {})},
-        capture_output=True,
-        text=True,
-    )
+    for attempt in (1, 2):
+        r = subprocess.run(
+            ["make", *targets],
+            cwd=ROOT,
+            timeout=timeout,
+            env={**os.environ, **(env or {})},
+            capture_output=True,
+            text=True,
+        )
+        if r.returncode == 0:
+            return
+        if attempt == 2:
+            raise AssertionError(f"make {' '.join(targets)} failed:\n{(r.stdout + r.stderr)[-3000:]}")
+        time.sleep(5)
 
 
 def wait_app(timeout: float = 120) -> None:

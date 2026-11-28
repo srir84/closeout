@@ -63,7 +63,7 @@ def command_kinds() -> dict[str, tuple[str, ...]]:
         "answer": OPEN_ANSWER_STATES,
         "accept_correction": ("answered",),
         "reject_correction": ("answered",),
-        "undo": ("confirmed",),
+        "undo": ("answered", "confirmed"),  # answered only in the moment a confirmation is being recorded
         "unsubscribed": (*before_recorded, "recorded"),
         "ops_stop": ("on_hold",),
     }
@@ -91,6 +91,7 @@ class Job:
         self.correction_pending = False
         self.confirmed_at: datetime | None = None
         self.undo_deadline: datetime | None = None
+        self.reminder2_at: datetime | None = None
         self.closed_reason: str | None = None
 
     # --- commands and signals --------------------------------------------------------------------
@@ -115,8 +116,17 @@ class Job:
             return "bad_answer"
         if ref.kind == "answer" and ref.codes.get("round") != str(self.round):
             return "old_round"
-        if ref.kind == "undo" and (self.undo_deadline is None or ref.saved_at > self.undo_deadline):
-            return "too_late"
+        if (
+            ref.kind == "answer"
+            and self.first_sent_at is not None
+            and ref.saved_at > self.real_at(WAITS.late_window, self.first_sent_at)
+        ):
+            return "too_late"  # 30 days after the first delivery, in every state (R-OUT-4)
+        if ref.kind == "undo":
+            if self.undo_deadline is None:
+                return "not_confirmed"
+            if ref.saved_at > self.undo_deadline:
+                return "too_late"
         if ref.kind == "approve" and not set(SEND_STEPS) <= set(ref.ids):
             return "missing_approvals"
         return None
@@ -189,11 +199,16 @@ class Job:
         assert self.inp is not None
         if self.document_id is None:
             return
-        for r in ["A"] if self.inp.light else ["A", "B"]:
+        looks = (
+            [("A", "invoice")]
+            if self.inp.light
+            else [("A", "invoice"), ("B", "invoice"), ("B", "amount_marks")]
+        )
+        for r, purpose in looks:
             try:
                 await workflow.execute_activity(
                     reading.read_document,
-                    reading.ReadIn(document_id=self.document_id, reader=r),
+                    reading.ReadIn(document_id=self.document_id, reader=r, purpose=purpose),
                     task_queue=f"model-reads-{r}",
                     start_to_close_timeout=timedelta(seconds=120),
                     retry_policy=MODEL_RETRY,
@@ -217,6 +232,8 @@ class Job:
                 review_item_id=str(check.review_item_ids[0]) if check.review_item_ids else None,
             )
         else:
+            if self.approvals:  # contacted in this round before: back to ready means a new round
+                await self._new_round("back_to_ready")
             await self._record("job.ready", f"{key}:ready")
         await self._match_permit()
 
@@ -321,13 +338,14 @@ class Job:
                 state=d.state,
             )
             await self._hold(d.state, step, d.outbox_id)
+        elif d.state == "cancelled" and not self.unsubscribed and self.status == "asking_homeowner":
+            await self._hold("cancelled", step, d.outbox_id)  # e.g. the grant was revoked before the claim
 
     async def _outreach(self) -> None:
         """Send the first email, then the reminders, while nobody has answered (R-OUT-4)."""
         code = await self._send("first")
         if code != "queued":
-            if code != "suppressed":
-                await self._hold(code, "first")
+            await self._hold(code, "first")  # including suppressed: the homeowner can't be asked at all
             return
         d = await self._delivery("first")
         if d is None:
@@ -350,9 +368,13 @@ class Job:
             rd = await self._delivery(step)
             if rd is not None:
                 await self._note_delivery(step, rd)
+            if step == "reminder_2":
+                self.reminder2_at = rd.sent_at if rd is not None and rd.sent_at else workflow.now()
             if self.status != "asking_homeowner":
                 return
-        last = self.real_at(WAITS.reminder_2 + WAITS.last_wait, self.first_sent_at)
+        # The last wait is 7 days after reminder 2 actually went (or was due, if it was skipped).
+        anchor = self.reminder2_at or self.real_at(WAITS.reminder_2, self.first_sent_at)
+        last = self.real_at(WAITS.last_wait, anchor)
         if await self._idle_until(last):
             await self._record("job.no_answer", self._tkey("last", "no_answer"))
 
@@ -368,8 +390,7 @@ class Job:
 
     async def _undo_window(self) -> None:
         """confirmed -> recorded when the undo window ends (R-REC-3). Real-time floor: 60 s."""
-        assert self.clock is not None and self.inp is not None and self.confirmed_at is not None
-        self.undo_deadline = self.confirmed_at + self.clock.real_wait(WAITS.undo_window, WAITS.undo_floor)
+        assert self.clock is not None and self.inp is not None and self.undo_deadline is not None
         while self.status == "confirmed":
             await wait_until(lambda: self.q.has_work(), self.undo_deadline)
             if self.q.has_work():
@@ -400,6 +421,7 @@ class Job:
         )
         self.approvals, self.outbox, self.delivered = {}, {}, {}
         self.first_sent_at = None
+        self.reminder2_at = None
         self.correction_pending = False
         self.confirmed_at = None
         self.undo_deadline = None
@@ -407,8 +429,11 @@ class Job:
     async def _confirmed(self, key: str, command_id: UUID, via: str) -> None:
         assert self.inp is not None
         await self._db(outbox.stop_sending, outbox.StopIn(job_id=self.inp.job_id, reason="answered"))
-        await self._record("job.homeowner_confirmed", key, command_id=str(command_id), via=via)
+        # The undo window starts now, before `confirmed` is visible, so a quick undo is never early.
+        assert self.clock is not None
         self.confirmed_at = workflow.now()
+        self.undo_deadline = self.confirmed_at + self.clock.real_wait(WAITS.undo_window, WAITS.undo_floor)
+        await self._record("job.homeowner_confirmed", key, command_id=str(command_id), via=via)
 
     # --- command handling ------------------------------------------------------------------------
     async def handle(self, ref: CommandRef) -> None:
@@ -515,6 +540,9 @@ class Job:
         a: answers.AnswerOut = await self._db(
             answers.apply_answer, acts.CommandIn(job_id=self.inp.job_id, command_id=ref.command_id)
         )
+        if not a.ok:
+            await self._finish(ref, False, a.code)
+            return
         await self._record(
             "job.answered",
             f"{ckey}:job.answered",
@@ -594,5 +622,6 @@ class Job:
                 await self.handle(self.q.pop())
         while self.q.has_work():  # commands queued behind the one that closed the job get an answer
             await self._finish(self.q.pop(), False, "job_closed")
+        await self._db(answers.mark_closed, acts.JobRef(job_id=inp.job_id))
         await workflow.wait_condition(workflow.all_handlers_finished)
         return JobOut(job_id=inp.job_id, status=self.status or "imported", round=self.round)

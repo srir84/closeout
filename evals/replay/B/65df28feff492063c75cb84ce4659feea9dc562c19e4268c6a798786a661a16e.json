@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 36334,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"Harbor & Pine Builders\",\n  \"contractor_license\": \"NJ HIC # 13VH01234567\",\n  \"contractor_email\": \"office@harbormine.example\",\n  \"customer_name\": \"Petra Tallowmere\",\n  \"job_address\": \"73 Sandbar Ct\",\n  \"work_type\": \"addition\",\n  \"completion_date\": \"2026-02-16\",\n  \"total_amount\": 26609.96,\n  \"warranty_years\": 5\n}",
+ "tokens_in": 3894,
+ "tokens_out": 130
+}

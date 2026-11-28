@@ -57,4 +57,4 @@ def cases(name: str) -> list[Case]:
 
 
 def purpose(name: str) -> str:
-    return "town_reply" if name == "town_replies" else "invoice"
+    return "town_reply" if name.startswith("town_replies") else "invoice"
