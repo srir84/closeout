@@ -13,7 +13,9 @@ log = logging.getLogger("closeout.sender")
 
 
 async def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
+    from closeout import logsetup
+
+    logsetup.setup()
     s = get_settings()
     for _ in range(30):
         problems = startup_problems(s)

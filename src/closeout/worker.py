@@ -29,7 +29,9 @@ async def sweep_forever(client: Client, every: float) -> None:
 
 
 async def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
+    from closeout import logsetup
+
+    logsetup.setup()
     s = get_settings()
     client = await connect()
     from closeout import startup

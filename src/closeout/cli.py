@@ -29,7 +29,9 @@ def reset_data(scale: float) -> None:
 
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    from closeout import logsetup
+
+    logsetup.setup("%(message)s")
     p = argparse.ArgumentParser(prog="closeout")
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("migrate")

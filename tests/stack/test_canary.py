@@ -83,5 +83,8 @@ def test_canary_is_gone_everywhere() -> None:
     if flows.emails(email):
         hits.append("mailpit")
     logs = stack.compose("logs", "--no-color").stdout
-    hits += [f"container logs: {w}" for w in (name, email, tag) if w in logs]
+    from urllib.parse import quote, quote_plus
+
+    forms = (name, email, tag, quote(email), quote_plus(name))  # also as they'd appear inside a URL
+    hits += [f"container logs: {w}" for w in forms if w in logs]
     assert hits == [], json.dumps(hits, indent=1)

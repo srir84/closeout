@@ -9,7 +9,7 @@ This is a demo that runs on your own computer. **Every person, home and company 
 not tied to any real business. Emails go only to a local test mailbox. Real public data (Manasquan, NJ
 permits and parcels) appears only on the data pages, with no people in it.
 
-**Watch the demo:** [the 3-minute walkthrough](https://srir84.github.io/closeout/demo.html)
+**Watch the demo:** [the 2-minute walkthrough](https://srir84.github.io/closeout/demo.html)
 ([video file](docs/demo/closeout-demo.mp4)) · [the clickable mock](https://srir84.github.io/closeout/)
 
 ## Quickstart
