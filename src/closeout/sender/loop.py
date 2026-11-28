@@ -162,7 +162,14 @@ class Sender:
                 return None
             answer, unsub = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
             target = f"job-{got['job_id']}" if got["job_id"] else f"town-{got['town_request_id']}"
-            purpose = "answer" if got["job_id"] else "town_reply"
+            origin = (
+                db.scalar(c, "SELECT origin FROM jobs WHERE id = :j", j=got["job_id"])
+                if got["job_id"]
+                else None
+            )
+            purpose = {"contractor": "answer", "homeowner": "contractor_confirm"}.get(
+                origin or "", "town_reply"
+            )
             db.run(
                 c,
                 """INSERT INTO links (token_hash, purpose, target, round, outbox_id, recipient_id, expires_at)
@@ -185,7 +192,7 @@ class Sender:
                 rec=got["recipient_id"],
             )
         base = self.s.app_public_url.rstrip("/")
-        path = "a" if purpose == "answer" else "t"
+        path = {"answer": "a", "contractor_confirm": "k", "town_reply": "t"}[purpose]
         return Claimed(
             id=oid,
             attempt_id=attempt,

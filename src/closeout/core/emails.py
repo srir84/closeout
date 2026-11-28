@@ -133,3 +133,39 @@ def town_message(step: str, f: TownMessageFacts) -> Draft:
         ]
     )
     return Draft(step=step, subject=subject, body_template=body)
+
+
+CONTRACTOR_STEPS = ("first", "reminder_1")
+
+
+def contractor_message(step: str, f: JobMessageFacts) -> Draft:
+    """S9: the homeowner asks the contractor to confirm a job the homeowner uploaded (design 3.20)."""
+    if step not in CONTRACTOR_STEPS:
+        raise ValueError(f"unknown step {step}")
+    what = f"{work_words(f.work_type)} work at {f.address}"
+    subject = {
+        "first": f"A homeowner asks you to confirm {what}",
+        "reminder_1": f"Reminder: a homeowner asks you to confirm {what}",
+    }[step]
+    body = "\n".join(
+        [
+            f"Hello {f.contractor_name},",
+            "",
+            "A homeowner uploaded an invoice from you and asked us to check it with you."
+            if step == "first"
+            else "A few days ago a homeowner asked you to confirm a job. We haven't heard back.",
+            "",
+            f"  Work: {work_words(f.work_type).capitalize()}",
+            f"  Address: {f.address}",
+            f"  Finished: {when(f.finish_date)}",
+            f"  Total on the invoice: {money(f.total)}",
+            "",
+            "Did you do this job? You can confirm it, correct a detail, or tell us it isn't your job.",
+            "Opening the link changes nothing until you press a button:",
+            ANSWER_SLOT,
+            "",
+            "This message was sent by Closeout (a demo with made-up people) on the homeowner's behalf.",
+            "Don't want these emails? Unsubscribe with one click: " + UNSUB_SLOT,
+        ]
+    )
+    return Draft(step=step, subject=subject, body_template=body)

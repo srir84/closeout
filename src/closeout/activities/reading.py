@@ -220,7 +220,7 @@ def registry_contacts(conn: Any, job_id: UUID) -> None:
         conn,
         """SELECT k.name, k.license, p.email FROM jobs j JOIN contractors k ON k.id = j.contractor_id
                           JOIN recipients r ON r.id = k.recipient_id JOIN people p ON p.id = r.person_id
-                          WHERE j.id = :j AND j.origin = 'contractor'""",
+                          WHERE j.id = :j""",
         j=job_id,
     )
     if row is None:

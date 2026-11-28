@@ -10,6 +10,7 @@ def register(app: FastAPI) -> None:
         contractor,
         data_pages,
         homeowner,
+        homeowner_jobs,
         ops_pages,
         outreach_pages,
         runs_pages,
@@ -23,3 +24,4 @@ def register(app: FastAPI) -> None:
     homeowner.register(app)
     town_pages.register(app)
     ops_pages.register(app)
+    homeowner_jobs.register(app)

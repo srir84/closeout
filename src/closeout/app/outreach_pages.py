@@ -23,7 +23,7 @@ from closeout.core.emails import ANSWER_SLOT, UNSUB_SLOT
 from closeout.messages import job_messages
 from closeout.privacy_hmac import email_hmac
 
-ANSWER_OPEN = ("asking_homeowner", "answered", "no_answer", "on_hold")
+ANSWER_OPEN = ("asking_homeowner", "asking_contractor", "answered", "no_answer", "on_hold")
 
 
 def token_hash(token: str) -> str:
@@ -106,6 +106,8 @@ def register(app: FastAPI) -> None:
         from closeout.app.contractor import own_job
 
         job = own_job(acct, job_id)
+        if job["origin"] == "homeowner":  # the homeowner approves the messages for a job they started
+            return RedirectResponse(f"/c/jobs/{job_id}?msg=The homeowner sends this one.", status_code=303)
         if job["status"] != "ready":
             return RedirectResponse(f"/c/jobs/{job_id}?msg=This job isn't ready to send.", status_code=303)
         existing = commands.read_result(command_id)
@@ -215,7 +217,15 @@ def register(app: FastAPI) -> None:
     # --- the homeowner answers one job ------------------------------------------------------------
     @app.get("/a/{token}", response_class=HTMLResponse)
     def answer_page(request: Request, token: str) -> Any:
-        link = find_link(token, "answer")
+        return show_answer(request, token, "answer")
+
+    @app.get("/k/{token}", response_class=HTMLResponse)
+    def contractor_page(request: Request, token: str) -> Any:
+        """S9: the contractor confirms a job a homeowner uploaded."""
+        return show_answer(request, token, "contractor_confirm")
+
+    def show_answer(request: Request, token: str, purpose: str) -> Any:
+        link = find_link(token, purpose)
         if link is None:
             return render(request, "link_closed.html", status_code=404, why="unknown", account=None)
         job = link_job(link)
@@ -232,7 +242,7 @@ def register(app: FastAPI) -> None:
             }
         return render(
             request,
-            "a_answer.html",
+            "a_answer.html" if purpose == "answer" else "k_confirm.html",
             job=job,
             facts=facts,
             token=token,
@@ -241,6 +251,18 @@ def register(app: FastAPI) -> None:
             link_csrf=csrf_token("link:" + link["token_hash"]),
             command_id=uuid.uuid4(),
         )
+
+    @app.post("/k/{token}")
+    async def contractor_answer(
+        request: Request,
+        token: str,
+        answer: str = Form(...),
+        csrf: str = Form(""),
+        command_id: uuid.UUID = Form(...),
+    ) -> Any:
+        if answer not in ("confirm", "not_mine"):
+            raise HTTPException(status_code=400, detail="Unknown answer")
+        return await take_answer(request, token, "contractor_confirm", answer, csrf, command_id, "", "", "")
 
     @app.post("/a/{token}")
     async def answer(
@@ -253,7 +275,22 @@ def register(app: FastAPI) -> None:
         total: str = Form(""),
         price_visible: str = Form(""),
     ) -> Any:
-        link = find_link(token, "answer")
+        return await take_answer(
+            request, token, "answer", answer, csrf, command_id, finish_date, total, price_visible
+        )
+
+    async def take_answer(
+        request: Request,
+        token: str,
+        purpose: str,
+        answer: str,
+        csrf: str,
+        command_id: uuid.UUID,
+        finish_date: str,
+        total: str,
+        price_visible: str,
+    ) -> Any:
+        link = find_link(token, purpose)
         if link is None:
             return render(request, "link_closed.html", status_code=404, why="unknown", account=None)
         if not csrf_ok("link:" + link["token_hash"], csrf):
@@ -289,7 +326,13 @@ def register(app: FastAPI) -> None:
             )
             return render(request, "link_closed.html", why=why, code=out.code, account=None)
         return render(
-            request, "a_thanks.html", answer=answer, saved=out.status != "done", account=None, sample=True
+            request,
+            "a_thanks.html",
+            answer=answer,
+            saved=out.status != "done",
+            account=None,
+            sample=True,
+            contractor=purpose == "contractor_confirm",
         )
 
     # --- one-click unsubscribe --------------------------------------------------------------------

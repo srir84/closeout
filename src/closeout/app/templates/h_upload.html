@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Add work you had done{% endblock %}
+{% block content %}
+<h1>Add work you had done</h1>
+{% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
+<p>Upload the invoice and pick the contractor. We read it twice, then (once you approve the exact message) ask the contractor to confirm. We only email contractors on our list, at the address we have for them, never an address taken from the invoice.</p>
+<form method="post" action="/h/upload" enctype="multipart/form-data" class="card">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <p><label>Contractor <select name="contractor_id" id="contractor">{% for k in contractors %}<option value="{{ k.id }}">{{ k.name }} (licence {{ k.license }})</option>{% endfor %}</select></label></p>
+  <p><label>Kind of work <select name="work_type" id="work-type">{% for w in work_types %}<option value="{{ w }}">{{ w | replace('_', ' ') }}</option>{% endfor %}</select></label></p>
+  <p><label>Finished on <input name="finish_date" id="finish-date" placeholder="2025-03-28"></label></p>
+  <p><label>Total <input name="total" id="total" placeholder="48250.00"></label></p>
+  <p><label>Invoice (PDF, PNG or JPEG) <input type="file" name="invoice" id="invoice"></label></p>
+  <button id="upload">Upload</button>
+</form>
+<h2>What you've added</h2>
+<ul id="mine">{% for j in mine %}<li><a href="/h/jobs/{{ j.id }}">{{ j.work_type | replace('_', ' ') }} by {{ j.name }}</a>: {{ j.status | replace('_', ' ') }}</li>{% else %}<li>Nothing yet.</li>{% endfor %}</ul>
+<p><a href="/h/home">Back to my home</a></p>
+{% endblock %}

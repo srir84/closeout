@@ -27,6 +27,7 @@ with workflow.unsafe.imports_passed_through():
 
 MODEL_RETRY = RetryPolicy(maximum_attempts=2, non_retryable_error_types=["BadInput", "ReplayMiss"])
 SEND_STEPS = ("first", "reminder_1", "reminder_2")
+ASKING = ("asking_homeowner", "asking_contractor")
 OPEN_ANSWER_STATES = ("asking_homeowner", "asking_contractor", "answered", "no_answer", "on_hold")
 
 
@@ -49,6 +50,7 @@ def command_kinds() -> dict[str, tuple[str, ...]]:
         "needs_a_look",
         "ready",
         "asking_homeowner",
+        "asking_contractor",
         "answered",
         "confirmed",
         "no_answer",
@@ -127,9 +129,13 @@ class Job:
                 return "not_confirmed"
             if ref.saved_at > self.undo_deadline:
                 return "too_late"
-        if ref.kind == "approve" and not set(SEND_STEPS) <= set(ref.ids):
+        if ref.kind == "approve" and not set(self.steps()) <= set(ref.ids):
             return "missing_approvals"
         return None
+
+    def steps(self) -> tuple[str, ...]:
+        """A contractor's job: first email + 2 reminders. A homeowner-started job (S9): first email + 1 reminder."""
+        return SEND_STEPS if self.origin == "contractor" else ("first", "reminder_1")
 
     @workflow.update
     async def command(self, ref: CommandRef) -> CommandResult:
@@ -299,7 +305,7 @@ class Job:
             if d is not None or not self.is_open():
                 return d
             await self.handle(self.q.pop())
-            if self.status != "asking_homeowner":
+            if self.status not in ASKING:
                 return None
 
     async def _hold(self, reason: str, step: str, outbox_id: UUID | None = None) -> None:
@@ -338,7 +344,7 @@ class Job:
                 state=d.state,
             )
             await self._hold(d.state, step, d.outbox_id)
-        elif d.state == "cancelled" and not self.unsubscribed and self.status == "asking_homeowner":
+        elif d.state == "cancelled" and not self.unsubscribed and self.status in ASKING:
             await self._hold("cancelled", step, d.outbox_id)  # e.g. the grant was revoked before the claim
 
     async def _outreach(self) -> None:
@@ -351,9 +357,12 @@ class Job:
         if d is None:
             return
         await self._note_delivery("first", d)
-        if self.status != "asking_homeowner" or self.first_sent_at is None:
+        if self.status not in ASKING or self.first_sent_at is None:
             return
-        for step, at in (("reminder_1", WAITS.reminder_1), ("reminder_2", WAITS.reminder_2)):
+        reminders = (("reminder_1", WAITS.reminder_1), ("reminder_2", WAITS.reminder_2))[
+            : len(self.steps()) - 1
+        ]
+        for step, at in reminders:
             if not await self._idle_until(self.real_at(at, self.first_sent_at)):
                 return
             if self.unsubscribed:
@@ -370,7 +379,7 @@ class Job:
                 await self._note_delivery(step, rd)
             if step == "reminder_2":
                 self.reminder2_at = rd.sent_at if rd is not None and rd.sent_at else workflow.now()
-            if self.status != "asking_homeowner":
+            if self.status not in ASKING:
                 return
         # The last wait is 7 days after reminder 2 actually went (or was due, if it was skipped).
         anchor = self.reminder2_at or self.real_at(WAITS.reminder_2, self.first_sent_at)
@@ -380,12 +389,12 @@ class Job:
 
     async def _idle_until(self, deadline: datetime) -> bool:
         """Handle commands until the deadline. True if the job is still waiting for an answer at the end."""
-        while self.is_open() and self.status == "asking_homeowner":
+        while self.is_open() and self.status in ASKING:
             await wait_until(lambda: self.q.has_work() or not self.is_open(), deadline)
             if self.q.has_work():
                 await self.handle(self.q.pop())
                 continue
-            return self.status == "asking_homeowner"
+            return self.status in ASKING
         return False
 
     async def _undo_window(self) -> None:
@@ -479,25 +488,28 @@ class Job:
             chk: outbox.ApprovalCheckOut = await self._db(
                 outbox.check_approvals,
                 outbox.ApprovalCheckIn(
-                    job_id=self.inp.job_id, approval_ids={s: ref.ids[s] for s in SEND_STEPS}, round=self.round
+                    job_id=self.inp.job_id,
+                    approval_ids={s: ref.ids[s] for s in self.steps()},
+                    round=self.round,
                 ),
             )
             if not chk.ok:
                 await self._finish(ref, False, chk.code)
                 return
-            self.approvals = {s: ref.ids[s] for s in SEND_STEPS}
+            self.approvals = {s: ref.ids[s] for s in self.steps()}
             await self._record(
                 "job.approved",
                 f"{ckey}:job.approved",
-                approval_ids=[str(ref.ids[s]) for s in SEND_STEPS],
+                approval_ids=[str(ref.ids[s]) for s in self.steps()],
                 command_id=str(ref.command_id),
             )
-            await self._record(
-                "job.contractor_confirmed",
-                f"{ckey}:job.contractor_confirmed",
-                approval_id=str(ref.ids["first"]),
-                command_id=str(ref.command_id),
-            )
+            if self.origin == "contractor":  # the contractor's approval states the job happened
+                await self._record(
+                    "job.contractor_confirmed",
+                    f"{ckey}:job.contractor_confirmed",
+                    approval_id=str(ref.ids["first"]),
+                    command_id=str(ref.command_id),
+                )
             await self._finish(ref, True, "approved")
             await self._outreach()
         elif k == "answer":
@@ -557,7 +569,16 @@ class Job:
                 command_id=str(ref.command_id),
                 price_visible=a.price_visible,
             )
-        if kind == "confirm":
+        if kind == "confirm" and self.origin == "homeowner":
+            # S9: the contractor confirms through their link; the homeowner stated it when uploading.
+            await self._record(
+                "job.contractor_confirmed",
+                f"{ckey}:job.contractor_confirmed",
+                command_id=str(ref.command_id),
+                via="link",
+            )
+            await self._confirmed(f"{ckey}:job.homeowner_confirmed", ref.command_id, "upload")
+        elif kind == "confirm":
             self.correction_pending = False
             await self._confirmed(f"{ckey}:job.homeowner_confirmed", ref.command_id, "answer")
         elif kind == "correct":
@@ -576,7 +597,9 @@ class Job:
                 outbox.StopIn(
                     job_id=self.inp.job_id,
                     reason=kind,
-                    review_kind="not_my_house" if kind == "not_mine" else None,
+                    review_kind=("not_my_job" if self.origin == "homeowner" else "not_my_house")
+                    if kind == "not_mine"
+                    else None,
                 ),
             )
             await self._record(

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Please confirm this job{% endblock %}
+{% block content %}
+<div class="phone">
+<h1>Did you do this job?</h1>
+<p>A homeowner uploaded an invoice from {{ job.contractor_name }} and asked us to check it with you. Nothing changes until you press a button.</p>
+<dl class="kv">
+  <dt>Work</dt><dd id="k-work">{{ job.work_type | replace('_', ' ') }}</dd>
+  <dt>Address</dt><dd id="k-address">{{ job.parcel_address or facts.get('job_address') or job.address_raw }}</dd>
+  <dt>Finished</dt><dd id="k-date">{{ facts.get('completion_date', 'not stated') }}</dd>
+  <dt>Total</dt><dd id="k-total">{{ '${:,.2f}'.format(facts['total_amount']|float) if facts.get('total_amount') else 'not stated' }}</dd>
+</dl>
+<form method="post" action="/k/{{ token }}" class="big">
+  <input type="hidden" name="csrf" value="{{ link_csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}">
+  <button name="answer" value="confirm" id="confirm">Yes, we did this job</button>
+  <button name="answer" value="not_mine" class="danger" id="not-mine">This isn't our job</button>
+</form>
+</div>
+{% endblock %}

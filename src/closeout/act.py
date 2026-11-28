@@ -109,15 +109,18 @@ def load_target(conn: Connection, target: str, step: str) -> dict[str, Any] | No
         job = db.one(conn, "SELECT * FROM jobs WHERE id = :id FOR SHARE", id=UUID(target[4:]))
         if job is None:
             return None
+        m = expected_job_message(conn, job["id"], step)
         return {
             "kind": "job",
             "job_id": job["id"],
             "town_request_id": None,
             "round": job["round"],
             "content_rev": job["content_rev"],
-            "recipient_id": job["homeowner_recipient_id"],
+            "recipient_id": m.recipient_id if m else None,
             "contractor_id": job["contractor_id"],
-            "msg": expected_job_message(conn, job["id"], step),
+            "origin": job["origin"],
+            "pin": job["pin"],
+            "msg": m,
         }
     if target.startswith("town-"):
         tr = db.one(conn, "SELECT * FROM town_requests WHERE id = :id FOR SHARE", id=UUID(target[5:]))
@@ -144,6 +147,8 @@ def load_target(conn: Connection, target: str, step: str) -> dict[str, Any] | No
 
 
 def owns(conn: Connection, account_id: UUID, t: dict[str, Any]) -> bool:
+    if t["kind"] == "job" and t["origin"] == "homeowner":  # S9: the home's owner asks the contractor
+        return db.scalar(conn, "SELECT owner_account_id FROM homes WHERE pin = :p", p=t["pin"]) == account_id
     if t["kind"] == "job":
         return (
             db.scalar(conn, "SELECT contractor_id FROM accounts WHERE id = :a", a=account_id)

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ job.work_type | replace('_', ' ') | capitalize }} by {{ job.contractor_name }}{% endblock %}
+{% block content %}
+<h1>{{ job.work_type | replace('_', ' ') | capitalize }} by {{ job.contractor_name }}</h1>
+{% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
+<p>Status: <strong id="status">{{ job.status | replace('_', ' ') }}</strong></p>
+<dl class="kv">{% for f in ('job_address', 'completion_date', 'total_amount') %}<dt>{{ {'job_address': 'Address', 'completion_date': 'Finished', 'total_amount': 'Total'}[f] }}</dt><dd>{{ facts.get(f) or 'not read yet' }}</dd>{% endfor %}</dl>
+{% if job.status == 'needs_a_look' %}<p class="warn">Someone needs to look at this invoice before we can ask the contractor. Ops has been told.</p>{% endif %}
+{% for m in msgs %}
+<section class="card message" id="msg-{{ m.step }}">
+  <h3>{{ {'first': 'The request', 'reminder_1': 'One reminder, 3 days after delivery if there is no answer'}[m.step] }}</h3>
+  <dl class="kv"><dt>To</dt><dd class="to">{{ m.to_address }}</dd><dt>Subject</dt><dd class="subject">{{ m.subject }}</dd></dl>
+  <pre class="email">{{ shown(m.body_template) }}</pre>
+</section>
+{% endfor %}
+{% if msgs %}
+<form method="post" action="/h/jobs/{{ job.id }}/approve">
+  <input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="command_id" value="{{ command_id }}"><input type="hidden" name="preview" value="{{ preview }}">
+  <p class="muted">By approving, you confirm you had this work done: that is the "homeowner confirmed" mark, added once the contractor confirms.</p>
+  <button id="approve">Approve and send</button>
+</form>
+{% endif %}
+<p><a href="/h/upload">Back</a></p>
+{% endblock %}

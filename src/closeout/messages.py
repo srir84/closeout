@@ -12,11 +12,13 @@ from sqlalchemy import Connection
 
 from closeout import db
 from closeout.core.emails import (
+    CONTRACTOR_STEPS,
     JOB_STEPS,
     TOWN_STEPS,
     Draft,
     JobMessageFacts,
     TownMessageFacts,
+    contractor_message,
     job_message,
     town_message,
 )
@@ -45,17 +47,29 @@ def job_facts(conn: Connection, job_id: UUID) -> dict[str, Any]:
     }
 
 
-def job_messages(conn: Connection, job_id: UUID, steps: tuple[str, ...] = JOB_STEPS) -> list[Message]:
+def job_messages(conn: Connection, job_id: UUID, steps: tuple[str, ...] | None = None) -> list[Message]:
+    """A contractor's job asks its homeowner (3 messages). A homeowner-started job asks the contractor (2, S9).
+
+    The address comes only from the recipient list: the homeowner the contractor typed in, or our contractor list.
+    """
     job = db.one(
         conn,
-        """SELECT j.*, k.name AS contractor_name, pa.address AS parcel_address, p.email AS to_address
+        """SELECT j.*, k.name AS contractor_name, pa.address AS parcel_address,
+                                 CASE WHEN j.origin = 'homeowner' THEN k.recipient_id ELSE j.homeowner_recipient_id END
+                                     AS to_recipient
                           FROM jobs j JOIN contractors k ON k.id = j.contractor_id
-                          LEFT JOIN parcels pa ON pa.pin = j.pin
-                          JOIN recipients r ON r.id = j.homeowner_recipient_id JOIN people p ON p.id = r.person_id
-                          WHERE j.id = :id""",
+                          LEFT JOIN parcels pa ON pa.pin = j.pin WHERE j.id = :id""",
         id=job_id,
     )
-    if job is None or not job["to_address"]:
+    if job is None or job["to_recipient"] is None:
+        return []
+    to_address = db.scalar(
+        conn,
+        """SELECT p.email FROM recipients r JOIN people p ON p.id = r.person_id
+                                    WHERE r.id = :r""",
+        r=job["to_recipient"],
+    )
+    if not to_address:
         return []
     f = job_facts(conn, job_id)
     facts = JobMessageFacts(
@@ -67,17 +81,21 @@ def job_messages(conn: Connection, job_id: UUID, steps: tuple[str, ...] = JOB_ST
         else job["csv_finish_date"],
         total=Decimal(f["total_amount"]) if f.get("total_amount") else job["csv_total"],
     )
+    homeowner_started = job["origin"] == "homeowner"
+    default = CONTRACTOR_STEPS if homeowner_started else JOB_STEPS
     out = []
-    for step in steps:
-        d: Draft = job_message(step, facts)
+    for step in steps or default:
+        if step not in default:
+            continue
+        d: Draft = contractor_message(step, facts) if homeowner_started else job_message(step, facts)
         out.append(
             Message(
                 target=f"job-{job_id}",
                 round=job["round"],
                 step=step,
                 content_rev=job["content_rev"],
-                recipient_id=job["homeowner_recipient_id"],
-                to_address=job["to_address"],
+                recipient_id=job["to_recipient"],
+                to_address=to_address,
                 subject=d.subject,
                 body_template=d.body_template,
             )

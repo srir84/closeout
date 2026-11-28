@@ -21,6 +21,8 @@ REASONS = {
     "light_review": "Light mode: every fact needs a person's check.",
     "read_failed": "The invoice couldn't be read.",
     "not_mine": "The homeowner said it isn't their home.",
+    "not_my_house": "The homeowner said it isn't their home.",
+    "not_my_job": "The contractor said a homeowner's upload isn't their job.",
     "correction_rejected": "The contractor rejected the homeowner's correction.",
     "home_already_claimed": "Someone claimed a home that already has an owner.",
     "workflow_missing": "A job has no running workflow.",

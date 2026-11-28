@@ -35,7 +35,7 @@ def owned_homes(account_id: uuid.UUID) -> list[dict[str, Any]]:
     with db.tx() as c:
         return db.all_rows(
             c,
-            """SELECT h.pin, p.address, p.year_built FROM homes h JOIN parcels p ON p.pin = h.pin
+            """SELECT h.pin, p.address, p.year_built, p.town FROM homes h JOIN parcels p ON p.pin = h.pin
                                  WHERE h.owner_account_id = :a ORDER BY p.address""",
             a=account_id,
         )

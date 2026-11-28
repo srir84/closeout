@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{{ home.address }}</h1>
 {% if msg %}<p class="notice" id="msg">{{ msg }}</p>{% endif %}
-<p><a class="button" href="/h/report" id="report-link">See the sale report</a> <a class="button secondary" href="/h/share" id="share-link">Share the report</a></p>
+<p><a class="button" href="/h/report" id="report-link">See the sale report</a> <a class="button secondary" href="/h/share" id="share-link">Share the report</a> <a class="button secondary" href="/h/upload" id="upload-link">Add work you had done</a></p>
 <h2>Verified work</h2>
 {% for j in jobs %}
 <div class="card job"><h3>{{ j.work_type | capitalize }} · {{ j.contractor_name }}</h3>

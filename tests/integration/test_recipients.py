@@ -44,9 +44,12 @@ def test_planted_addresses_never_become_recipients(seeded) -> None:
 
 
 def test_the_only_source_of_addresses_is_the_recipients_table() -> None:
-    """Code check: the message builder reads the address through recipients -> people, and nowhere else."""
+    """Code check: every address the message builders use is read through recipients -> people."""
     src = (Path(__file__).parents[2] / "src" / "closeout" / "messages.py").read_text()
-    assert "JOIN recipients r ON r.id = j.homeowner_recipient_id JOIN people p ON p.id = r.person_id" in src
-    assert "facts" not in src.split("def job_messages")[1].split("to_address=")[1].split(",")[0]
-    tree = ast.parse(src)
-    assert tree is not None
+    assert src.count("FROM recipients r JOIN people p ON p.id = r.person_id") == 1  # job messages
+    assert (
+        "JOIN recipients r ON r.id = tw.clerk_recipient_id" in src
+    )  # town messages: the clerk from town settings
+    for chunk in src.split("to_address")[1:]:
+        assert "facts" not in chunk.split("\n")[0]
+    assert ast.parse(src) is not None

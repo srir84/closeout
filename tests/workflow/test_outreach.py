@@ -19,7 +19,7 @@ from temporalio.worker import Worker
 from closeout.act import PerformIn, PerformOut
 from closeout.activities import answers, outbox, permit_match, reading
 from closeout.activities import jobs as acts
-from closeout.core.jobs import Refused, next_state
+from closeout.core.jobs import Refused, homeowner_started_next, next_state
 from closeout.workflows.job import Job, JobIn
 from closeout.workflows.payloads import ClockIn, CommandRef, CommandResult, Delivered
 
@@ -34,7 +34,9 @@ class World:
         late_undo: bool = False,
         delivery_delay: timedelta = timedelta(0),
         first_state: str = "sent",
+        origin: str = "contractor",
     ) -> None:
+        self.origin = origin
         self.delivery_delay = delivery_delay
         self.first_state = first_state
         self.status: str | None = None
@@ -52,7 +54,7 @@ class World:
 
         @activity.defn(name="record")
         async def record(inp: acts.RecordIn) -> acts.RecordOut:
-            to = next_state(w.status, inp.kind)
+            to = (homeowner_started_next if w.origin == "homeowner" else next_state)(w.status, inp.kind)
             assert not isinstance(to, Refused), (w.status, inp.kind)
             w.status = to
             w.events.append(inp.kind)
@@ -60,7 +62,7 @@ class World:
 
         @activity.defn(name="prepare_job")
         async def prepare_job(inp: acts.JobRef) -> acts.PrepOut:
-            return acts.PrepOut(document_id=uuid.uuid4(), origin="contractor")
+            return acts.PrepOut(document_id=uuid.uuid4(), origin=w.origin)
 
         @activity.defn(name="read_document")
         async def read_document(inp: reading.ReadIn) -> reading.ReadOut:
@@ -478,3 +480,49 @@ async def test_an_empty_correction_is_refused_and_changes_nothing(ts_env) -> Non
         assert (r.ok, r.code, r.state) == (False, "bad_correction", "asking_homeowner")
         await h.terminate("done")
     assert "job.answered" not in w.events
+
+
+# --- S9: a homeowner-started job asks the contractor (design 3.20, R-HOME-3) ----------------------------
+
+
+@pytest.mark.slice("S9")
+@pytest.mark.req("R-HOME-3")
+async def test_a_homeowner_job_asks_the_contractor_once_plus_one_reminder(ts_env) -> None:
+    w = World(origin="homeowner")
+    async with job(ts_env, w) as h:
+        await until_state(h, w, "ready", ts_env)
+        assert (await send(h, "approve")).ok
+        await until_state(h, w, "asking_contractor", ts_env)
+        out = await h.result()
+    assert steps(w) == ["first", "reminder_1"] and out.status == "no_answer"
+    assert (
+        "job.contractor_confirmed" not in w.events
+    )  # the homeowner's approval says nothing for the contractor
+
+
+@pytest.mark.slice("S9")
+@pytest.mark.req("R-HOME-3")
+async def test_the_contractor_confirms_by_link_and_the_job_is_recorded(ts_env) -> None:
+    w = World(origin="homeowner")
+    async with job(ts_env, w) as h:
+        await until_state(h, w, "ready", ts_env)
+        assert (await send(h, "approve")).ok
+        await until_state(h, w, "asking_contractor", ts_env)
+        r = await send(h, "answer", answer="confirm", round="1")
+        assert r.ok and r.state == "confirmed"
+        out = await h.result()
+    assert out.status == "recorded"
+    assert w.events.index("job.contractor_confirmed") < w.events.index("job.homeowner_confirmed")
+
+
+@pytest.mark.slice("S9")
+@pytest.mark.req("R-HOME-3")
+async def test_the_contractor_says_not_ours_and_ops_get_a_look(ts_env) -> None:
+    w = World(origin="homeowner")
+    async with job(ts_env, w) as h:
+        await until_state(h, w, "ready", ts_env)
+        assert (await send(h, "approve")).ok
+        await until_state(h, w, "asking_contractor", ts_env)
+        r = await send(h, "answer", answer="not_mine", round="1")
+        assert r.state == "stopped"
+    assert w.reviews == ["not_my_job"] and steps(w) == ["first"]
