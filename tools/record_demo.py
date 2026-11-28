@@ -108,7 +108,6 @@ def run(story: Story) -> None:
     story.go(
         f"{MAIL}/view/{msg['ID']}", "Emails go only to a local test mailbox. Here is the one Dana got.", 4
     )
-    p.set_viewport_size({"width": 430, "height": 720})
     story.go(
         flows.answer_link(msg),
         "Dana opens the link on her phone. Nothing changes until she presses a button.",
@@ -117,7 +116,6 @@ def run(story: Story) -> None:
     story.scroll(300, 1)
     p.click("#confirm")
     story.caption("Dana confirmed the job.", 2.5)
-    p.set_viewport_size(SIZE)
 
     # 3. The marks.
     story.go(job_url, "Back with Mike: the job now has three marks, each backed by proof.", 3.5)
@@ -130,7 +128,7 @@ def run(story: Story) -> None:
     story.scroll(500)
 
     # 4. Ask the town (while the undo window runs out).
-    story.sign_in("Dana Whitfield", "Dana's home: verified work, permits and her sale report.")
+    story.sign_in("Dana Whitfield", "Dana's home: her permits, and the kitchen job she just confirmed.")
     story.scroll(400)
     p.click("text=Ask the town")
     story.caption("Old permits with no final approval in the state data: Dana can ask the town clerk.", 3.5)
@@ -148,7 +146,10 @@ def run(story: Story) -> None:
     expect(p.locator("#town-result")).to_have_text("Final approval on file", timeout=90_000)
     story.caption("Final approval on file, with the town as the source.", 3)
 
-    # 5. The sale report and a share link.
+    # 5. The sale report and a share link. The job is recorded once the short undo window has passed.
+    end = time.monotonic() + 120
+    while time.monotonic() < end and 'class="card job"' not in p.request.get(APP + "/h/home").text():
+        p.wait_for_timeout(2000)
     story.go(
         APP + "/h/report", "The sale report: only confirmed work, with its marks and the permit history.", 4
     )
