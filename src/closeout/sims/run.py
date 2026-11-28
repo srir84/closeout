@@ -552,7 +552,21 @@ def k_settled(ks: list[Persona]) -> bool:
         )
 
 
+def wait_for_app(seconds: float = 180) -> None:
+    """The app may still be starting (compose can recreate it for this run)."""
+    end = time.monotonic() + seconds
+    while time.monotonic() < end:
+        try:
+            if httpx.get(APP + "/healthz", headers={"Host": "app:8000"}, timeout=5).status_code == 200:
+                return
+        except httpx.HTTPError:
+            pass
+        time.sleep(1)
+    raise TimeoutError("the app did not start")
+
+
 def main() -> int:
+    wait_for_app()
     ps = personas()
     TOWN.extend(town_personas())
     K.extend(k_personas())

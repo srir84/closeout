@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 11956,
+ "prompt_version": "town_reply_v4",
+ "text": "{\n  \"permit_number\": \"22-0147\",\n  \"result_permit_number\": \"22-0147\",\n  \"asks_for_more_information\": false,\n  \"result\": \"final_on_file\",\n  \"result_date\": \"2022-08-27\",\n  \"work_still_outstanding\": false\n}",
+ "tokens_in": 4031,
+ "tokens_out": 78
+}

@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:8b-instruct",
+ "model_digest": "70e58e37beb15464e19aa903dedb2cba828b89c0fb186f75ff2738c7347b96eb",
+ "ms": 16987,
+ "prompt_version": "town_reply_v4",
+ "text": "{\n  \"permit_number\": \"25-0476\",\n  \"result_permit_number\": \"25-0476\",\n  \"asks_for_more_information\": false,\n  \"result\": \"no_record\",\n  \"result_date\": \"\",\n  \"work_still_outstanding\": true\n}",
+ "tokens_in": 3474,
+ "tokens_out": 66
+}

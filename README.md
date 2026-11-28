@@ -18,7 +18,7 @@ You need Docker (with Compose) and `make`. Nothing else: no AI model downloads, 
 
 ```sh
 git clone https://github.com/srir84/closeout && cd closeout
-make demo        # builds, starts, plays every role, prints a pass/fail list (about 6-8 minutes)
+make demo        # builds, starts, plays every role, prints a pass/fail list (about 5-8 minutes)
 ```
 
 Then open <http://127.0.0.1:8000> and pick a person. Other commands:
@@ -47,11 +47,11 @@ through the real pages and email links, then prints something like:
   ...
   PASS  T1 ends replied, final_on_file, 1 emails
   PASS  K1 ends recorded, 3 marks, 1 emails, 0 review items
-  PASS  every delivered email (31) has a used approval and an audit row
+  PASS  every delivered email (26) has a used approval and an audit row
   PASS  no email went to a suppressed address
   PASS  no page or email contains a banned phrase
 
-21 of 21 checks passed.
+20 of 20 checks passed.
 ```
 
 The full report is saved in `build/demo-report.txt`. Afterwards, sign in as:

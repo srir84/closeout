@@ -71,6 +71,13 @@ def sampleton_cases() -> list[tuple[str, str, str]]:
             job["work"], date.fromisoformat(job["finish"]), by_parcel[(p["block"].upper(), p["lot"].upper())]
         )
         out.append((job["code"], "no_details" if job["code"] == "H11" else "on_file", got.result))
+    k1 = world["k1"]  # the homeowner-started job (S9) must match exactly its own permit
+    p = permits[k1["permit_pk"]]
+    got = match(
+        k1["work"], date.fromisoformat(k1["finish"]), by_parcel[(p["block"].upper(), p["lot"].upper())]
+    )
+    out.append(("K1", "on_file", got.result))
+    out.append(("K1 permit", k1["permit_pk"], (got.pks or ["none"])[0]))
     for mc in world["match_cases"]:
         block, lot = mc["pin"].split("_")[1:3]
         got = match(

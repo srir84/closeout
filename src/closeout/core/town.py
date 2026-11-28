@@ -47,7 +47,8 @@ def one_read(read: dict[str, object] | None, permit_no: str, today: date) -> Tow
         return None
     if read.get("asks_for_more_information") is True:
         return TownResult(result="unclear", result_date=None, reason="more_info")
-    if read.get("work_still_outstanding") is True:  # a partial approval is not a final one
+    if read.get("work_still_outstanding") is True and read.get("result") == "final_on_file":
+        # a partial approval is not a final one (open work fits "no record of a final approval" fine)
         return TownResult(result="unclear", result_date=None, reason="outstanding")
     answer_about = read.get("result_permit_number")
     if answer_about not in (None, "") and not same_permit(answer_about, permit_no):

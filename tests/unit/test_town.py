@@ -78,3 +78,8 @@ def test_same_permit_ignores_words_around_the_number(field: str, same: bool) -> 
 def test_work_still_outstanding_is_unclear() -> None:
     partial = dict(F, work_still_outstanding=True)
     assert decide(partial, partial, "22-0147", TODAY).result == "unclear"
+
+
+def test_open_work_with_no_record_is_still_shown() -> None:
+    nr = dict(N, work_still_outstanding=True)
+    assert decide(nr, nr, "22-0147", TODAY).result == "no_record"

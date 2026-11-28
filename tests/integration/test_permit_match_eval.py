@@ -16,5 +16,5 @@ def test_no_false_matches_on_200_other_trade_jobs() -> None:
 
 def test_sampleton_known_answers() -> None:
     known = run_permit_match.sampleton_cases()
-    assert len(known) == 23
+    assert len(known) == 25
     assert [(n, w, g) for n, w, g in known if w != g] == []

@@ -25,7 +25,7 @@ def test_old_permits_with_no_final_approval_on_the_owners_home(seeded) -> None:
 
 def test_a_permit_newer_than_12_months_is_not_offered(seeded) -> None:
     with db.tx() as c:
-        clockdb.reset(c, scale=1, epoch_virtual=datetime(2024, 1, 15, tzinfo=UTC))
+        clockdb.reset(c, scale=1, epoch_virtual=datetime(2023, 12, 1, tzinfo=UTC))
         pin = db.scalar(c, "SELECT pin FROM homes WHERE owner_account_id = :a", a=sid("account:dana"))
     assert sorted(p["permit_no"] for p in eligible_permits(pin)) == [
         "21-0912",

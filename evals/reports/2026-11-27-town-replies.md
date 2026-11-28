@@ -2,7 +2,7 @@
 
 Run 2026-11-27. 30 replies.
 
-**Wrong results shown: 2 of 30.** Shown: 21. Sent to ops as unclear: 9. Missing: 0.
+**Wrong results shown: 0 of 30.** Shown: 19. Sent to ops as unclear: 11. Missing: 0.
 
 | Reply | Truth | Shown | Why |
 |---|---|---|---|
@@ -10,7 +10,7 @@ Run 2026-11-27. 30 replies.
 | tr02 | no_record | no_record | agree |
 | tr03 | unclear | unclear | read_unclear |
 | tr04 | final_on_file | final_on_file | agree |
-| tr05 | unclear | unclear | read_unclear |
+| tr05 | unclear | unclear | outstanding |
 | tr06 | no_record | no_record | agree |
 | tr07 | final_on_file | final_on_file | agree |
 | tr08 | no_record | no_record | agree |
@@ -23,16 +23,16 @@ Run 2026-11-27. 30 replies.
 | tr15 | final_on_file | final_on_file | agree |
 | tr16 | no_record | no_record | agree |
 | tr17 | no_record | no_record | agree |
-| tr18 | unclear | unclear | disagree |
-| tr19 | unclear | no_record | agree |
+| tr18 | unclear | unclear | wrong_permit |
+| tr19 | unclear | unclear | more_info |
 | tr20 | no_record | no_record | agree |
 | tr21 | unclear | unclear | read_unclear |
 | tr22 | unclear | unclear | read_unclear |
-| tr23 | unclear | unclear | disagree |
+| tr23 | unclear | unclear | wrong_permit |
 | tr24 | no_record | no_record | agree |
-| tr25 | unclear | unclear | read_unclear |
+| tr25 | unclear | unclear | outstanding |
 | tr26 | no_record | no_record | agree |
 | tr27 | final_on_file | final_on_file | agree |
 | tr28 | no_record | no_record | agree |
-| tr29 | unclear | no_record | agree |
+| tr29 | unclear | unclear | more_info |
 | tr30 | final_on_file | final_on_file | agree |

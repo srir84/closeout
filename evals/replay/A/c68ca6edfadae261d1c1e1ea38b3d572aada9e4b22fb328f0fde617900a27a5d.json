@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 11210,
+ "prompt_version": "town_reply_v3",
+ "text": "{\n  \"permit_number\": \"OPRA Request W-2026-0249 - Construction Permit No. 25-1341, 26 Sandbar Ct\",\n  \"result_permit_number\": \"25-1341\",\n  \"asks_for_more_information\": false,\n  \"result\": \"final_on_file\",\n  \"result_date\": \"2025-07-03\"\n}",
+ "tokens_in": 3210,
+ "tokens_out": 95
+}

@@ -124,3 +124,16 @@ Each report has:
 - Live-model evals run on the owner's Mac with `make eval-live`, because GitHub's machines have no graphics chip. The report is added to the repo by a pull request, and the milestone check fails if it's more than 7 days old.
 
 At each milestone we read the reports together and decide: continue, fix first, or change the plan.
+
+## 4.8 Results so far (replay of local-model runs, 27-28 Nov 2026)
+
+| Eval | n | Result | Target | Report |
+|---|---|---|---|---|
+| Reading: regression | 30 invoices | E1 0 of 30. Reader A agrees with the truth on 97.8% of facts. | E1 = 0 | `evals/reports/*-regression.md` |
+| Reading: development | 100 invoices (842 facts) | E1 0 of 100. Reader A 99.7%. | E1 = 0 | `evals/reports/*-development.md` |
+| Reading: messy | 30 invoices | E1 5 of 30 before the amount-marks look: all five were totals crossed out and rewritten by hand, which both readers read the same wrong way. The look sends such totals to a person; its recording is in progress, and this row is updated when it lands. | E1 = 0 | `evals/reports/*-messy.md` |
+| Town replies | 30 letters | 0 wrong results shown. 19 shown, 11 sent to ops. | 0 | `evals/reports/*-town-replies.md` |
+| Town replies, held out | 30 new letters | 0 wrong results shown. 19 shown, 11 sent to ops. | 0 | `evals/reports/*-town-replies-heldout.md` |
+| Permit match | 200 pairs | 0 false matches | 0 | `evals/reports/*-permit-match.md` |
+
+**How the town-reply prompt got here, honestly.** Version 1 showed 2 wrong results on the first set. Versions 2 to 4 each added one yes/no question (does the letter ask for more information, which permit is its answer about, is any work still outstanding), each chosen from failures on the first set only. The held-out set was written after version 2 and first run on version 4. One later rule change (outstanding work matters only for a "final approval" answer) was made after its results were seen, so the held-out set is no longer fully unseen; the sealed set at the next milestone is the clean check.
