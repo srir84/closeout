@@ -5,16 +5,21 @@ SCALE ?= $(or $(CLOSEOUT_TIME_SCALE),17280)
 SLICE ?=
 PY := uv run
 
-.PHONY: help up down reset keys seed check verify test lint types demo demo-run demo-open sim sync eval eval-live record chaos mutation trace publish-check logs ps
+.PHONY: help image up down reset keys seed check verify test lint types demo demo-run demo-open sim sync eval eval-live record chaos mutation trace publish-check logs ps
 
 help:
 	@echo "make up | down | reset | demo | check | verify SLICE=S1 | sim | eval | chaos | logs"
 
-keys:
-	@CLOSEOUT_KEYS_DIR=.secrets $(PY) python -m closeout.keys
+image:
+	$(COMPOSE) build migrate || (sleep 3 && $(COMPOSE) build migrate)
+
+# Keys are made inside the app image, so a fresh clone needs only Docker and make.
+keys: image
+	@mkdir -p .secrets
+	@docker run --rm --user "$$(id -u):$$(id -g)" -v "$(CURDIR)/.secrets:/out" -e CLOSEOUT_KEYS_DIR=/out \
+		closeout-app:local python -m closeout.keys
 
 up: keys
-	$(COMPOSE) build migrate || (sleep 3 && $(COMPOSE) build migrate)
 	$(COMPOSE) up -d --wait
 	$(COMPOSE) run --rm -e CLOSEOUT_TIME_SCALE=$(SCALE) migrate python -m closeout.cli seed-if-empty
 	@echo "Closeout is up: http://127.0.0.1:8000  (mail: http://127.0.0.1:8025, workflows: http://127.0.0.1:8233)"
@@ -26,8 +31,7 @@ down:
 reset:
 	$(COMPOSE) down -v --remove-orphans
 	rm -rf .secrets
-	CLOSEOUT_KEYS_DIR=.secrets $(PY) python -m closeout.keys
-	$(COMPOSE) build migrate || (sleep 3 && $(COMPOSE) build migrate)
+	$(MAKE) keys
 	$(COMPOSE) up -d --wait
 	$(COMPOSE) run --rm -e CLOSEOUT_TIME_SCALE=$(SCALE) migrate python -m closeout.cli seed --scale $(SCALE)
 
@@ -83,11 +87,16 @@ sim:
 
 demo: demo-run demo-open
 
+# Plays every role in the spec's persona table (H1-H12, T1-T3, K1) through the real pages and links, then
+# prints the pass/fail list and the end-state summary. Replay mode: no AI downloads, no keys to fetch.
 demo-run:
-	@echo "make demo arrives in S14"
+	$(MAKE) reset SCALE=$(SIM_SCALE)
+	@mkdir -p build
+	@$(COMPOSE) run --rm sims > build/demo-report.txt 2>&1; s=$$?; cat build/demo-report.txt; exit $$s
 
 demo-open:
-	@command -v open >/dev/null && open http://127.0.0.1:8000 || true
+	@echo "Open http://127.0.0.1:8000 (pick a person). Mail: http://127.0.0.1:8025"
+	@[ -n "$$CI" ] || { command -v open >/dev/null && open http://127.0.0.1:8000; } || true
 
 # Run the permit feed once now (fetches the whole town from data.nj.gov).
 sync:

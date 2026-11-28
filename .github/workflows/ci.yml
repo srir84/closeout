@@ -79,3 +79,22 @@ jobs:
         run: |
           set -o pipefail
           python3 tools/trace.py | tee -a "$GITHUB_STEP_SUMMARY"
+
+  # E5 / R-RUN-1: a fresh copy with only Docker and make runs the whole demo in replay mode in under
+  # 10 minutes and prints its pass/fail list. No uv, no Python on the host.
+  fresh-clone:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: make demo (timed)
+        env: { CI: "1" }
+        run: |
+          start=$(date +%s)
+          make demo
+          took=$(( $(date +%s) - start ))
+          echo "make demo took ${took} s"
+          test "$took" -le 600
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: demo-report, path: build/demo-report.txt }

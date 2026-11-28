@@ -122,14 +122,13 @@ def register(app: FastAPI) -> None:
                 p=person,
                 a=acct["id"],
             )
-            n = db.scalar(c, "SELECT count(*) FROM jobs WHERE pin = :p AND origin = 'homeowner'", p=h["pin"])
             jid = db.scalar(
                 c,
                 """INSERT INTO jobs (origin, contractor_id, job_ref, homeowner_recipient_id, address_raw,
                                   work_type, csv_finish_date, csv_total, town, pin)
                                   VALUES ('homeowner', :k, :ref, :r, :addr, :wt, :fd, :tot, :town, :pin) RETURNING id""",
                 k=contractor_id,
-                ref=f"H-{int(n or 0) + 1:03d}",
+                ref=f"H-{uuid.uuid4().hex[:8].upper()}",  # unique per contractor, whichever home it's for
                 r=rid,
                 addr=h["address"],
                 wt=work_type,

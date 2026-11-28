@@ -378,6 +378,8 @@ def perform_share(conn: Connection, inp: ShareIn) -> PerformOut:
         or "share_report" not in g["actions"]
     ):
         return _refuse_share(conn, inp, cid, "grant_revoked")
+    if g["expires_at"] is not None and db.scalar(conn, "SELECT now() > :e", e=g["expires_at"]):
+        return _refuse_share(conn, inp, cid, "grant_expired")  # review finding 12: the same check as email
     lid = db.scalar(
         conn,
         """INSERT INTO links (token_hash, purpose, target, role, fields_allowed, expires_at)

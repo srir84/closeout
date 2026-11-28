@@ -65,7 +65,7 @@ def test_hosted_request_has_no_tools_and_a_strict_schema() -> None:
         ("not json", "not_json"),
         ("[1, 2]", "not_an_object"),
         (json.dumps({"contractor_name": "x"}), "missing:total_amount"),
-        (json.dumps(dict(json.loads(GOOD), extra="hi")), "extra:extra"),
+        (json.dumps(dict(json.loads(GOOD), extra="hi")), "extra_key"),  # never the key itself (privacy)
         (json.dumps(dict(json.loads(GOOD), total_amount="19300")), "type:total_amount"),
         (json.dumps(dict(json.loads(GOOD), work_type="garage")), "enum:work_type"),
         (json.dumps(dict(json.loads(GOOD), warranty_years=True)), "type:warranty_years"),

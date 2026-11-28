@@ -97,8 +97,8 @@ def report_data(pin: str) -> tuple[list[rp.ReportJob], list[rp.ReportPermit]]:
             for x in db.all_rows(
                 c,
                 """SELECT p.permit_no, p.permit_type, p.trades, p.issued_on, p.final_on,
-                       (SELECT t.result FROM town_requests t WHERE t.permit_pk = p.pk ORDER BY t.created_at DESC LIMIT 1)
-                           AS town_result,
+                       (SELECT coalesce(t.result, CASE WHEN t.status = 'no_reply' THEN 'no_reply' END)
+                        FROM town_requests t WHERE t.permit_pk = p.pk ORDER BY t.created_at DESC LIMIT 1) AS town_result,
                        (SELECT t.result_date FROM town_requests t WHERE t.permit_pk = p.pk
                         ORDER BY t.created_at DESC LIMIT 1) AS town_result_date
                        FROM permit_parcel pp JOIN permits p ON p.pk = pp.permit_pk
@@ -344,8 +344,9 @@ def register(app: FastAPI) -> None:
         with db.tx() as c:
             d = db.one(
                 c,
-                """SELECT d.path, d.mime, d.removed_at, j.contractor_id, j.pin, d.kind FROM documents d
-                             LEFT JOIN jobs j ON j.id = d.job_id WHERE d.id = :id""",
+                """SELECT d.path, d.mime, d.removed_at, j.contractor_id, coalesce(j.pin, t.home_pin) AS pin, d.kind
+                             FROM documents d LEFT JOIN jobs j ON j.id = d.job_id
+                             LEFT JOIN town_requests t ON t.id = d.town_request_id WHERE d.id = :id""",
                 id=document_id,
             )
             owner = (

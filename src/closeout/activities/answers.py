@@ -48,7 +48,7 @@ def apply_answer(inp: CommandIn) -> AnswerOut:
         p = (cmd or {}).get("payload") or {}
         from closeout.privacy import erased_job
 
-        if erased_job(c, inp.job_id):  # nothing typed is stored for an erased person
+        if erased_job(c, inp.job_id, lock=True):  # nothing typed is stored for an erased person
             p = {"answer": p.get("answer")}
         today = virtual_today(c)
         pv = p.get("price_visible")

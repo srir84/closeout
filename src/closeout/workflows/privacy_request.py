@@ -22,9 +22,15 @@ class PrivacyRequest:
 
         await step(acts.privacy_mark)  # 1. from here on, late writes store blanks
         await step(acts.privacy_stop)  # 2. links revoked, queued messages cancelled
-        for _ in range(30):  # 3. wait until nothing for them is running (with a timeout)
+        for _ in range(30):  # 3. let clicks and sends in flight settle (a click for a closed job may never)
             if await step(acts.privacy_busy) == 0:
                 break
             await workflow.sleep(timedelta(seconds=2))
+        # A send a sender has claimed must finish first, or it could deliver after Mailpit is cleaned. Claimed
+        # sends always end: sent, failed or, through the reaper, unknown. So this wait has no cap.
+        if await step(acts.privacy_sending):
+            await step(acts.privacy_waiting)
+            while await step(acts.privacy_sending):
+                await workflow.sleep(timedelta(seconds=5))
         out: acts.Counts = await step(acts.privacy_redact)  # 4. every store
         return out.counts

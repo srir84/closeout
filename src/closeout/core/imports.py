@@ -73,6 +73,7 @@ def messages() -> dict[str, str]:
         "duplicate_ref": "This job number appears twice in the file.",
         "already_imported": "This job number was already imported.",
         "missing_file": "The invoice file named in this row wasn't uploaded.",
+        "do_not_contact": "This homeowner asked us to remove their details and not contact them.",
         "bad_file": "The invoice file was refused.",
         "text_too_long": "A value is longer than 200 characters.",
         "extra_columns": "This row has more values than there are columns.",

@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+import asyncio
 import contextlib
 import uuid
 from datetime import UTC, datetime, timedelta
 
 import pytest
 from temporalio import activity
-from temporalio.client import WorkflowUpdateFailedError
+from temporalio.client import WorkflowUpdateFailedError, WorkflowUpdateStage
 from temporalio.worker import Worker
 
 from closeout.act import PerformIn, PerformOut
@@ -21,7 +22,10 @@ MONDAY = datetime(2026, 3, 2, 9, tzinfo=UTC)
 
 
 class Town:
-    def __init__(self) -> None:
+    def __init__(self, delivery: str = "sent", gated: bool = False) -> None:
+        self.delivery = delivery
+        self.gate = asyncio.Event() if gated else None
+        self.polling = False
         self.statuses: list[str] = []
         self.sends: list[tuple[str, datetime]] = []
         self.outbox: dict[uuid.UUID, tuple[str, datetime]] = {}
@@ -45,7 +49,15 @@ class Town:
         @activity.defn(name="outbox_state")
         async def outbox_state(inp: outbox.OutboxRef) -> Delivered:
             _, at = t.outbox[inp.outbox_id]
-            return Delivered(outbox_id=inp.outbox_id, state="sent", sent_at=at, round=1)
+            t.polling = True
+            if t.gate is not None:
+                await t.gate.wait()  # the test accepts a reply while this poll is still running
+            return Delivered(
+                outbox_id=inp.outbox_id,
+                state=t.delivery,
+                sent_at=at if t.delivery == "sent" else None,
+                round=1,
+            )
 
         @activity.defn(name="read_document")
         async def read_document(inp: reading.ReadIn) -> reading.ReadOut:
@@ -68,6 +80,10 @@ class Town:
         async def finish_command(r: CommandResult) -> None:
             return None
 
+        @activity.defn(name="town_ended")
+        async def town_ended(inp: town.TownRef) -> None:
+            t.statuses.append("ended")
+
         return [
             town_status,
             perform_send,
@@ -77,6 +93,7 @@ class Town:
             stop_town_sending,
             town_hold,
             finish_command,
+            town_ended,
         ]
 
 
@@ -174,3 +191,35 @@ async def test_a_reply_after_60_days_is_too_late(ts_env) -> None:
             await h.execute_update(TownRequest.command, late, id=str(late.command_id))
         assert (await h.result()).status == "no_reply"
     assert common
+
+
+async def test_a_reply_accepted_while_an_unknown_delivery_result_comes_back_is_still_read(ts_env) -> None:
+    """Review finding 9: the delivery poll returned unknown while a reply was queued, and the reply was dropped."""
+    t = Town(delivery="unknown", gated=True)
+    async with request(ts_env, t) as h:
+        for _ in range(400):
+            if t.polling:
+                break
+            await ts_env.sleep(timedelta(seconds=30))
+        assert t.polling
+        c = CommandRef(
+            command_id=uuid.uuid4(),
+            kind="reply",
+            saved_at=await ts_env.get_current_time(),
+            ids={"document_id": uuid.uuid4()},
+        )
+        upd = await h.start_update(
+            TownRequest.command, c, id=str(c.command_id), wait_for_stage=WorkflowUpdateStage.ACCEPTED
+        )
+        t.gate.set()  # type: ignore[union-attr]
+        r = await upd.result()
+        assert (r.ok, r.code) == (True, "final_on_file")
+        assert (await h.result()).status == "replied"
+    assert t.reads == 2 and t.statuses[-1] == "ended"
+
+
+async def test_every_way_out_marks_the_request_ended(ts_env) -> None:
+    t = Town(delivery="failed")
+    async with request(ts_env, t) as h:
+        out = await h.result()
+    assert out.status == "closed" and "hold:failed" in t.statuses and t.statuses[-1] == "ended"

@@ -451,19 +451,19 @@ The owner, acting as a newcomer, clones the public repo, runs `make demo` and se
 | S0 | 4.5 | 0.5 | done | #1 |
 | S1 | 3 | 0.5 | done | #1 |
 | S2 | 2 | 0.3 | done | #1 |
-| S3 | 4 | | not started | |
-| S4 | 3 | | not started | |
-| S5 | 1.5 | | not started | |
-| S6 | 4.5 | | not started | |
-| S7 | 3.5 | | not started | |
-| S7b | 2.5 | | not started | |
-| S8 | 2 | | not started | |
-| S9 | 2.5 | | not started | |
-| S10 | 2.5 | | not started | |
-| S11 | 3 | | not started | |
-| S12 | 3 | | not started | |
-| S13 | 1 | | not started | |
-| S14 | 3 | | not started | |
+| S3 | 4 | 0.3 | built, in review | #2 |
+| S4 | 3 | 0.2 | built, in review | #2 |
+| S5 | 1.5 | 0.2 | built, in review | #2 |
+| S6 | 4.5 | 0.3 | built, in review | #2 |
+| S7 | 3.5 | 0.4 | built, in review | #2 |
+| S7b | 2.5 | 0.3 | built, in review | #2 |
+| S8 | 2 | 0.2 | built, in review | #2 |
+| S9 | 2.5 | 0.2 | built, in review | #2 |
+| S10 | 2.5 | 0.2 | built, in review | #2 |
+| S11 | 3 | 0.3 | built, in review | #2 |
+| S12 | 3 | 0.2 | built, in review | #2 |
+| S13 | 1 | 0.1 | built, in review (cost page only, no Phoenix) | #2 |
+| S14 | 3 | | in progress | #2 |
 
 Actual days are agent working time. The whole build is done by one AI agent working without pauses, so they are much shorter than the estimates, which assumed a working day with reviews and waits.
 
@@ -490,8 +490,14 @@ What was built differently from the plan, and why. Each note says where it's han
 | S0 | The coding agent works from its own GitHub account and fork, and the person merges. | The owner asked for the whole build to run without stopping, so the agent works on branches in the main repo under the owner's account, using the ruleset's owner bypass. The guards still run on every PR: CI, the `gate` check, mutation, trace and an independent review by another model (Codex). The fork setup stays documented for outside contributors. |
 | S0 | Web pages use htmx. | Plain HTML forms with a stable command ID in each form, and no JavaScript library. It's simpler, fits the strict Content-Security-Policy, and a re-sent form can't run twice. |
 | S0 | One `model-reads` queue, one read at a time per reader. | Two queues, `model-reads-A` and `model-reads-B`, each with one slot. That guarantees one read at a time *per reader*, which one shared queue with two slots doesn't. |
-| S0 | `make keys` | Keys are made on the host with `uv`. S14 moves this into a container so a fresh clone needs only Docker and `make`. |
+| S0 | `make keys` | Keys were made on the host with `uv` until S14. Now `make keys` runs inside the app image, so a fresh clone needs only Docker and `make`. |
 | S0 | Ollama from Docker on Linux, tried once | Written down in the README, but there's no Linux machine with Ollama to try it on. Not tried yet. |
 | S1 | 2,707 permits get exactly one street address. | 2,706 on the snapshot of 27 Nov 2026, by three independent ways of counting. The research check used an earlier download. The other fixed counts (3,982, 3,362, 2,914, 2,712 / 82 / 120, 280) match exactly. |
 | S7 | Saved histories replay against new code. | The S6/S7 review fixes changed the Job workflow's steps and the replay check failed, as it should. The Job workflow had not reached `main` or a release, so no running workflow used the old code and the histories were re-recorded. From the first tagged release on, such changes go through `workflow.patched` (design 3.8). |
 | S1 | Sampleton: about 40 parcels and 60 permits | 49 parcels and 45 permits cover every persona, every permit-match result and every town-request case. |
+| S3 | Reader B reads the invoice once. | A second, narrow look by reader B (`amount_marks_v1`) asks only whether a total is crossed out or written over by hand. If it is, the total goes to a person. Handwritten corrections were the one kind of invoice where both readers agreed on the wrong total (5 of 30 in the messy set). |
+| S11 | The town-reply prompt reads the permit number and the result. | Version 3 also reads which permit the letter's answer is about. Letters that name the asked-for permit in the subject line but enclose another permit's approval were read as `no_record` by both readers. Now any answer about a different permit is `unclear`, for ops. |
+| S9 | The contractor can confirm, correct or decline. | The contractor's page offers "yes, we did this job" and "this isn't our job". A contractor's correction of a homeowner's upload would need the homeowner to accept it, a second loop that was left out. "Not ours" goes to ops. |
+| S12 | Ops can re-send an email whose result is unknown. | Ops can mark it as arrived or close it. Re-sending is not built, because sending again is exactly what the at-most-once sender exists to prevent without a person's fresh approval. The README lists it under known limits. |
+| S13 | The cost page, first hosted numbers, optional Phoenix. | The cost and speed page is built from the model call log. There is no hosted-mode key in this build, so it has no hosted numbers, and Phoenix was left out (it was optional). |
+| S14 | A short demo video. | Recorded with Playwright from the running demo (`tools/record_demo.py`), converted with the ffmpeg in `imageio-ffmpeg`, and shown on the GitHub Pages site next to the mock. |

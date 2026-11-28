@@ -16,5 +16,5 @@
 <td>{% if i.ref.startswith('job-') %}<a href="/runs/{{ i.ref[4:] }}">the job's run</a>{% else %}{{ i.ref }}{% endif %}</td>
 <td><form method="post" action="/ops/review/{{ i.id }}/resolve"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="secondary">Resolved</button></form></td></tr>
 {% else %}<tr><td colspan="5">Nothing needs a look.</td></tr>{% endfor %}</table>
-<p><a href="/ops/data">Data health</a></p>
+<p><a href="/ops/data">Data health</a> · <a href="/ops/cost" id="cost-link">Cost and speed</a></p>
 {% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Cost and speed{% endblock %}
+{% block content %}
+<h1>Cost and speed per mode</h1>
+<p>Every model call is logged with its reader, model, time and tokens (R-OBS-1). This page adds them up. <strong>replay</strong> calls repeat the saved answers and the timings measured when they were recorded on a local model; <strong>ollama</strong> calls are local models now (cost 0); <strong>hosted</strong> calls would go to an outside AI company and carry its price. Hosted mode has not been measured in this demo.</p>
+{% if per_doc %}<p id="per-doc">Per document: {{ docs.docs }} documents, {{ '%.1f' | format(per_doc.seconds) }} s of model time and ${{ '%.4f' | format(per_doc.cost) }} each on average.</p>{% endif %}
+<table id="cost"><tr><th>Mode</th><th>Model</th><th>For</th><th>Calls</th><th>Failed</th><th>Median</th><th>95th pct</th><th>Tokens in / out (avg)</th><th>Cost</th></tr>
+{% for r in rows %}<tr><td>{{ r.provider }}</td><td>{{ r.model }}</td><td>{{ r.purpose | replace('_', ' ') }}</td><td class="calls">{{ r.calls }}</td><td>{{ r.failed }}</td><td>{{ '%.1f' | format(r.median_ms / 1000) }} s</td><td>{{ '%.1f' | format(r.p95_ms / 1000) }} s</td><td>{{ r.avg_tokens_in or '' }} / {{ r.avg_tokens_out or '' }}</td><td>${{ '%.4f' | format(r.cost_usd) }}</td></tr>
+{% else %}<tr><td colspan="9">No model calls yet.</td></tr>{% endfor %}</table>
+<p><a href="/ops/data">Data health</a></p>
+{% endblock %}

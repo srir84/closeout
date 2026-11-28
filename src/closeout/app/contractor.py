@@ -328,6 +328,13 @@ def register(app: FastAPI) -> None:
         own_job(acct, job_id)
         if field not in invoice_fields() or field in REGISTRY_FIELDS:
             raise HTTPException(status_code=400, detail="Unknown field")
+        from closeout.privacy import PERSONAL_FIELDS, erased_job
+
+        with db.tx() as c:
+            gone = field in PERSONAL_FIELDS and erased_job(c, job_id)
+        if gone:  # nothing typed is saved for a person who asked to be erased (review finding 4)
+            msg = "This homeowner asked for their details to be removed."
+            return RedirectResponse(f"/c/review/{job_id}?msg={msg}", status_code=303)
         out = await send(
             acct,
             job_id,

@@ -53,3 +53,28 @@ def test_an_answer_about_a_different_permit_is_unclear() -> None:
     assert decide(other, N, "22-0147", TODAY).reason == "wrong_permit"
     same = dict(F, result_permit_number="22-0147")
     assert decide(same, same, "22-0147", TODAY).result == "final_on_file"
+
+
+@pytest.mark.parametrize(
+    ("field", "same"),
+    [
+        ("22-0147", True),
+        ("Permit #22 0147", True),
+        ("22-0147 (furnace and AC replacement)", True),
+        ("22-0147, 153 Tidewater Road", True),
+        ("OPRA Request W-2026-0859 - Construction Permit No. 22-0147, 81 Bayberry Circle", True),
+        ("220147", True),
+        ("22-0174", False),
+        ("22-0147 and 22-0148", False),
+        ("", False),
+    ],
+)
+def test_same_permit_ignores_words_around_the_number(field: str, same: bool) -> None:
+    from closeout.core.town import same_permit
+
+    assert same_permit(field, "22-0147") is same
+
+
+def test_work_still_outstanding_is_unclear() -> None:
+    partial = dict(F, work_still_outstanding=True)
+    assert decide(partial, partial, "22-0147", TODAY).result == "unclear"

@@ -68,7 +68,7 @@ def store_read(conn: Any, document_id: UUID, res: Any) -> UUID:
     from closeout.privacy import erased_job
 
     job_id = db.scalar(conn, "SELECT job_id FROM documents WHERE id = :d", d=document_id)
-    if erased_job(conn, job_id):  # a late answer for an erased person stores blanks (design 3.17)
+    if erased_job(conn, job_id, lock=True):  # a late answer for an erased person stores blanks (design 3.17)
         res = res.model_copy(update={"output": None, "text": "", "valid": False, "errors": ["erased"]})
     rid = db.scalar(
         conn,
@@ -159,8 +159,13 @@ def fact_text(v: object) -> str | None:
 
 
 def store_facts(conn: Any, job_id: UUID, decisions: list[FactDecision], light: bool) -> FactsOut:
+    from closeout.privacy import PERSONAL_FIELDS, erased_job
+
+    erased = erased_job(conn, job_id, lock=True)
     counts = {"kept": 0, "asked": 0, "unconfirmed": 0}
     for d in decisions:
+        if erased and d.field in PERSONAL_FIELDS:  # an erased homeowner's name and address stay blank
+            d = d.model_copy(update={"value": None, "value_a": None, "value_b": None})
         counts[d.status] += 1
         db.run(
             conn,

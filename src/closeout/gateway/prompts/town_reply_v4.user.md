@@ -1,0 +1,7 @@
+Fields:
+- permit_number: the permit number the letter says it is about (for example in its subject line), exactly as printed
+- result_permit_number: the permit number that the letter's answer actually refers to: the permit whose final approval is enclosed or confirmed, or whose records were searched. Exactly as printed. If the letter gives no answer about any permit, an empty string
+- asks_for_more_information: true if the letter says the office could not find or could not identify the permit as written, or asks for more details (such as a corrected permit number, block and lot, or an owner's name) before it can answer; otherwise false
+- work_still_outstanding: true if the letter says any inspection, subcode, part of the work or condition for that permit is still outstanding, pending, open, scheduled or not yet approved; otherwise false
+- result: final_on_file only if the letter states that a final inspection was passed, or a certificate of approval or occupancy was issued, for that exact permit; no_record only if the letter states the office searched for that exact permit and found no record of a final inspection or approval; unclear for anything else, including a request for more information, a permit the office could not find, an inspection that is only scheduled, approval of only part of the work, a missing date, or an answer about a different permit
+- result_date: the date of the final approval as YYYY-MM-DD when result is final_on_file, otherwise an empty string

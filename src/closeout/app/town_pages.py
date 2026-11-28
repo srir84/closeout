@@ -38,7 +38,8 @@ def eligible_permits(pin: str) -> list[dict[str, Any]]:
                                  WHERE pp.pin = :pin AND pp.status = 'linked' AND p.final_on IS NULL
                                  AND p.issued_on IS NOT NULL AND p.issued_on <= :cut
                                  AND NOT EXISTS (SELECT 1 FROM town_requests t WHERE t.permit_pk = p.pk
-                                                 AND t.status NOT IN ('no_reply', 'closed', 'replied'))
+                                                 AND (t.ended_at IS NULL
+                                                      OR t.result IN ('final_on_file', 'no_record')))
                                  ORDER BY p.issued_on""",
             pin=pin,
             cut=today - timedelta(days=365),
@@ -214,6 +215,18 @@ def register(app: FastAPI) -> None:
             return render(request, "link_closed.html", status_code=404, why="unknown", account=None)
         if not csrf_ok("link:" + link["token_hash"], csrf):
             raise HTTPException(status_code=403, detail="Form expired. Open the link again.")
+        rid = uuid.UUID(link["target"][5:])
+        with db.tx() as c:
+            t = db.one(c, "SELECT status, ended_at FROM town_requests WHERE id = :id", id=rid)
+            prior = db.scalar(c, "SELECT refs FROM commands WHERE command_id = :c", c=command_id)
+        # A closed request stores nothing (review finding 14).
+        if (
+            t is None
+            or t["ended_at"] is not None
+            or t["status"] not in ("approved", "sent", "reminded", "no_reply")
+        ):
+            return render(request, "link_closed.html", why="closed", account=None)
+        prior_doc = ((prior or {}).get("ids") or {}).get("document_id")
         data = await reply.read(files.MAX_BYTES + 1)
         chk = files.check(data)
         if not chk.ok or chk.mime is None:
@@ -224,17 +237,20 @@ def register(app: FastAPI) -> None:
                 why=files.MESSAGES.get(chk.reason or "", "Refused"),
                 account=None,
             )
-        rid = uuid.UUID(link["target"][5:])
         with db.tx() as c:
-            doc = db.scalar(
-                c,
-                """INSERT INTO documents (town_request_id, kind, sha256, path, mime, pages)
+            doc = (
+                uuid.UUID(str(prior_doc))
+                if prior_doc
+                else db.scalar(
+                    c,
+                    """INSERT INTO documents (town_request_id, kind, sha256, path, mime, pages)
                                   VALUES (:t, 'town_reply', :s, :p, :m, :n) RETURNING id""",
-                t=rid,
-                s=chk.sha256,
-                p=files.store(data, chk.mime),
-                m=chk.mime,
-                n=chk.pages,
+                    t=rid,
+                    s=chk.sha256,
+                    p=files.store(data, chk.mime),
+                    m=chk.mime,
+                    n=chk.pages,
+                )
             )
         ref = deps.save_command(
             target_workflow=f"town-{rid}",

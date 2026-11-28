@@ -59,10 +59,13 @@ def activities(client: Client | None = None) -> list[Callable[..., Any]]:
         town.decide_reply,
         town.stop_town_sending,
         town.town_hold,
+        town.town_ended,
         privacy_acts.privacy_mark,
         privacy_acts.privacy_stop,
         privacy_acts.privacy_busy,
         privacy_acts.privacy_redact,
+        privacy_acts.privacy_sending,
+        privacy_acts.privacy_waiting,
     ]
     if client is not None:
         out.append(jobs.Starter(client).start_jobs)

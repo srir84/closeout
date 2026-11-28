@@ -21,9 +21,10 @@ def test_canary_is_gone_everywhere() -> None:
     stack.wait_app()
     tag = uuid.uuid4().hex[:8]
     name, email = f"Canary Quillfeather{tag}", f"canary-{tag}@sampleton.example"
+    ref = f"CAN-{uuid.uuid4().hex[:6]}"  # not personal data, and not the tag, which must appear nowhere
     mike, csrf = flows.person("Mike Brennan")
     head = (flows.DEMO / "harbor_pine_jobs.csv").read_text().splitlines()[0]
-    row = f"CAN-{tag},{name},{email},14 Osprey Ln,kitchen,,,2025-03-28,48250.00,HP-25-001.png"
+    row = f"{ref},{name},{email},14 Osprey Ln,kitchen,,,2025-03-28,48250.00,HP-25-001.png"
     files = [
         ("csv_file", ("j.csv", f"{head}\n{row}\n".encode(), "text/csv")),
         (
@@ -33,7 +34,7 @@ def test_canary_is_gone_everywhere() -> None:
     ]
     batch = mike.post("/c/import", data={"csrf": csrf}, files=files).url.path
     for _ in range(60):
-        m = re.search(r'href="/c/jobs/([0-9a-f-]+)">CAN-', mike.get(batch).text)
+        m = re.search(rf'href="/c/jobs/([0-9a-f-]+)">{ref}<', mike.get(batch).text)
         if m and "state ready" in mike.get(batch).text:
             break
         time.sleep(1)

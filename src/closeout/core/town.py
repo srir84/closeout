@@ -22,9 +22,24 @@ class TownResult(BaseModel):
     reason: str  # agree | disagree | invalid | wrong_permit | read_unclear | no_date
 
 
+PERMIT_TOKEN = re.compile(r"(?<![0-9A-Za-z-])(\d{2})\s*[-\u2013 ]\s*(\d{3,5})(?![0-9])")
+
+
 def permit_key(s: object) -> str:
     """Permit numbers compared by their digits, so "Permit #22 0147" is 22-0147."""
     return re.sub(r"[^0-9]", "", str(s or ""))
+
+
+def same_permit(field: object, permit_no: str) -> bool:
+    """A read's permit field names the asked permit and no other one.
+
+    Readers add words around the number ("22-0147 (furnace and AC replacement)", "OPRA Request W-2026-0859 -
+    Permit No. 24-0648"), so only permit-shaped tokens count. With no such token, all its digits are compared.
+    """
+    tokens = {a + b for a, b in PERMIT_TOKEN.findall(str(field or ""))}
+    if tokens:
+        return tokens == {permit_key(permit_no)}
+    return permit_key(field) == permit_key(permit_no)
 
 
 def one_read(read: dict[str, object] | None, permit_no: str, today: date) -> TownResult | None:
@@ -32,12 +47,14 @@ def one_read(read: dict[str, object] | None, permit_no: str, today: date) -> Tow
         return None
     if read.get("asks_for_more_information") is True:
         return TownResult(result="unclear", result_date=None, reason="more_info")
+    if read.get("work_still_outstanding") is True:  # a partial approval is not a final one
+        return TownResult(result="unclear", result_date=None, reason="outstanding")
     answer_about = read.get("result_permit_number")
-    if answer_about not in (None, "") and permit_key(answer_about) != permit_key(permit_no):
+    if answer_about not in (None, "") and not same_permit(answer_about, permit_no):
         return TownResult(
             result="unclear", result_date=None, reason="wrong_permit"
         )  # an answer about another permit
-    if permit_key(read.get("permit_number")) != permit_key(permit_no):
+    if not same_permit(read.get("permit_number"), permit_no):
         return TownResult(result="unclear", result_date=None, reason="wrong_permit")
     if read["result"] == "final_on_file":
         d = clean_date(read.get("result_date"), today)

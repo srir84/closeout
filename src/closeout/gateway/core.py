@@ -25,7 +25,7 @@ from closeout.settings import Settings, get_settings
 
 PROMPTS = Path(__file__).parent / "prompts"
 # amount_marks: a separate yes/no look for amounts changed by hand (both readers can misread those the same way).
-PROMPT_VERSION = {"invoice": "invoice_v1", "town_reply": "town_reply_v3", "amount_marks": "amount_marks_v1"}
+PROMPT_VERSION = {"invoice": "invoice_v1", "town_reply": "town_reply_v4", "amount_marks": "amount_marks_v1"}
 PREPROCESSING_VERSION = "pp1"  # images: the uploaded bytes as-is; PDFs: up to 3 pages at 150 dpi as PNG
 SETTINGS = {"temperature": 0, "num_ctx": 8192}
 THINK = False
@@ -157,7 +157,7 @@ def validate(purpose: Purpose, text: str) -> tuple[dict[str, Any] | None, list[s
             errors.append(f"missing:{k}")
     for k, v in data.items():
         if k not in props:
-            errors.append(f"extra:{k}")
+            errors.append("extra_key")  # never the key itself: a model can put any text there (review 8)
             continue
         t = props[k].get("type")
         types = t if isinstance(t, list) else [t]

@@ -173,13 +173,15 @@ class Sender:
             db.run(
                 c,
                 """INSERT INTO links (token_hash, purpose, target, round, outbox_id, recipient_id, expires_at)
-                         VALUES (:h, :p, :t, :r, :o, :rec, now() + interval '30 days')""",
+                         VALUES (:h, :p, :t, :r, :o, :rec, now() + make_interval(days => :days))""",
                 h=token_hash(answer),
                 p=purpose,
                 t=target,
                 r=got["round"],
                 o=oid,
                 rec=got["recipient_id"],
+                # A town letter may come up to 60 days after the request (late window), so its link lasts longer.
+                days=75 if purpose == "town_reply" else 30,
             )
             db.run(
                 c,

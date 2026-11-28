@@ -318,6 +318,15 @@ def apply_fix(inp: CommandIn) -> CommandOut:
         raw = cmd["payload"].get("value")
         if field in REGISTRY_FIELDS:
             return CommandOut(ok=False, code="registry_field")
+        from closeout.privacy import PERSONAL_FIELDS, erased_job
+
+        if field in PERSONAL_FIELDS and erased_job(c, inp.job_id, lock=True):
+            db.run(
+                c,
+                "UPDATE commands SET payload = '{}'::jsonb, redacted_at = now() WHERE command_id = :id",
+                id=inp.command_id,
+            )
+            return CommandOut(ok=False, code="erased")
         if field not in invoice_fields():
             return CommandOut(ok=False, code="bad_field")
         cleaned = clean_field(field, raw, today)
@@ -368,6 +377,11 @@ def create_jobs_from_rows(c: Any, batch: dict[str, Any], parsed: Any, file_map: 
         f = file_map.get(row.invoice_file)
         if f is None or not f.get("ok"):
             parsed.rejected.append(_rej(row.line, row.job_ref, "missing_file" if f is None else "bad_file"))
+            continue
+        from closeout.privacy import erased_address
+
+        if erased_address(c, row.homeowner_email):  # an erased person isn't brought back by an import
+            parsed.rejected.append(_rej(row.line, row.job_ref, "do_not_contact"))
             continue
         pid = db.scalar(
             c,

@@ -159,19 +159,24 @@ def run_story(ps: list[Persona]) -> None:
         for p in sorted((demo / "invoices").glob("HP-*.png"))
     ]
     batch = str(mike.post("/c/import", {"csrf": mike.csrf}, files=files).url.path)
-    end = time.monotonic() + 120
+    end = time.monotonic() + 300  # reading 12 invoices twice can be slow on a small CI machine
     while time.monotonic() < end:
         page = mike.get(batch)
         refs = dict((r, j) for j, r in re.findall(r'href="/c/jobs/([0-9a-f-]+)">(HP-[0-9-]+)<', page))
         if len(refs) == len(ps) and page.count("state ready") == len(ps):
             break
         time.sleep(1)
+    missing = [p.job_ref for p in ps if p.job_ref not in refs]
+    if missing:
+        raise TimeoutError(f"the import didn't make jobs {missing} ready in time")
     for p in ps:
         p.job_id = refs[p.job_ref]
     approve_all = [p for p in ps]
     for p in approve_all:
         approve(mike, p)
     ask_the_town(TOWN)
+    for k in K:
+        upload_for_contractor(k)
     first_at: dict[str, datetime] = {}
     deadline = time.monotonic() + TIMEOUT
     while time.monotonic() < deadline:
@@ -180,7 +185,9 @@ def run_story(ps: list[Persona]) -> None:
             busy |= step(mike, p, first_at)
         for t in TOWN:
             busy |= clerk_step(t, mike)
-        if not busy and all_settled(mike, ps) and town_settled(TOWN):
+        for k in K:
+            busy |= contractor_step(k)
+        if not busy and all_settled(mike, ps) and town_settled(TOWN) and k_settled(K):
             return
         time.sleep(0.5)
     raise TimeoutError("the simulation did not settle")
@@ -367,6 +374,9 @@ def check_town(ts: list[TownPersona]) -> list[tuple[str, bool, str]]:
     out = []
     with db.tx() as c:
         for t in ts:
+            if not t.request_id:
+                out.append((f"{t.code} ends {t.want['status']}", False, "the request was never made"))
+                continue
             r = db.one(c, "SELECT status, result FROM town_requests WHERE id = :i", i=t.request_id) or {}
             n = len([m for m in MAIL.search(f"to:{CLERK}") if t.permit_no in m.get("Subject", "")])
             n_rev = db.scalar(
@@ -391,6 +401,9 @@ def check(ps: list[Persona]) -> list[tuple[str, bool, str]]:
     results: list[tuple[str, bool, str]] = []
     with db.tx() as c:
         for p in ps:
+            if not p.job_id:
+                results.append((f"{p.code} ends {p.want['ends']}", False, "the job was never created"))
+                continue
             evs = read_stream(c, f"job-{p.job_id}")
             status = db.scalar(c, "SELECT status FROM jobs WHERE id = :j", j=p.job_id)
             n_marks = len(marks(evs))
@@ -401,7 +414,8 @@ def check(ps: list[Persona]) -> list[tuple[str, bool, str]]:
                 r=f"job-{p.job_id}",
             )
             got = {"ends": status, "marks": n_marks, "emails": n_mail, "reviews": n_rev}
-            ok = got == p.want and status_from_events(evs) == status
+            origin = db.scalar(c, "SELECT origin FROM jobs WHERE id = :j", j=p.job_id) or "contractor"
+            ok = got == p.want and status_from_events(evs, origin) == status
             results.append(
                 (
                     f"{p.code} ends {p.want['ends']}, {p.want['marks']} marks, {p.want['emails']} emails, "
@@ -435,8 +449,8 @@ def check(ps: list[Persona]) -> list[tuple[str, bool, str]]:
         results.append(("no email went to a suppressed address", not supp, f"{len(supp)} sent"))
         mismatch = [
             j["id"]
-            for j in db.all_rows(c, "SELECT id, status FROM jobs")
-            if status_from_events(read_stream(c, f"job-{j['id']}")) != j["status"]
+            for j in db.all_rows(c, "SELECT id, status, origin FROM jobs")
+            if status_from_events(read_stream(c, f"job-{j['id']}"), j["origin"]) != j["status"]
         ]
         results.append(
             ("every job's status equals what its events say", not mismatch, f"{len(mismatch)} differ")
@@ -451,29 +465,111 @@ def summary(ps: list[Persona]) -> list[dict[str, Any]]:
         return [
             {
                 "persona": p.code,
-                "status": db.scalar(c, "SELECT status FROM jobs WHERE id=:j", j=p.job_id),
-                "marks": [m.kind for m in marks(read_stream(c, f"job-{p.job_id}"))],
+                "status": db.scalar(c, "SELECT status FROM jobs WHERE id=:j", j=p.job_id)
+                if p.job_id
+                else None,
+                "marks": [m.kind for m in marks(read_stream(c, f"job-{p.job_id}"))] if p.job_id else [],
             }
             for p in ps
         ]
 
 
+# --- K1: a contractor asked by a homeowner (S9) ---------------------------------------------------------
+
+K: list[Persona] = []
+
+
+def k_personas() -> list[Persona]:
+    world = json.loads((DATA / "seed" / "sampleton" / "world.json").read_text())
+    k = world["k1"]
+    people = {p["key"]: p for p in world["people"]}
+    email = people[f"contractor:{k['contractor']}"]["email"]
+    return [
+        Persona(
+            code=k["code"],
+            email=email,
+            job_ref="K1",
+            spec=k,
+            want={"ends": k["ends"], "marks": k["marks"], "emails": k["emails"], "reviews": 0},
+        )
+    ]
+
+
+def upload_for_contractor(k: Persona) -> None:
+    """Dana uploads the contractor's invoice, waits for it to be read, then approves the message to them."""
+    dana = Web("Dana Whitfield")
+    page = dana.get("/h/upload")
+    names = dict(
+        (n.split(" (")[0], i) for i, n in re.findall(r'<option value="([^"]+)">([^<]+)</option>', page)
+    )
+    world = json.loads((DATA / "seed" / "sampleton" / "world.json").read_text())
+    kname = next(c["name"] for c in world["contractors"] if c["key"] == k.spec["contractor"])
+    f = DATA / "demo" / "invoices" / f"K1-{k.spec['contractor']}.png"
+    r = dana.post(
+        "/h/upload",
+        {
+            "csrf": dana.csrf,
+            "contractor_id": names[kname.replace("&", "&amp;")],
+            "work_type": k.spec["work"],
+            "finish_date": k.spec["finish"],
+            "total": k.spec["total"],
+        },
+        files=[("invoice", (f.name, f.read_bytes(), "image/png"))],
+    )
+    k.job_id = r.url.path.rsplit("/", 1)[1]
+    end = time.monotonic() + 120
+    while time.monotonic() < end:
+        page = dana.get(f"/h/jobs/{k.job_id}")
+        if 'id="approve"' in page:
+            dana.post(
+                f"/h/jobs/{k.job_id}/approve",
+                {
+                    "csrf": dana.csrf,
+                    "command_id": form_value(page, "command_id"),
+                    "preview": form_value(page, "preview"),
+                },
+            )
+            return
+        time.sleep(1)
+    raise TimeoutError("K1's upload never became ready")
+
+
+def contractor_step(k: Persona) -> bool:
+    if "answered" in k.done:
+        return False
+    msgs = emails_to(k.email)
+    if not msgs:
+        return True
+    answer(link_in(msgs[-1], "k"), "confirm")
+    k.done.add("answered")
+    return False
+
+
+def k_settled(ks: list[Persona]) -> bool:
+    with db.tx() as c:
+        return all(
+            db.scalar(c, "SELECT status FROM jobs WHERE id = :j", j=k.job_id) == k.want["ends"] for k in ks
+        )
+
+
 def main() -> int:
     ps = personas()
     TOWN.extend(town_personas())
+    K.extend(k_personas())
     t0 = time.monotonic()
     try:
         run_story(ps)
         error = ""
     except Exception as e:  # report what was reached
         error = f"{type(e).__name__}: {e}"
-    results = check(ps) + check_town(TOWN)
+        print(f"The story stopped early: {error}", flush=True)
+    results = check(ps + K) + check_town(TOWN)
     print(
         f"\nSimulation finished in {time.monotonic() - t0:.0f} s{' with an error: ' + error if error else ''}\n"
     )
     for name, ok, why in results:
         print(f"  {'PASS' if ok else 'FAIL'}  {name}" + (f"  ({why})" if why else ""))
-    print("\nend-state summary: " + json.dumps(summary(ps), sort_keys=True))
+    print("\nend-state summary: " + json.dumps(summary(ps + K), sort_keys=True))
     failed = [r for r in results if not r[1]]
     print(f"\n{len(results) - len(failed)} of {len(results)} checks passed.")
     return 1 if failed or error else 0

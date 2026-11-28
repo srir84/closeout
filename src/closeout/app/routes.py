@@ -25,3 +25,4 @@ def register(app: FastAPI) -> None:
     town_pages.register(app)
     ops_pages.register(app)
     homeowner_jobs.register(app)
+    ops_pages.register_cost(app)

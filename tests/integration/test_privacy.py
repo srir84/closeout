@@ -10,6 +10,8 @@ import pytest
 
 from closeout import db, privacy
 from closeout.act import PerformIn, perform
+from closeout.privacy_hmac import email_hmac
+from closeout.seed import sid
 from tests.helpers.jobs import approve, make_job
 
 pytestmark = [pytest.mark.slice("S12"), pytest.mark.req("R-OPS-2")]
@@ -34,6 +36,8 @@ def canary(seeded, tmp_path, monkeypatch):
     get_settings.cache_clear()
     email = f"zq-{uuid.uuid4().hex[:6]}@sampleton.example"
     job = make_job(email=email)
+    make_job(email=email)  # review 1: a second job for the same person makes a second identity row
+    other = make_job(email="someone.else@sampleton.example")
     (tmp_path / "inv.png").write_bytes(b"\x89PNG " + CANARY_NAME.encode())
     with db.tx() as c:
         db.run(c, "UPDATE people SET display_name = :n WHERE email = :e", n=CANARY_NAME, e=email)
@@ -55,6 +59,19 @@ def canary(seeded, tmp_path, monkeypatch):
             "(:d, 'A', 'm', 'g', 'p', CAST(:o AS jsonb), true)",
             d=doc,
             o=json.dumps({"customer_name": CANARY_NAME}),
+        )
+        db.run(  # review 8: a failed read's note quoting the model's own text
+            c,
+            "INSERT INTO reads (document_id, reader, purpose, model, model_digest, prompt_version, valid, errors) "
+            "VALUES (:d, 'B', 'amount_marks', 'm', 'g', 'p', false, ARRAY[:e])",
+            d=doc,
+            e=f"extra:{CANARY_NAME}",
+        )
+        db.run(  # review 2: the person's address printed on another homeowner's job (as a contractor would be)
+            c,
+            "UPDATE facts SET value = :e, value_a = :e WHERE job_id = :j AND field = 'contractor_email'",
+            e=email,
+            j=other,
         )
         db.run(
             c,
@@ -84,22 +101,35 @@ def canary(seeded, tmp_path, monkeypatch):
     return job, pid, email, doc, tmp_path
 
 
+def erase(email: str, busy: int | None = None) -> None:
+    """The workflow's four steps, in order, in this process."""
+    h = email_hmac(email)
+    with db.tx() as c:
+        privacy.mark(c, privacy.people_by_hmac(c, h), h)
+    with db.tx() as c:
+        privacy.stop(c, privacy.people_by_hmac(c, h))
+        if busy is not None:
+            assert privacy.busy(c, privacy.people_by_hmac(c, h)) == busy
+    with db.tx() as c:
+        privacy.redact(c, privacy.people_by_hmac(c, h))
+
+
 def test_the_canary_is_everywhere_before_and_nowhere_after(canary) -> None:
     job, pid, email, doc, uploads = canary
     before = dump()
     assert CANARY_NAME in before and email in before
-    with db.tx() as c:
-        privacy.mark(c, pid)
-        privacy.stop(c, pid)
-        assert privacy.busy(c, pid) == 1  # the undelivered click; the workflow waits, then redacts anyway
-        privacy.redact(c, pid)
+    assert len(privacy_people(email)) == 2
+    erase(email, busy=1)  # the undelivered click; the workflow waits for it, then redacts anyway
     after = dump()
     assert CANARY_NAME not in after and email not in after
     assert not any(CANARY_NAME.encode() in p.read_bytes() for p in Path(uploads).rglob("*") if p.is_file())
     with db.tx() as c:
         assert db.scalar(c, "SELECT count(*) FROM suppression") == 1
         assert db.scalar(c, "SELECT count(*) FROM outbox WHERE state = 'pending' AND job_id = :j", j=job) == 0
-        assert db.scalar(c, "SELECT erased_at IS NOT NULL FROM people WHERE id = :p", p=pid)
+        assert db.scalar(
+            c, "SELECT bool_and(erased_at IS NOT NULL) FROM people WHERE email_hmac = :h", h=email_hmac(email)
+        )
+        assert privacy.erased_address(c, email)  # a later import is refused
 
 
 def test_a_late_model_answer_after_the_marker_stores_blanks(canary) -> None:
@@ -108,7 +138,7 @@ def test_a_late_model_answer_after_the_marker_stores_blanks(canary) -> None:
 
     job, pid, email, doc, _ = canary
     with db.tx() as c:
-        privacy.mark(c, pid)
+        privacy.mark(c, [pid], email_hmac(email))
     late = ReadResult(
         reader="B",
         purpose="invoice",
@@ -148,9 +178,104 @@ def test_a_late_correction_after_the_marker_stores_nothing(canary) -> None:
             w=f"job-{job}",
             p=json.dumps({"answer": "correct", "total": "1.00"}),
         )
-        privacy.mark(c, pid)
+        privacy.mark(c, [pid], email_hmac(email))
     out = answers.apply_answer(CommandIn(job_id=job, command_id=cid))
     assert (out.ok, out.code) == (False, "bad_correction")
+
+
+def privacy_people(email: str) -> list[uuid.UUID]:
+    with db.tx() as c:
+        return privacy.people_by_hmac(c, email_hmac(email))
+
+
+def test_a_writer_holding_the_check_blocks_the_marker(canary) -> None:
+    """Review 3: the erased check and the write share one lock, so the marker can't land between them."""
+    job, pid, email, doc, _ = canary
+    with db.tx() as writer:
+        assert privacy.erased_job(writer, job, lock=True) is False
+        with pytest.raises(Exception, match="lock"):
+            with db.tx() as eraser:
+                db.run(eraser, "SET LOCAL lock_timeout = '300ms'")
+                privacy.mark(eraser, [pid], email_hmac(email))
+
+
+def test_a_contractor_fix_after_erasure_is_refused_and_not_kept(canary) -> None:
+    """Review 4: a contractor typing the erased person's name back in."""
+    from closeout.activities.jobs import CommandIn, apply_fix
+
+    job, pid, email, doc, _ = canary
+    erase(email)
+    cid = uuid.uuid4()
+    with db.tx() as c:
+        db.run(
+            c,
+            "INSERT INTO commands (command_id, target_workflow, kind, payload) VALUES (:c, :w, 'fix_fact', "
+            "CAST(:p AS jsonb))",
+            c=cid,
+            w=f"job-{job}",
+            p=json.dumps({"field": "customer_name", "value": CANARY_NAME}),
+        )
+    out = apply_fix(CommandIn(job_id=job, command_id=cid))
+    assert (out.ok, out.code) == (False, "erased")
+    assert CANARY_NAME not in dump()
+
+
+def test_a_file_another_document_still_uses_is_kept(canary) -> None:
+    """Review 5: files are stored by content, and a town letter (no job) may share the erased invoice's file."""
+    job, pid, email, doc, uploads = canary
+    with db.tx() as c:
+        rid = db.scalar(
+            c,
+            """INSERT INTO town_requests (home_pin, permit_pk, account_id) SELECT pp.pin, pp.permit_pk,
+                              :a FROM permit_parcel pp LIMIT 1 RETURNING id""",
+            a=sid("account:marcus"),
+        )
+        db.run(
+            c,
+            "INSERT INTO documents (town_request_id, kind, sha256, path, mime) VALUES (:t, 'town_reply', "
+            "'x', 'inv.png', 'image/png')",
+            t=rid,
+        )
+    erase(email)
+    assert (Path(uploads) / "inv.png").exists()
+
+
+def test_mailpit_is_searched_until_nothing_is_left(monkeypatch) -> None:
+    """Review 7: one search returns at most 500 messages."""
+    from closeout import mailpit
+
+    left = {"n": 501}
+
+    class Fake:
+        def __init__(self, url: str) -> None: ...
+
+        def search(self, q: str) -> list[dict[str, str]]:
+            return [{"ID": str(i)} for i in range(min(500, left["n"]))]
+
+        def delete_search(self, q: str) -> None:
+            left["n"] -= min(500, left["n"])
+
+    monkeypatch.setattr(mailpit, "Mailpit", Fake)
+    assert privacy.mailpit_delete("http://x", ["a@sampleton.example"]) == 501 and left["n"] == 0
+
+
+def test_an_import_of_an_erased_address_is_refused(canary) -> None:
+    job, pid, email, doc, _ = canary
+    erase(email)
+    from types import SimpleNamespace
+
+    from closeout.activities.jobs import create_jobs_from_rows
+
+    row = SimpleNamespace(line=2, job_ref="Z-1", invoice_file="f.png", homeowner_email=email.upper())
+    parsed = SimpleNamespace(rows=[row], rejected=[])
+    with db.tx() as c:
+        made = create_jobs_from_rows(
+            c,
+            {"account_id": sid("account:mike"), "id": None, "town": "9999"},
+            parsed,
+            {"f.png": {"ok": True}},
+        )
+    assert made == [] and [r.reason for r in parsed.rejected] == ["do_not_contact"]
 
 
 def test_only_ops_reach_the_ops_pages(seeded) -> None:

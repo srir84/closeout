@@ -139,12 +139,15 @@ class TownRequest:
         poll = self.clock.real_wait(WAITS.backup_poll, WAITS.backup_poll_floor)
         while self.result is None:
             await wait_until(lambda: oid in self.delivered or self.q.has_work(), workflow.now() + poll)
-            if oid in self.delivered:
-                return self.delivered[oid]
+            # A reply that is already accepted goes first: it can't be dropped by a delivery result (review 9).
             if self.q.has_work():
                 await self.handle(self.q.pop())
                 continue
+            if oid in self.delivered:
+                return self.delivered[oid]
             d: Delivered = await self._db(outbox.outbox_state, outbox.OutboxRef(outbox_id=oid))
+            if self.q.has_work():
+                continue
             if d.state in ("sent", "failed", "unknown", "cancelled"):
                 return d
         return None
@@ -200,6 +203,15 @@ class TownRequest:
     async def run(self, inp: TownIn) -> TownOut:
         self.inp = inp
         self.clock = to_clock(inp.clock)
+        out = await self._story(inp)
+        # Every way out settles what is still queued and frees the permit for a new request (review 9, 10).
+        while self.q.has_work():
+            await self._finish(self.q.pop(), False, "request_closed")
+        await self._db(town.town_ended, town.TownRef(request_id=inp.request_id))
+        await workflow.wait_condition(workflow.all_handlers_finished)
+        return out
+
+    async def _story(self, inp: TownIn) -> TownOut:
         await workflow.wait_condition(lambda: self.q.has_work())
         while self.status == "drafted":
             await self.handle(self.q.pop())
@@ -228,7 +240,4 @@ class TownRequest:
             await self._set("no_reply")
             assert self.first_sent_at is not None
             await self._idle_until(self._real_at(WAITS.town_late_window, self.first_sent_at))
-        while self.q.has_work():
-            await self._finish(self.q.pop(), False, "request_closed")
-        await workflow.wait_condition(workflow.all_handlers_finished)
         return TownOut(request_id=inp.request_id, status=self.status, result=self.result)

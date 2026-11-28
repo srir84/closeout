@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Closeout demo video</title>
+<meta name="description" content="A three-minute walkthrough of the Closeout demo. Every person, home and company in it is made up.">
+<style>
+  :root { color-scheme: light dark; --ink: #13232c; --muted: #5b6b73; --bg: #f6f4ef; --card: #fff; --accent: #1f4e5f; }
+  @media (prefers-color-scheme: dark) { :root { --ink: #e8eef0; --muted: #9fb0b7; --bg: #11191d; --card: #182328; --accent: #7fb3c4; } }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1040px; margin: 0 auto; padding: 40px 20px 64px; }
+  h1 { font-size: 2rem; margin: 0 0 .3em; letter-spacing: -.01em; }
+  p.lead { color: var(--muted); margin: 0 0 1.4em; max-width: 62ch; }
+  video { width: 100%; border-radius: 10px; background: #000; box-shadow: 0 8px 30px rgba(0,0,0,.18); }
+  ol { padding-left: 1.2em; max-width: 70ch; }
+  li { margin: .3em 0; }
+  a { color: var(--accent); }
+  .note { margin-top: 2em; padding: 14px 18px; background: var(--card); border-radius: 8px; color: var(--muted); font-size: .95rem; }
+  code { background: var(--card); padding: 1px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Closeout: the demo</h1>
+  <p class="lead">Closeout turns finished home repairs into verified records a homeowner can show when they sell. This walkthrough was recorded from the running demo. Run it yourself with <code>make demo</code>.</p>
+  <video controls preload="metadata" poster="closeout-demo-poster.png">
+    <source src="closeout-demo.mp4" type="video/mp4">
+    Your browser can't play this video. <a href="closeout-demo.mp4">Download it</a>.
+  </video>
+  <h2>What happens</h2>
+  <ol>
+    <li>A contractor uploads a finished job and its invoice. AI reads the invoice twice, and the two reads must agree.</li>
+    <li>The contractor approves the exact emails. Nothing is sent before that.</li>
+    <li>The homeowner confirms from the email link. The job gets three marks: homeowner, contractor and town permit.</li>
+    <li>The homeowner asks the town about an old permit. The clerk's letter is read twice, and the result is shown only if both reads agree.</li>
+    <li>The sale report, and a share link for a buyer's agent with prices hidden.</li>
+    <li>Ops: the review list and privacy requests. Then the real public permit data.</li>
+  </ol>
+  <p class="note">Every person, home, company, invoice and letter in this demo is made up. Emails go only to a local test mailbox. The permit and parcel data on the data page is real public data from New Jersey, with no people in it. <a href="./">See the clickable mock</a> · <a href="https://github.com/srir84/closeout">Source</a></p>
+</main>
+</body>
+</html>

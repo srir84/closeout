@@ -44,7 +44,7 @@ def register(app: FastAPI) -> None:
                 """SELECT (SELECT count(*) FROM review_items WHERE resolved_at IS NULL) AS review,
                                     (SELECT count(*) FROM outbox WHERE state = 'unknown') AS unknown,
                                     (SELECT count(*) FROM jobs WHERE status = 'on_hold') AS on_hold,
-                                    (SELECT count(*) FROM privacy_requests WHERE status = 'running') AS privacy""",
+                                    (SELECT count(*) FROM privacy_requests WHERE status <> 'done') AS privacy""",
             )
             items = db.all_rows(
                 c,
@@ -148,20 +148,25 @@ def register(app: FastAPI) -> None:
         """R-OPS-2: ops records a request to erase a person. The address is used to find them, then not stored."""
         acct = ops(request)
         deps.check_csrf(request, csrf)
+        from closeout.privacy_hmac import email_hmac
+
+        h = email_hmac(email[:200])
         with db.tx() as c:
             pid = privacy.person_by_email(c, email[:200])
             if pid is None:
                 return RedirectResponse("/ops/privacy?msg=No one with that address.", status_code=303)
             rid = db.scalar(
                 c,
-                "INSERT INTO privacy_requests (person_id, requested_by) VALUES (:p, :a) RETURNING id",
+                """INSERT INTO privacy_requests (person_id, requested_by, email_hmac) VALUES (:p, :a, :h)
+                   RETURNING id""",
                 p=pid,
                 a=acct["id"],
+                h=h,
             )
         client = await deps.temporal()
         await client.start_workflow(
             "PrivacyRequest",
-            PrivacyIn(request_id=rid, person_id=pid),
+            PrivacyIn(request_id=rid, email_hmac=h),
             id=f"privacy-{rid}",
             task_queue=get_settings().task_queue,
         )
@@ -187,3 +192,32 @@ def register(app: FastAPI) -> None:
                                  FROM model_calls""",
             )
         return render(request, "ops_data.html", n=data_numbers(), runs=runs, bad=bad, calls=calls)
+
+
+COST_SQL = """SELECT provider, model, purpose, count(*) AS calls, count(*) FILTER (WHERE error IS NOT NULL) AS failed,
+                     round(percentile_cont(0.5) WITHIN GROUP (ORDER BY ms))::int AS median_ms,
+                     round(percentile_cont(0.95) WITHIN GROUP (ORDER BY ms))::int AS p95_ms,
+                     round(avg(tokens_in))::int AS avg_tokens_in, round(avg(tokens_out))::int AS avg_tokens_out,
+                     coalesce(sum(cost_usd), 0) AS cost_usd
+              FROM model_calls GROUP BY provider, model, purpose ORDER BY provider, purpose, model"""
+
+
+def register_cost(app: FastAPI) -> None:
+    """S13 (R-OBS-3): cost and speed per mode, from the model call log. No personal data: counts and timings only."""
+
+    @app.get("/ops/cost", response_class=HTMLResponse)
+    def cost(request: Request) -> Any:
+        deps.require_account(request, "ops")
+        with db.tx() as c:
+            rows = db.all_rows(c, COST_SQL)
+            docs = db.one(
+                c,
+                """SELECT count(DISTINCT document_id) AS docs, coalesce(sum(cost_usd), 0) AS cost,
+                                       coalesce(sum(ms), 0) AS ms FROM model_calls WHERE document_id IS NOT NULL""",
+            ) or {"docs": 0}
+        per_doc = (
+            {"cost": docs["cost"] / docs["docs"], "seconds": docs["ms"] / docs["docs"] / 1000}
+            if docs["docs"]
+            else None
+        )
+        return render(request, "ops_cost.html", rows=rows, docs=docs, per_doc=per_doc)

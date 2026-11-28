@@ -37,7 +37,7 @@ def signed_in(who: str) -> tuple[TestClient, str]:
         __import__("closeout.app.main", fromlist=["x"]).create_app(), base_url="http://127.0.0.1:8000"
     )
     c.post("/signin", data={"account_id": str(sid("account:" + who))})
-    page = c.get("/h/home" if who == "dana" else "/c/jobs").text
+    page = c.get("/h/home" if who in ("dana", "marcus") else "/c/jobs").text
     return c, re.search(r'name="csrf" value="([^"]+)"', page).group(1) if 'name="csrf"' in page else ""
 
 
@@ -140,3 +140,28 @@ def test_the_contractor_link_page_offers_confirm_and_not_ours(seeded) -> None:
     csrf = re.search(r'name="csrf" value="([^"]+)"', page).group(1)
     r = c.post(f"/k/{token}", data={"csrf": csrf, "command_id": str(uuid.uuid4()), "answer": "correct"})
     assert r.status_code == 400
+
+
+def test_two_homes_can_send_the_same_contractor_an_upload(seeded, monkeypatch, tmp_path) -> None:
+    """Review finding: references were numbered per home, but must be unique per contractor."""
+    monkeypatch.setenv("UPLOADS_DIR", str(tmp_path))
+    from closeout.settings import get_settings
+
+    get_settings.cache_clear()
+
+    class Fake:
+        async def start_workflow(self, name, arg, **kw):  # type: ignore[no-untyped-def]
+            return None
+
+    async def fake_temporal():  # type: ignore[no-untyped-def]
+        return Fake()
+
+    monkeypatch.setattr(deps, "temporal", fake_temporal)
+    for who in ("dana", "marcus"):
+        c, csrf = signed_in(who)
+        r = c.post(
+            "/h/upload",
+            data={"csrf": csrf, "contractor_id": str(sid("contractor:harbor")), "work_type": "roof"},
+            files={"invoice": ("inv.png", INVOICE.read_bytes(), "image/png")},
+        )
+        assert r.status_code == 200 and "reading the invoice" in r.text, who

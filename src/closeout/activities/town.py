@@ -159,3 +159,15 @@ def town_hold(inp: TownStatusIn) -> None:
             {"town_request_id": str(inp.request_id)},
             f"town_hold:{inp.request_id}:{inp.status}",
         )
+
+
+@activity.defn
+@scrubbed
+def town_ended(inp: TownRef) -> None:
+    """The TownRequest workflow has ended: the permit may be asked about again (if it had no definite answer)."""
+    with db.tx() as c:
+        db.run(
+            c,
+            "UPDATE town_requests SET ended_at = coalesce(ended_at, now()) WHERE id = :id",
+            id=inp.request_id,
+        )
