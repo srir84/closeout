@@ -125,7 +125,7 @@ async def test_wrong_address_wrong_total_and_other_contractor_need_a_look(dev_en
             codes={"field": "job_address"},
         )
         out = await commands.send(dev_env.client, f"job-{job1['id']}", ref, wait_seconds=20)
-        assert (out.status, out.result.state if out.result else None) == ("done", "ready")
+        assert (out.status, out.result.state if out.result else None) == ("done", "ready"), out
         again = await commands.send(dev_env.client, f"job-{job1['id']}", ref, wait_seconds=20)
         assert again.result == out.result
 

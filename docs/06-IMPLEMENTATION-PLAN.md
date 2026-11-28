@@ -451,19 +451,19 @@ The owner, acting as a newcomer, clones the public repo, runs `make demo` and se
 | S0 | 4.5 | 0.5 | done | #1 |
 | S1 | 3 | 0.5 | done | #1 |
 | S2 | 2 | 0.3 | done | #1 |
-| S3 | 4 | 0.3 | built, in review | #2 |
-| S4 | 3 | 0.2 | built, in review | #2 |
-| S5 | 1.5 | 0.2 | built, in review | #2 |
-| S6 | 4.5 | 0.3 | built, in review | #2 |
-| S7 | 3.5 | 0.4 | built, in review | #2 |
-| S7b | 2.5 | 0.3 | built, in review | #2 |
-| S8 | 2 | 0.2 | built, in review | #2 |
-| S9 | 2.5 | 0.2 | built, in review | #2 |
-| S10 | 2.5 | 0.2 | built, in review | #2 |
-| S11 | 3 | 0.3 | built, in review | #2 |
-| S12 | 3 | 0.2 | built, in review | #2 |
-| S13 | 1 | 0.1 | built, in review (cost page only, no Phoenix) | #2 |
-| S14 | 3 | | in progress | #2 |
+| S3 | 4 | 0.3 | done | #2 |
+| S4 | 3 | 0.2 | done | #2 |
+| S5 | 1.5 | 0.2 | done | #2 |
+| S6 | 4.5 | 0.3 | done | #2 |
+| S7 | 3.5 | 0.4 | done | #2 |
+| S7b | 2.5 | 0.3 | done | #2 |
+| S8 | 2 | 0.2 | done | #2 |
+| S9 | 2.5 | 0.2 | done | #2 |
+| S10 | 2.5 | 0.2 | done | #2 |
+| S11 | 3 | 0.3 | done | #2 |
+| S12 | 3 | 0.2 | done | #2 |
+| S13 | 1 | 0.1 | done | #2 |
+| S14 | 3 | 0.6 | done | #2 |
 
 Actual days are agent working time. The whole build is done by one AI agent working without pauses, so they are much shorter than the estimates, which assumed a working day with reviews and waits.
 
@@ -501,3 +501,4 @@ What was built differently from the plan, and why. Each note says where it's han
 | S12 | Ops can re-send an email whose result is unknown. | Ops can mark it as arrived or close it. Re-sending is not built, because sending again is exactly what the at-most-once sender exists to prevent without a person's fresh approval. The README lists it under known limits. |
 | S13 | The cost page, first hosted numbers, optional Phoenix. | The cost and speed page is built from the model call log. There is no hosted-mode key in this build, so it has no hosted numbers, and Phoenix was left out (it was optional). |
 | S14 | A short demo video. | Recorded with Playwright from the running demo (`tools/record_demo.py`), converted with the ffmpeg in `imageio-ffmpeg`, and shown on the GitHub Pages site next to the mock. |
+| S14 | — | Watch list: `test_wrong_address_wrong_total_and_other_contractor_need_a_look` failed once (a fix was refused) in a full local run while two local models were recording, and passed in every rerun. Its assertion now prints the refusal code, so the next failure says why. |

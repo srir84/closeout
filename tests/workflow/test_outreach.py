@@ -482,11 +482,11 @@ async def test_an_empty_correction_is_refused_and_changes_nothing(ts_env) -> Non
     assert "job.answered" not in w.events
 
 
-# --- S9: a homeowner-started job asks the contractor (design 3.20, R-HOME-3) ----------------------------
+# --- S9: a homeowner-started job asks the contractor (design 3.20, R-IMP-6) ----------------------------
 
 
 @pytest.mark.slice("S9")
-@pytest.mark.req("R-HOME-3")
+@pytest.mark.req("R-IMP-6")
 async def test_a_homeowner_job_asks_the_contractor_once_plus_one_reminder(ts_env) -> None:
     w = World(origin="homeowner")
     async with job(ts_env, w) as h:
@@ -501,7 +501,7 @@ async def test_a_homeowner_job_asks_the_contractor_once_plus_one_reminder(ts_env
 
 
 @pytest.mark.slice("S9")
-@pytest.mark.req("R-HOME-3")
+@pytest.mark.req("R-IMP-6")
 async def test_the_contractor_confirms_by_link_and_the_job_is_recorded(ts_env) -> None:
     w = World(origin="homeowner")
     async with job(ts_env, w) as h:
@@ -516,7 +516,7 @@ async def test_the_contractor_confirms_by_link_and_the_job_is_recorded(ts_env) -
 
 
 @pytest.mark.slice("S9")
-@pytest.mark.req("R-HOME-3")
+@pytest.mark.req("R-IMP-6")
 async def test_the_contractor_says_not_ours_and_ops_get_a_look(ts_env) -> None:
     w = World(origin="homeowner")
     async with job(ts_env, w) as h:

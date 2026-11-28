@@ -1,4 +1,4 @@
-"""S9: a homeowner uploads an invoice and asks the contractor to confirm (design 3.20, R-HOME-3)."""
+"""S9: a homeowner uploads an invoice and asks the contractor to confirm (design 3.20, R-IMP-6)."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from closeout.messages import job_messages
 from closeout.seed import sid
 from tests.helpers.jobs import approve, make_job
 
-pytestmark = [pytest.mark.slice("S9"), pytest.mark.req("R-HOME-3")]
+pytestmark = [pytest.mark.slice("S9"), pytest.mark.req("R-IMP-6")]
 INVOICE = Path(__file__).parents[2] / "data" / "demo" / "invoices" / "HP-25-001.png"
 
 

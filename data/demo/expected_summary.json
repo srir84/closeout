@@ -1,0 +1,98 @@
+[
+ {
+  "marks": [
+   "homeowner_confirmed",
+   "contractor_confirmed",
+   "permit_on_file"
+  ],
+  "persona": "H1",
+  "status": "recorded"
+ },
+ {
+  "marks": [
+   "homeowner_confirmed",
+   "contractor_confirmed",
+   "permit_on_file"
+  ],
+  "persona": "H2",
+  "status": "recorded"
+ },
+ {
+  "marks": [],
+  "persona": "H3",
+  "status": "needs_a_look"
+ },
+ {
+  "marks": [
+   "homeowner_confirmed",
+   "contractor_confirmed",
+   "permit_on_file"
+  ],
+  "persona": "H4",
+  "status": "recorded"
+ },
+ {
+  "marks": [
+   "homeowner_confirmed",
+   "contractor_confirmed",
+   "permit_on_file"
+  ],
+  "persona": "H5",
+  "status": "recorded"
+ },
+ {
+  "marks": [
+   "homeowner_confirmed",
+   "contractor_confirmed",
+   "permit_on_file"
+  ],
+  "persona": "H6",
+  "status": "recorded"
+ },
+ {
+  "marks": [],
+  "persona": "H7",
+  "status": "stopped"
+ },
+ {
+  "marks": [],
+  "persona": "H8",
+  "status": "stopped"
+ },
+ {
+  "marks": [],
+  "persona": "H9",
+  "status": "no_answer"
+ },
+ {
+  "marks": [],
+  "persona": "H10",
+  "status": "no_answer"
+ },
+ {
+  "marks": [
+   "homeowner_confirmed",
+   "contractor_confirmed"
+  ],
+  "persona": "H11",
+  "status": "recorded"
+ },
+ {
+  "marks": [
+   "homeowner_confirmed",
+   "contractor_confirmed",
+   "permit_on_file"
+  ],
+  "persona": "H12",
+  "status": "recorded"
+ },
+ {
+  "marks": [
+   "homeowner_confirmed",
+   "contractor_confirmed",
+   "permit_on_file"
+  ],
+  "persona": "K1",
+  "status": "recorded"
+ }
+]

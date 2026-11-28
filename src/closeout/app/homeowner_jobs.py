@@ -1,4 +1,4 @@
-"""S9: a homeowner uploads an invoice and asks the contractor to confirm it (design 3.20, R-HOME-3).
+"""S9: a homeowner uploads an invoice and asks the contractor to confirm it (design 3.20, R-IMP-6).
 
 The contractor's address comes only from our contractor list (recipients source 'registry'), never from the
 invoice. The homeowner approves the two messages (the request and one reminder) like a contractor does.

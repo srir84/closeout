@@ -1,0 +1,9 @@
+{
+ "model": "qwen3-vl:4b-instruct",
+ "model_digest": "84f7ed8042fa7cdbd902f7dcb7d0370e032095047cc3244179f263b77b5bc318",
+ "ms": 13619,
+ "prompt_version": "invoice_v1",
+ "text": "{\n  \"contractor_name\": \"DUNE GRASS DECKS\",\n  \"contractor_license\": \"13VH00410267\",\n  \"contractor_email\": \"build@dunegrassdecks.example\",\n  \"customer_name\": \"Yvette Halvorsen\",\n  \"job_address\": \"168 Heron Way\",\n  \"work_type\": \"deck\",\n  \"completion_date\": \"2026-04-23\",\n  \"total_amount\": 13237.75,\n  \"warranty_years\": 5\n}",
+ "tokens_in": 3894,
+ "tokens_out": 130
+}
