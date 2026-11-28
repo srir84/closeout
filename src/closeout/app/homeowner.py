@@ -109,6 +109,9 @@ def report_data(pin: str) -> tuple[list[rp.ReportJob], list[rp.ReportPermit]]:
     return jobs, permits
 
 
+CLAIM_MISSES_PER_HOUR = 5
+
+
 def link_hash(token: str) -> str:
     return hashlib.sha256(token.encode()).hexdigest()
 
@@ -304,12 +307,29 @@ def register(app: FastAPI) -> None:
         acct = deps.require_account(request, "homeowner")
         deps.check_csrf(request, csrf)
         with db.tx() as c:
+            # Codes are short, so wrong guesses are limited: 5 an hour per account (security review).
+            db.scalar(c, "SELECT pg_advisory_xact_lock(hashtextextended(:a, 11))", a=str(acct["id"]))
+            misses = db.scalar(
+                c,
+                """SELECT count(*) FROM audit_log WHERE actor_account_id = :a AND action = 'claim_miss'
+                   AND created_at > now() - interval '1 hour'""",
+                a=acct["id"],
+            )
+            if (misses or 0) >= CLAIM_MISSES_PER_HOUR:
+                return RedirectResponse(
+                    "/h/home?msg=Too many wrong codes. Try again in an hour.", status_code=303
+                )
             home = db.one(
                 c,
                 "SELECT pin, owner_account_id FROM homes WHERE claim_code_hash = :h FOR UPDATE",
                 h=claim_code_hash(code[:40]),
             )
             if home is None:
+                db.run(
+                    c,
+                    "INSERT INTO audit_log (actor_account_id, action, target) VALUES (:a, 'claim_miss', 'claim')",
+                    a=acct["id"],
+                )
                 msg = "That code didn't match. Check the letter and try again."
             elif home["owner_account_id"] is None:
                 db.run(
@@ -344,7 +364,8 @@ def register(app: FastAPI) -> None:
         with db.tx() as c:
             d = db.one(
                 c,
-                """SELECT d.path, d.mime, d.removed_at, j.contractor_id, coalesce(j.pin, t.home_pin) AS pin, d.kind
+                """SELECT d.path, d.mime, d.removed_at, j.contractor_id, coalesce(j.pin, t.home_pin) AS pin, d.kind,
+                       j.status AS job_status
                              FROM documents d LEFT JOIN jobs j ON j.id = d.job_id
                              LEFT JOIN town_requests t ON t.id = d.town_request_id WHERE d.id = :id""",
                 id=document_id,
@@ -364,4 +385,13 @@ def register(app: FastAPI) -> None:
         field = "invoice_file" if d["kind"] == "invoice" else "town_reply_file"
         if role is None or not rp.allowed(field, role):
             raise HTTPException(status_code=404, detail="Not found")
+        if role == "owner" and d["job_status"] == "retracted":  # a retracted job is hidden from the homeowner
+            raise HTTPException(status_code=404, detail="Not found")
+        if d["mime"] == "application/pdf":  # never shown inline under this site's address (security review)
+            return FileResponse(
+                files.path_of(d["path"]),
+                media_type=d["mime"],
+                filename=f"{document_id}.pdf",
+                content_disposition_type="attachment",
+            )
         return FileResponse(files.path_of(d["path"]), media_type=d["mime"])

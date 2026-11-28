@@ -155,7 +155,7 @@ def register(app: FastAPI) -> None:
         deps.check_csrf(request, csrf)
         from closeout.app.contractor import own_job
 
-        own_job(acct, job_id)
+        own_job(acct, job_id, change=True)
         kind = {"accept": "accept_correction", "reject": "reject_correction"}.get(decision)
         if kind is None:
             raise HTTPException(status_code=400, detail="Unknown choice")
@@ -176,7 +176,7 @@ def register(app: FastAPI) -> None:
         deps.check_csrf(request, csrf)
         from closeout.app.contractor import own_job
 
-        own_job(acct, job_id)
+        own_job(acct, job_id, change=True)
         ref = deps.save_command(
             target_workflow=f"job-{job_id}", kind="undo", account_id=acct["id"], command_id=command_id
         )
@@ -198,7 +198,7 @@ def register(app: FastAPI) -> None:
         from closeout.settings import get_settings
         from closeout.workflows.retract import RetractIn
 
-        job = own_job(acct, job_id)
+        job = own_job(acct, job_id, change=True)
         if job["status"] != "recorded":
             return RedirectResponse(
                 f"/c/jobs/{job_id}?msg=Only a recorded job can be retracted.", status_code=303

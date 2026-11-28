@@ -6,7 +6,7 @@ import hashlib
 import hmac
 import uuid
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -42,6 +42,19 @@ def account_from_cookie(value: str | None) -> uuid.UUID | None:
     if not hmac.compare_digest(mac, _mac("session:" + str(parsed))):
         return None
     return parsed
+
+
+def msg_sig(msg: str) -> str:
+    """Signs a notice passed in a redirect URL, so a link can't make the site show made-up text."""
+    return _mac("msg:" + msg)[:20]
+
+
+def sign_location(location: str) -> str:
+    parts = urlsplit(location)
+    q = parse_qs(parts.query, keep_blank_values=True)
+    if "msg" not in q or "ms" in q:
+        return location
+    return location + "&ms=" + msg_sig(q["msg"][0])
 
 
 def csrf_token(scope: str) -> str:
@@ -80,6 +93,8 @@ class HostAndHeaders(BaseHTTPMiddleware):
             if length is not None and (not length.isdigit() or int(length) > MAX_UPLOAD_BYTES):
                 return PlainTextResponse("The upload is too big (at most 100 MB in one go).", status_code=413)
         response: Response = await call_next(request)
+        if 300 <= response.status_code < 400 and "location" in response.headers:
+            response.headers["location"] = sign_location(response.headers["location"])
         response.headers["Content-Security-Policy"] = CSP
         response.headers["Referrer-Policy"] = "no-referrer"
         response.headers["X-Content-Type-Options"] = "nosniff"

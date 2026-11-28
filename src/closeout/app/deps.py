@@ -12,7 +12,7 @@ from fastapi.templating import Jinja2Templates
 from temporalio.client import Client
 
 from closeout import clockdb, db
-from closeout.app.security import COOKIE, account_from_cookie, csrf_ok, csrf_token
+from closeout.app.security import COOKIE, account_from_cookie, csrf_ok, csrf_token, msg_sig
 
 HERE = Path(__file__).parent
 HOMES: dict[str, str] = {}  # role -> start page, filled in by each slice
@@ -94,4 +94,8 @@ def render(request: Request, name: str, status_code: int = 200, **ctx: Any) -> A
         "clock": clock_info(),
     }
     base.update(ctx)
+    # A notice that came from the URL is shown only if this site signed it (see security.sign_location).
+    url_msg = request.query_params.get("msg") or ""
+    if base.get("msg") and base["msg"] == url_msg and request.query_params.get("ms") != msg_sig(url_msg):
+        base["msg"] = ""
     return templates.TemplateResponse(request, name, base, status_code=status_code)

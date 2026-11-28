@@ -45,25 +45,34 @@ STEP_WORDS = {
 SHOWN_CODES = ("reason", "answer", "step", "state", "via", "origin", "field")
 
 
+def _scope(acct: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    """ops: all jobs. Contractor: own jobs. Homeowner: jobs on their own home, not retracted (design 3.12)."""
+    if acct["kind"] == "ops":
+        return "TRUE", {}
+    if acct["kind"] == "contractor":
+        return "j.contractor_id = :k", {"k": acct["contractor_id"]}
+    return (
+        "j.pin IN (SELECT pin FROM homes WHERE owner_account_id = :a) AND j.status <> 'retracted'",
+        {"a": acct["id"]},
+    )
+
+
 def visible_jobs(acct: dict[str, Any]) -> list[dict[str, Any]]:
-    """ops: all jobs. Contractor: own jobs. Homeowner: jobs on their own home (design 3.12)."""
+    where, kw = _scope(acct)
     with db.tx() as c:
-        if acct["kind"] == "ops":
-            where, kw = "TRUE", {}
-        elif acct["kind"] == "contractor":
-            where, kw = "j.contractor_id = :k", {"k": acct["contractor_id"]}
-        else:
-            where, kw = "j.pin IN (SELECT pin FROM homes WHERE owner_account_id = :a)", {"a": acct["id"]}
         return db.all_rows(
             c,
             f"""SELECT j.id, j.job_ref, j.status, j.round, j.work_type, j.updated_at
-                                  FROM jobs j WHERE {where} ORDER BY j.updated_at DESC LIMIT 200""",
+                FROM jobs j WHERE {where} ORDER BY j.updated_at DESC LIMIT 200""",
             **kw,
         )
 
 
 def can_see_job(acct: dict[str, Any], job_id: uuid.UUID) -> bool:
-    return any(j["id"] == job_id for j in visible_jobs(acct))
+    """Checked on the one job, so a job older than the list's first 200 is still reachable."""
+    where, kw = _scope(acct)
+    with db.tx() as c:
+        return bool(db.scalar(c, f"SELECT 1 FROM jobs j WHERE j.id = :job AND {where}", job=job_id, **kw))
 
 
 def run_view(job_id: uuid.UUID) -> dict[str, Any]:

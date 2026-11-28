@@ -36,7 +36,9 @@ REASON_TEXT = {
 }
 
 
-def own_job(acct: dict[str, Any], job_id: uuid.UUID) -> dict[str, Any]:
+def own_job(acct: dict[str, Any], job_id: uuid.UUID, change: bool = False) -> dict[str, Any]:
+    """The contractor's own job, or 404. With change=True, only jobs the contractor started: a job a homeowner
+    started is the homeowner's to send and ops' to review, so the contractor can't fix, drop or undo it."""
     with db.tx() as c:
         job = db.one(
             c,
@@ -46,6 +48,8 @@ def own_job(acct: dict[str, Any], job_id: uuid.UUID) -> dict[str, Any]:
             id=job_id,
         )
     if job is None or job["contractor_id"] != acct["contractor_id"]:
+        raise HTTPException(status_code=404, detail="No such job")
+    if change and job["origin"] != "contractor":
         raise HTTPException(status_code=404, detail="No such job")
     return job
 
@@ -325,7 +329,7 @@ def register(app: FastAPI) -> None:
     ) -> Any:
         acct = deps.require_account(request, "contractor")
         deps.check_csrf(request, csrf)
-        own_job(acct, job_id)
+        own_job(acct, job_id, change=True)
         if field not in invoice_fields() or field in REGISTRY_FIELDS:
             raise HTTPException(status_code=400, detail="Unknown field")
         from closeout.privacy import PERSONAL_FIELDS, erased_job
@@ -351,7 +355,7 @@ def register(app: FastAPI) -> None:
     ) -> Any:
         acct = deps.require_account(request, "contractor")
         deps.check_csrf(request, csrf)
-        own_job(acct, job_id)
+        own_job(acct, job_id, change=True)
         out = await send(acct, job_id, "approve_facts", command_id)
         return RedirectResponse(f"/c/jobs/{job_id}?msg={outcome_msg(out)}", status_code=303)
 
@@ -365,7 +369,7 @@ def register(app: FastAPI) -> None:
     ) -> Any:
         acct = deps.require_account(request, "contractor")
         deps.check_csrf(request, csrf)
-        job = own_job(acct, job_id)
+        job = own_job(acct, job_id, change=True)
         if pk not in (job["permit_pks"] or []):
             raise HTTPException(status_code=400, detail="That permit isn't one of the choices.")
         out = await send(acct, job_id, "pick_permit", command_id, codes={"pk": pk})
@@ -377,6 +381,6 @@ def register(app: FastAPI) -> None:
     ) -> Any:
         acct = deps.require_account(request, "contractor")
         deps.check_csrf(request, csrf)
-        own_job(acct, job_id)
+        own_job(acct, job_id, change=True)
         out = await send(acct, job_id, "drop", command_id)
         return RedirectResponse(f"/c/jobs/{job_id}?msg={outcome_msg(out)}", status_code=303)
